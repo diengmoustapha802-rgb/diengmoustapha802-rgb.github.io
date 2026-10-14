@@ -129,6 +129,7 @@ main{padding-block:24px 60px}
           <label for="fAncien">Ancien prix barré (facultatif, pour une promo)<input id="fAncien" type="number" min="0" step="500" placeholder="Laisser vide si pas de promo"></label>
           <label class="check" style="align-self:end"><input type="checkbox" id="fVedette"> Mettre en avant dans « Produits vedettes »</label>
         </div>
+        <label class="check"><input type="checkbox" id="fMasque"> Masquer de la boutique (le produit reste ici mais les clients ne le voient plus)</label>
         <label for="fEtat">État<select id="fEtat"><option value="neuf">Neuf</option><option value="reconditionne">Reconditionné</option></select></label>
         <div><div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:6px">Rayons</div><div class="cats" id="fCats"></div></div>
         <div class="photo">
@@ -211,7 +212,7 @@ function denied(err){console.error(err);
 function drawProduits(){
   $("pList").innerHTML=produits.length?produits.map(p=>`<div class="item">
     ${p.image?`<img src="${p.image}" alt="">`:'<div class="ph"></div>'}
-    <div><div class="n">${esc(p.marque)} · ${esc(p.nom)}${p.vedette?'<span class="tag">VEDETTE</span>':""}${p.ancienPrix?'<span class="tag">PROMO</span>':""}${p.etat==="reconditionne"?'<span class="tag">RECONDITIONNÉ</span>':""}</div>
+    <div><div class="n">${esc(p.marque)} · ${esc(p.nom)}${p.vedette?'<span class="tag">VEDETTE</span>':""}${p.ancienPrix?'<span class="tag">PROMO</span>':""}${p.etat==="reconditionne"?'<span class="tag">RECONDITIONNÉ</span>':""}${p.masque?'<span class="tag">MASQUÉ</span>':""}</div>
       <div class="m">${f(p.prix)}${p.ancienPrix?` <s>${f(p.ancienPrix)}</s>`:""}</div></div>
     <div class="act"><button class="btn ghost" data-edit="${p.id}">Modifier</button><button class="btn ghost" data-del="${p.id}">Supprimer</button></div>
   </div>`).join(""):'<p class="empty">Aucun produit pour l\'instant. Clique sur « + Ajouter un produit » pour mettre le premier en vente.</p>';
@@ -220,7 +221,7 @@ function openForm(p){
   editId=p?p.id:null;photo=p?.image||"";
   $("formTitle").textContent=p?"Modifier le produit":"Nouveau produit";
   $("fNom").value=p?.nom||"";$("fMarque").value=p?.marque||"";$("fPrix").value=p?.prix||"";$("fAncien").value=p?.ancienPrix||"";
-  $("fVedette").checked=!!p?.vedette;$("fEtat").value=p?.etat||"neuf";$("fPhoto").value="";
+  $("fVedette").checked=!!p?.vedette;$("fEtat").value=p?.etat||"neuf";$("fMasque").checked=!!p?.masque;$("fPhoto").value="";
   $("fCats").querySelectorAll("input").forEach(i=>i.checked=(p?.categories||[]).includes(i.value));
   $("fPreview").src=photo;$("fPreview").hidden=!photo;$("formErr").hidden=true;
   $("pForm").hidden=false;$("pForm").scrollIntoView({behavior:"smooth"});$("fNom").focus();
@@ -241,7 +242,7 @@ $("pForm").onsubmit=async e=>{e.preventDefault();
   const cats=[...$("fCats").querySelectorAll("input:checked")].map(i=>i.value);
   if(!cats.length){$("formErr").textContent="Choisis au moins un rayon pour que le produit apparaisse dans la boutique.";$("formErr").hidden=false;return}
   const data={nom:$("fNom").value.trim(),marque:$("fMarque").value.trim(),prix:+$("fPrix").value,ancienPrix:+$("fAncien").value||0,
-    categories:cats,vedette:$("fVedette").checked,etat:$("fEtat").value,image:photo,maj:serverTimestamp()};
+    categories:cats,vedette:$("fVedette").checked,etat:$("fEtat").value,masque:$("fMasque").checked,image:photo,maj:serverTimestamp()};
   if(data.ancienPrix&&data.ancienPrix<=data.prix){$("formErr").textContent="L'ancien prix doit être plus élevé que le prix de vente.";$("formErr").hidden=false;return}
   $("saveBtn").disabled=true;$("saveBtn").textContent="Enregistrement…";
   try{editId?await updateDoc(doc(db,"produits",editId),data):await addDoc(collection(db,"produits"),data);

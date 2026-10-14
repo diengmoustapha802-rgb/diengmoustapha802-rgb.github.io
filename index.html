@@ -576,11 +576,52 @@ const hv=$("heroVid");hv.addEventListener("loadeddata",()=>{hv.hidden=false});hv
 renderVedette();renderRayons();upd();
 
 // Produits en direct depuis la base de données
-onSnapshot(collection(db,"produits"),snap=>{
-  P=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",r:x.etat==="reconditionne"}});
-  for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
+// ---------- Produits : ma base + catalogue Infinitech en direct ----------
+const SOURCE="https://infinitech.sn"; // les nouveaux produits ajoutés sur ce site apparaissent automatiquement
+let MINE=[],LIVE=[],mineOk=false,liveOk=false;
+const slugId=s=>"inf-"+String(s||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,80);
+const normN=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const unent=s=>{const t=document.createElement("textarea");t.innerHTML=s;return t.value};
+function devine(n,prix){const l=n.toLowerCase();
+  const b=/macbook|imac|iphone|ipad|apple/.test(l)?"Apple":/surface/.test(l)?"Microsoft":/dell/.test(l)?"Dell":/^hp|\bhp\b/.test(l)?"HP":/lenovo|thinkpad/.test(l)?"Lenovo":/asus|rog/.test(l)?(/rog/.test(l)?"ASUS ROG":"ASUS"):/msi/.test(l)?"MSI":/samsung|galaxy/.test(l)?"Samsung":"";
+  const c=[];
+  if(/iphone/.test(l))c.push("iphone");else if(/galaxy|xiaomi|redmi|tecno|infinix|pixel|smartphone/.test(l))c.push("android");
+  else if(/watch|montre/.test(l))c.push("montre");
+  else if(/souris|clavier|chargeur|sacoche|casque|écouteur|ecouteur|câble|cable|adaptateur|hub|disque|cl[ée] usb|ram\b|ssd externe|accessoire/.test(l)&&!/ordinateur|laptop|core|ryzen/.test(l))c.push("acc");
+  else{if(b==="Apple")c.push("apple");
+    if(/precision|zbook|rtx|m1 pro|m[2-5] pro|m5|radeon pro|p14s|quadro/.test(l))c.push("graph");
+    if(/gaming|rog|tuf|legion|omen|nitro|predator|rtx 40|rtx 30/.test(l))c.push("gaming");
+    if(/2-in-1|2-en-1|x360|yoga|x2 |surface pro|tactile|convertible/.test(l))c.push("2en1");
+    if(/elitebook|latitude|thinkpad|probook|precision|zbook/.test(l))c.push("pro");
+    if(prix&&prix<=200000)c.push("etud");
+    if(!c.includes("graph")&&!c.includes("gaming")&&b!=="Apple")c.push("bureau");}
+  return {b,c}}
+function fusion(){
+  const ids=new Set(MINE.map(p=>p.id)),noms=new Set(MINE.map(p=>normN(p.n)));
+  P=[...MINE.filter(p=>!p.h),...LIVE.filter(p=>!ids.has(p.id)&&!noms.has(normN(p.n)))];
+  if(mineOk&&liveOk)for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
   save();renderVedette();renderRayons();upd();
-},err=>{console.error(err);$("gVedette").innerHTML='<p class="empty">Impossible de charger les produits pour le moment. Rechargez la page.</p>';});
+}
+async function chargerSource(){
+  try{
+    const all=[];
+    for(let page=1;page<=20;page++){
+      const r=await fetch(`${SOURCE}/wp-json/wc/store/v1/products?per_page=100&page=${page}`);if(!r.ok)break;
+      const list=await r.json();all.push(...list);if(list.length<100)break;
+    }
+    LIVE=all.filter(x=>x.is_in_stock!==false&&x.prices).map(x=>{
+      const u=Math.pow(10,+x.prices.currency_minor_unit||0),prix=Math.round(+x.prices.price/u),reg=Math.round(+x.prices.regular_price/u);
+      const n=unent(x.name||"").replace(/^[^A-Za-z0-9]+/,"").trim(),g=devine(n,prix);
+      return {id:slugId(x.slug),b:g.b,n,p:prix,o:reg>prix?reg:0,c:g.c,v:false,img:(x.images&&x.images[0]&&(x.images[0].src||x.images[0].thumbnail))||"",r:!/\bneuf\b/i.test(n)}}).filter(p=>p.n&&p.p);
+  }catch(e){console.warn("Catalogue en direct indisponible",e)}
+  liveOk=true;fusion();
+}
+chargerSource();setInterval(chargerSource,10*60*1000); // vérifie les nouveautés toutes les 10 min
+
+onSnapshot(collection(db,"produits"),snap=>{
+  MINE=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",r:x.etat==="reconditionne",h:!!x.masque}});
+  mineOk=true;fusion();
+},err=>{console.error(err);mineOk=true;fusion();});
 </script>
 
 </body>
