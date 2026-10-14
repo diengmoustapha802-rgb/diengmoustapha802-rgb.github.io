@@ -228,14 +228,18 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <a href="#top">Accueil</a>
     <a href="#vedette">Boutique</a>
     <div class="dd">
-      <button id="ddBtn" aria-expanded="false" aria-controls="ddMenu">Nos ordinateurs ▾</button>
+      <button id="ddBtn" aria-expanded="false" aria-controls="ddMenu">Nos produits ▾</button>
       <div class="dd-menu" id="ddMenu" hidden></div>
     </div>
+    <a href="#vedette" data-cat="iphone">iPhone</a>
+    <a href="#vedette" data-cat="android">Android</a>
+    <a href="#vedette" data-cat="montre">Apple Watch</a>
+    <a href="#vedette" data-cat="acc">Accessoires</a>
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
   </nav>
   <div class="tools">
-    <input id="q" type="search" placeholder="Rechercher un PC…" aria-label="Rechercher">
+    <input id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher">
     <button class="cartbtn" id="openCart">Panier · <span id="cartTotal">0 F</span></button>
   </div>
 </div></header>
@@ -243,7 +247,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
 <main id="top">
   <section class="hero"><div class="wrap">
     <div>
-      <small>Ordinateurs neufs · Dakar</small>
+      <small>Ordinateurs, téléphones, Apple Watch & accessoires · Dakar</small>
       <h1>Le bon PC pour <span>chaque usage</span>.</h1>
       <p>Étudiants, bureau, gaming ou montage vidéo : des portables neufs, garantis 12 mois, livrés en 24 à 48 h à Dakar.</p>
       <div class="btns"><button class="b1" data-go="vedette">Voir la boutique</button><button class="b2" data-go="faq">Livraison et garantie</button></div>
@@ -261,7 +265,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
   <div class="brands"><div class="wrap" id="brands" role="group" aria-label="Filtrer par marque"></div></div>
 
   <section class="block" id="vedette"><div class="wrap">
-    <div class="head"><div><div class="eyebrow">Sélection</div><h2 id="vTitle">Produits vedettes</h2></div><button class="see" id="reset" hidden>Tout afficher</button></div>
+    <div class="head"><div><div class="eyebrow">Sélection</div><h2 id="vTitle">Tous nos produits</h2></div><button class="see" id="reset" hidden>Tout afficher</button></div>
     <div class="grid" id="gVedette"></div>
   </div></section>
 
@@ -366,13 +370,18 @@ const CATS=[
  {k:"etud",n:"Étudiants",d:"Le meilleur rapport prix/performance pour les cours, les exposés et les séries.",chips:["Petit budget","Léger","Autonomie"],badge:"Budget / Performance"},
  {k:"pro",n:"Professionnel & entreprise",d:"Sécurité, solidité et service pour les équipes.",chips:["Lecteur d'empreinte","Châssis renforcé"]},
  {k:"2en1",n:"2-en-1 convertibles",d:"Écran tactile qui se replie en tablette.",chips:["Tactile","Stylet"]},
- {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro neufs, puces Apple.",chips:["macOS","Puce M"]}
+ {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro neufs, puces Apple.",chips:["macOS","Puce M"]},
+ {k:"iphone",n:"iPhone",d:"iPhone neufs, toutes capacités, garantis.",chips:["iOS","Face ID","Neuf scellé"]},
+ {k:"android",n:"Smartphones Android",d:"Samsung, Xiaomi, Tecno, Pixel… des téléphones Android neufs pour tous les budgets.",chips:["Double SIM","Grande autonomie","Tous budgets"]},
+ {k:"montre",n:"Apple Watch & montres",d:"Apple Watch neuves et montres connectées, garanties.",chips:["Apple Watch","Santé & sport","GPS"]},
+ {k:"acc",n:"Accessoires",d:"Souris, claviers, sacoches, chargeurs, écouteurs et tout pour équiper votre PC.",chips:["Souris & claviers","Chargeurs","Audio"]}
 ];
 let P=[];
 // Sujet secret pour les notifications de commande (application ntfy sur ton téléphone)
 const NTFY_SUJET="moustaphatech-commandes-k7q4z9"; // rempli automatiquement depuis la base de données
-const SHOWN=["graph","bureau","gaming","etud"];
-const BRANDS=["Tout","MSI","Lenovo","HP","Dell","ASUS ROG","ASUS","Apple"];
+const SHOWN=["graph","bureau","gaming","etud","pro","2en1","apple","iphone","android","montre","acc"];
+const BRANDS=["Tout","MSI","Lenovo","HP","Dell","ASUS ROG","ASUS","Apple","Samsung"];
+const QUICK=[["iphone","iPhone"],["android","Android"],["montre","Apple Watch"],["acc","Accessoires"]];
 const $=id=>document.getElementById(id);
 const f=n=>n.toLocaleString("fr-FR").replace(/ | /g," ")+" F CFA";
 const pic='<svg viewBox="0 0 120 80" fill="none" aria-hidden="true"><rect x="22" y="8" width="76" height="50" rx="4" stroke="var(--ink)" stroke-width="3"/><rect x="29" y="15" width="62" height="36" rx="2" fill="var(--gold)" opacity=".35"/><path d="M8 62h104l-6 10H14z" fill="var(--ink)"/></svg>';
@@ -386,11 +395,11 @@ try{cart=JSON.parse(localStorage.getItem("mt-cart")||"{}")||{}}catch(e){}
 const save=()=>{try{localStorage.setItem("mt-cart",JSON.stringify(cart))}catch(e){}};
 
 $("ddMenu").innerHTML=CATS.map(c=>`<a href="#vedette" data-cat="${c.k}">${c.n}</a>`).join("");
-$("fcats").innerHTML=CATS.slice(0,5).map(c=>`<li>${c.n}</li>`).join("");
-$("brands").innerHTML=BRANDS.map(b=>`<button data-b="${b}" aria-pressed="${b==="Tout"}">${b}</button>`).join("");
+$("fcats").innerHTML=CATS.map(c=>`<li>${c.n}</li>`).join("");
+$("brands").innerHTML=BRANDS.map(b=>`<button data-b="${b}" aria-pressed="${b==="Tout"}">${b}</button>`).join("")+QUICK.map(([k,n])=>`<button data-cat="${k}">${n}</button>`).join("");
 
 function renderRayons(){
-$("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const items=P.filter(p=>p.c.includes(k)).slice(0,4);if(!items.length)return "";
+$("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const items=P.filter(p=>p.c.includes(k));if(!items.length)return "";
  return `<section class="block ${i%2===0?"alt":""}"><div class="wrap">
  <div class="head"><div><div class="eyebrow">Catégorie</div><h2>${c.n}</h2><p>${c.d}</p><div class="chips">${c.chips.map(x=>`<span>${x}</span>`).join("")}</div></div>
  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${c.badge?`<span class="badge">${c.badge}</span>`:""}<button class="see" data-cat="${k}">Voir tout</button></div></div>
@@ -399,13 +408,13 @@ $("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const item
 
 function renderVedette(){
   let list=P.filter(p=>(brand==="Tout"||p.b===brand)&&(!filterCat||p.c.includes(filterCat))&&(!q||(p.b+" "+p.n).toLowerCase().includes(q)));
-  if(brand==="Tout"&&!filterCat&&!q){const v=list.filter(p=>p.v);if(v.length)list=v;}
-  $("vTitle").textContent=filterCat?CATS.find(c=>c.k===filterCat).n:q?`Résultats pour « ${q} »`:brand!=="Tout"?brand:"Produits vedettes";
+  if(brand==="Tout"&&!filterCat&&!q){list=[...list.filter(p=>p.v),...list.filter(p=>!p.v)];}
+  $("vTitle").textContent=filterCat?CATS.find(c=>c.k===filterCat).n:q?`Résultats pour « ${q} »`:brand!=="Tout"?brand:"Tous nos produits";
   $("reset").hidden=brand==="Tout"&&!filterCat&&!q;
-  $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun ordinateur ne correspond. Essayez une autre marque ou un autre mot.</p>':'<p class="empty">Les produits arrivent bientôt.</p>');
+  $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun produit ne correspond. Essayez une autre marque ou un autre mot.</p>':'<p class="empty">Les produits arrivent bientôt.</p>');
 }
 function goVedette(){document.getElementById("vedette").scrollIntoView({behavior:"smooth"})}
-$("brands").onclick=e=>{const b=e.target.closest("button");if(!b)return;brand=b.dataset.b;filterCat=null;
+$("brands").onclick=e=>{const b=e.target.closest("button");if(!b||b.dataset.cat)return;brand=b.dataset.b;filterCat=null;
   [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x===b));renderVedette()};
 document.addEventListener("click",e=>{
   const c=e.target.closest("[data-cat]");if(c){e.preventDefault();filterCat=c.dataset.cat;brand="Tout";
@@ -434,7 +443,7 @@ function upd(){$("cartTotal").textContent=subtotal().toLocaleString("fr-FR").rep
 let tt;function toast(m){$("toast").textContent=m;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>$("toast").hidden=true,1600)}
 const pic2=p=>p.img?`<img src="${p.img}" alt="">`:pic;
 function drawCart(){const ids=Object.keys(cart).filter(k=>cart[k]>0);
-  if(!ids.length){$("lines").innerHTML='<p style="color:var(--muted)">Votre panier est vide. Ajoutez un ordinateur pour commander.</p>';$("dfoot").hidden=true;return}
+  if(!ids.length){$("lines").innerHTML='<p style="color:var(--muted)">Votre panier est vide. Ajoutez un produit pour commander.</p>';$("dfoot").hidden=true;return}
   $("lines").innerHTML=ids.map(id=>{const p=P.find(x=>x.id==id);return `<div class="line"><b>${p.b} ${p.n.split("·")[0]}</b><span class="p">${f(p.p*cart[id])}</span>
   <div class="qty"><button data-d="-1" data-id="${id}" aria-label="Retirer un">−</button><span>${cart[id]}</span><button data-d="1" data-id="${id}" aria-label="Ajouter un">+</button></div></div>`}).join("");
   $("dsub").textContent=f(subtotal());$("dfoot").hidden=false}

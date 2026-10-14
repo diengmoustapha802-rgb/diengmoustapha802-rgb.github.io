@@ -153,7 +153,7 @@ main{padding-block:24px 60px}
   </main>
 </div>
 
-<datalist id="marques"><option>Apple</option><option>ASUS</option><option>ASUS ROG</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option></datalist>
+<datalist id="marques"><option>Apple</option><option>ASUS</option><option>ASUS ROG</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option><option>Xiaomi</option><option>Tecno</option><option>Infinix</option><option>Google Pixel</option><option>Logitech</option><option>JBL</option><option>Anker</option></datalist>
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
@@ -161,7 +161,7 @@ import { db, auth } from "./firebase.js";
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const RAYONS=[["graph","Graphisme & montage"],["bureau","Bureautique"],["gaming","Gaming"],["etud","Étudiants"],["pro","Professionnel"],["2en1","2-en-1"],["apple","MacBook & Apple"]];
+const RAYONS=[["graph","Graphisme & montage"],["bureau","Bureautique"],["gaming","Gaming"],["etud","Étudiants"],["pro","Professionnel"],["2en1","2-en-1"],["apple","MacBook & Apple"],["iphone","iPhone"],["android","Android"],["montre","Apple Watch & montres"],["acc","Accessoires"]];
 const STATUTS={nouvelle:"Nouvelle",confirmee:"Confirmée",livree:"Livrée",annulee:"Annulée"};
 const $=id=>document.getElementById(id);
 const f=n=>(+n||0).toLocaleString("fr-FR").replace(/ | /g," ")+" F CFA";
