@@ -76,6 +76,8 @@ main{padding-block:24px 60px}
 .ofoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .ofoot select{width:auto}
 .total{font-weight:700;font-variant-numeric:tabular-nums}
+.alerte{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff6e0;border:2px solid #e0a100;border-radius:14px;padding:14px 16px;margin-bottom:18px;font-size:15px}
+.order.nouvelle{background:#fffbf0}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;z-index:20}
 @media (max-width:600px){.row{grid-template-columns:1fr}.item{grid-template-columns:52px 1fr}.item .act{grid-column:1/-1}.tabs{margin-left:0;width:100%}}
 </style>
@@ -99,16 +101,20 @@ main{padding-block:24px 60px}
   <header><div class="wrap">
     <div class="logo">MOUSTAPHA.TECH<small>GÉRANT</small></div>
     <nav class="tabs">
-      <button data-tab="produits" aria-pressed="true">Produits<b id="nbP">0</b></button>
-      <button data-tab="commandes" aria-pressed="false">Commandes<b id="nbC">0</b></button>
+      <button data-tab="commandes" aria-pressed="true">Commandes<b id="nbC">0</b></button>
+      <button data-tab="produits" aria-pressed="false">Produits<b id="nbP">0</b></button>
       <a class="btn ghost" href="./" target="_blank" style="text-decoration:none;padding:8px 12px">Voir la boutique</a>
       <button class="btn ghost" id="logout" style="padding:8px 12px">Déconnexion</button>
     </nav>
   </div></header>
 
   <main class="wrap">
+    <div class="alerte" id="alerte" hidden role="status">
+      <span><b>🔔 Nouvelle commande</b> <span id="alerteTxt"></span></span>
+      <button class="btn" id="alerteOk">Voir</button>
+    </div>
     <!-- PRODUITS -->
-    <section id="tab-produits">
+    <section id="tab-produits" hidden>
       <div class="top"><h2>Mes produits</h2><button class="btn" id="newBtn">+ Ajouter un produit</button></div>
 
       <form class="form" id="pForm" hidden>
@@ -138,7 +144,7 @@ main{padding-block:24px 60px}
     </section>
 
     <!-- COMMANDES -->
-    <section id="tab-commandes" hidden>
+    <section id="tab-commandes">
       <div class="top"><h2>Commandes reçues</h2>
         <select id="filtre" style="width:auto"><option value="">Toutes</option><option value="nouvelle">Nouvelles</option><option value="confirmee">Confirmées</option><option value="livree">Livrées</option><option value="annulee">Annulées</option></select>
       </div>
@@ -188,7 +194,10 @@ function start(){
     $("nbP").textContent=produits.length;drawProduits();
   },denied);
   stopC=onSnapshot(query(collection(db,"commandes"),orderBy("date","desc")),snap=>{
+    const avant=new Set(commandes.map(c=>c.id));
     commandes=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(chargeC){const nv=commandes.filter(c=>!avant.has(c.id)&&c.statut==="nouvelle");if(nv.length)alerter(nv[0]);}
+    chargeC=true;
     $("nbC").textContent=commandes.filter(c=>c.statut==="nouvelle").length;drawCommandes();
   },denied);
 }
@@ -245,7 +254,14 @@ $("pList").onclick=async e=>{
   try{await deleteDoc(doc(db,"produits",del.dataset.del));toast("Produit supprimé")}catch(err){console.error(err);toast("Suppression impossible")}};
 
 /* ---------- Commandes ---------- */
-let commandes=[];
+let commandes=[],chargeC=false;
+function bip(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.35)}catch(e){}}
+function alerter(c){
+  $("alerteTxt").textContent=`${c.numero||""} · ${c.client||""} · ${f(c.total)}`;$("alerte").hidden=false;bip();
+  document.title="🔔 Nouvelle commande · Moustapha Tech";
+}
+$("alerteOk").onclick=()=>{$("alerte").hidden=true;document.title="Espace gérant · Moustapha Tech";
+  document.querySelector('[data-tab="commandes"]').click();$("filtre").value="";drawCommandes();window.scrollTo({top:0,behavior:"smooth"})};
 $("filtre").onchange=drawCommandes;
 function drawCommandes(){
   const fl=$("filtre").value,list=commandes.filter(c=>!fl||c.statut===fl);
@@ -254,7 +270,9 @@ function drawCommandes(){
       <div class="ohead"><b>${esc(c.numero)}</b><span>${d}</span></div>
       <div class="ometa"><div><span>Client :</span> ${esc(c.client)}</div><div><span>Tél :</span> ${esc(c.telephone)}</div>
         <div><span>Livraison :</span> ${esc(c.livraison)}</div><div><span>Paiement :</span> ${esc(c.paiement)}</div>
-        ${c.adresse?`<div style="grid-column:1/-1"><span>Adresse :</span> ${esc(c.adresse)}</div>`:""}</div>
+        ${c.adresse?`<div style="grid-column:1/-1"><span>Adresse :</span> ${esc(c.adresse)}${c.region?", "+esc(c.region):""}</div>`:""}
+        ${c.email?`<div><span>E-mail :</span> ${esc(c.email)}</div>`:""}
+        ${c.notes?`<div style="grid-column:1/-1"><span>Note du client :</span> ${esc(c.notes)}</div>`:""}</div>
       <ul>${(c.articles||[]).map(a=>`<li>${a.quantite} × ${esc(a.nom)} — ${f(a.prix*a.quantite)}</li>`).join("")}</ul>
       <div class="ofoot"><span class="total">Total : ${f(c.total)}</span>
         <select data-statut="${c.id}" aria-label="Statut">${Object.entries(STATUTS).map(([k,v])=>`<option value="${k}" ${c.statut===k?"selected":""}>${v}</option>`).join("")}</select></div>
