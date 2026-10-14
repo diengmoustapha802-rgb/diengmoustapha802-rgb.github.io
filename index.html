@@ -136,7 +136,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
 .pays span{border:1px solid var(--line);padding:3px 9px;border-radius:6px;font-family:var(--mono);font-size:11px}
 
 /* Bouton contact */
-.contact{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:25;border:0;background:var(--gold);color:var(--gold-ink);padding:12px 18px;border-radius:999px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.contact{text-decoration:none;display:inline-flex;align-items:center;gap:8px;position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:25;border:0;background:var(--gold);color:var(--gold-ink);padding:12px 18px;border-radius:999px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 
 /* Panier */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30}
@@ -235,7 +235,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <details><summary>Comment payer ?</summary><p>Par Wave, Orange Money ou carte bancaire. Le paiement à la livraison est possible à Dakar.</p></details>
     <details><summary>Les ordinateurs sont-ils garantis ?</summary><p>Oui, tous nos ordinateurs neufs sont garantis 12 mois, facture à l'appui.</p></details>
     <details><summary>Puis-je retourner un produit ?</summary><p>Vous avez 7 jours pour signaler un défaut. L'appareil est échangé après vérification en boutique.</p></details>
-    <details><summary>Comment vous contacter ?</summary><p>Par WhatsApp ou téléphone au +221 77 000 00 00, du lundi au samedi de 9 h à 20 h.</p></details>
+    <details><summary>Comment vous contacter ?</summary><p>Par WhatsApp ou téléphone au +221 78 874 07 12, du lundi au samedi de 9 h à 20 h.</p></details>
   </div></section>
 
   <section class="news"><div class="wrap">
@@ -251,15 +251,15 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
 <footer id="contact">
   <div class="wrap fcols">
     <div><h4>MOUSTAPHA.TECH</h4><p>Ordinateurs portables neufs et accessoires, livrés partout au Sénégal.</p>
-      <div class="social"><span>Facebook</span><span>Instagram</span><span>TikTok</span><span>WhatsApp</span></div></div>
+      <div class="social"><span>Facebook</span><span>Instagram</span><span>TikTok</span><a href="https://wa.me/221788740712?text=Bonjour%20Moustapha%20Tech%2C%20j%27ai%20une%20question%20sur%20un%20ordinateur." target="_blank" rel="noopener" style="text-decoration:none"><span>WhatsApp</span></a></div></div>
     <div><h4>Catégories</h4><ul id="fcats"></ul></div>
     <div><h4>Informations</h4><ul><li>Livraison et retours</li><li>Garantie</li><li>FAQ</li><li>Conditions de vente</li><li>À propos</li></ul></div>
-    <div><h4>Contact</h4><ul><li>+221 77 000 00 00</li><li>Dakar, Sénégal</li><li>Lun–sam, 9 h–20 h</li></ul></div>
+    <div><h4>Contact</h4><ul><li>+221 78 874 07 12</li><li>Dakar, Sénégal</li><li>Lun–sam, 9 h–20 h</li></ul></div>
   </div>
   <div class="fbot"><div class="wrap"><span>© 2026 Moustapha Tech. Tous droits réservés.</span><div class="pays"><span>WAVE</span><span>ORANGE MONEY</span><span>CARTE</span></div></div></div>
 </footer>
 
-<button class="contact" id="contactBtn">Contactez-nous</button>
+<a class="contact" id="contactBtn" href="https://wa.me/221788740712?text=Bonjour%20Moustapha%20Tech%2C%20j%27ai%20une%20question%20sur%20un%20ordinateur." target="_blank" rel="noopener">Contactez-nous sur WhatsApp</a>
 
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Panier">
@@ -383,7 +383,7 @@ $("checkout").onsubmit=async e=>{e.preventDefault();
 const open=v=>{$("drawer").hidden=$("scrim").hidden=!v;if(v)drawCart()};
 $("openCart").onclick=()=>open(true);$("closeCart").onclick=()=>open(false);$("scrim").onclick=()=>open(false);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){open(false);closeMenus()}});
-$("contactBtn").onclick=()=>document.getElementById("contact").scrollIntoView({behavior:"smooth"});
+
 $("newsForm").onsubmit=e=>{e.preventDefault();$("nmsg").hidden=false;$("nmail").value="";$("nok").checked=false};
 renderVedette();renderRayons();upd();
 
