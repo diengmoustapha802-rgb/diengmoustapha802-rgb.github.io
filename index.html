@@ -13,17 +13,17 @@ img{max-width:100%}
 /* Layout: boutique de PC — bandeau promo, menu à rayons, bannière, marques, rayons par usage, FAQ, newsletter, pied 4 colonnes */
 :root{
   --bg:#ffffff; --surface:#ffffff; --ink:#121212; --muted:#5f5b52; --line:#ebe7de;
-  --gold:#121212; --gold-text:#121212; --gold-ink:#ffffff; --dark:#ffffff; --on-dark:#121212; --hot:#d94b2b;
+  --gold:#0b1f3a; --gold-text:#1e63b0; --navy:#0b1f3a; --blue:#1e63b0; --gold-ink:#ffffff; --dark:#ffffff; --on-dark:#121212; --hot:#d94b2b;
   --soft:#ffffff; --hover:rgba(0,0,0,.05);
   --display:"Sora",system-ui,sans-serif; --body:"DM Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
   color-scheme:light;
 }
 /* Site toujours blanc, écriture noire (pas de mode sombre) */
 .promo-bar{background:#ffffff!important;color:#121212!important;border-bottom:1px solid var(--line)}
-.promo-bar .cd{background:#121212!important;color:#ffffff!important}
+.promo-bar .cd{background:var(--navy)!important;color:#ffffff!important}
 .news{background:#ffffff!important;color:#121212!important;border-top:1px solid var(--line)}
 .news input[type=email]{border:1px solid var(--line)!important}
-.news button{background:#121212!important;color:#ffffff!important}
+.news button{background:var(--navy)!important;color:#ffffff!important}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
 .wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -108,6 +108,17 @@ nav>a,nav>.dd>button{white-space:nowrap}
 @media (max-width:1100px) and (min-width:821px){.tools input{display:none}}
 
 @media (max-width:820px){.bar{flex-wrap:nowrap!important;gap:8px}.logo img{width:38px;height:38px}.logo span{font-size:16px}.burger{order:3;padding:8px 10px}.cartbtn{padding:8px 12px;font-size:13px}}
+
+/* Couleurs du logo : bleu marine */
+.add,.pay,.badge,.brands button[aria-pressed="true"],.toast{background:var(--navy)!important;color:#fff!important}
+.add:hover,.b1:hover,.cartbtn:hover,.contact:hover{background:var(--blue)!important}
+.see{border-color:var(--navy)!important;color:var(--navy)!important}
+.b2{border-color:var(--navy)!important;color:var(--navy)!important}
+.hero h1{color:var(--navy)}
+.rec{border-color:var(--navy)!important;color:var(--navy)!important}
+.c-go{background:var(--navy)!important}.c-go:hover{background:var(--blue)!important}
+.caisse .opt input{accent-color:var(--blue)!important}.caisse .opt:has(input:checked){background:#eef4fc!important}
+header{border-bottom:2px solid var(--navy)!important}
 
 /* Marques */
 .brands{border-bottom:1px solid var(--line);background:var(--surface)}
@@ -301,7 +312,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
       <video id="heroVid" class="hvid" muted autoplay loop playsinline preload="metadata" src="hero.mp4" hidden></video>
       <svg class="anim" viewBox="0 0 520 380" fill="none">
         <defs>
-          <linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2bd17e" stop-opacity=".45"/><stop offset="1" stop-color="#2bd17e" stop-opacity="0"/></linearGradient>
+          <linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b8be6" stop-opacity=".45"/><stop offset="1" stop-color="#3b8be6" stop-opacity="0"/></linearGradient>
           <linearGradient id="sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
           <clipPath id="scr"><rect x="70" y="40" width="330" height="206" rx="6"/></clipPath>
         </defs>
@@ -312,10 +323,10 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
           <g clip-path="url(#scr)">
             <g stroke="#ffffff" stroke-opacity=".07"><path d="M70 90H400M70 135H400M70 180H400M70 225H400"/><path d="M140 40V246M210 40V246M280 40V246M350 40V246"/></g>
             <text x="84" y="62" fill="#fff" fill-opacity=".85" font-family="IBM Plex Mono,monospace" font-size="11">PERFORMANCE</text>
-            <text x="386" y="62" fill="#2bd17e" font-family="IBM Plex Mono,monospace" font-size="11" text-anchor="end" id="hPct">+0 %</text>
+            <text x="386" y="62" fill="#3b8be6" font-family="IBM Plex Mono,monospace" font-size="11" text-anchor="end" id="hPct">+0 %</text>
             <path class="area" d="M80 210 L120 196 L160 202 L200 170 L240 178 L280 138 L320 146 L360 104 L392 84 L392 236 L80 236Z" fill="url(#ga)"/>
-            <path class="line" pathLength="1" d="M80 210 L120 196 L160 202 L200 170 L240 178 L280 138 L320 146 L360 104 L392 84" stroke="#2bd17e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle class="dot" cx="392" cy="84" r="5" fill="#2bd17e"/>
+            <path class="line" pathLength="1" d="M80 210 L120 196 L160 202 L200 170 L240 178 L280 138 L320 146 L360 104 L392 84" stroke="#3b8be6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle class="dot" cx="392" cy="84" r="5" fill="#3b8be6"/>
             <g class="bars" fill="#ffffff" fill-opacity=".22">
               <rect x="88" y="214" width="14" height="22" style="--d:.1s"/><rect x="128" y="206" width="14" height="30" style="--d:.2s"/><rect x="168" y="210" width="14" height="26" style="--d:.3s"/><rect x="208" y="198" width="14" height="38" style="--d:.4s"/><rect x="248" y="202" width="14" height="34" style="--d:.5s"/><rect x="288" y="190" width="14" height="46" style="--d:.6s"/><rect x="328" y="194" width="14" height="42" style="--d:.7s"/><rect x="368" y="182" width="14" height="54" style="--d:.8s"/>
             </g>
@@ -329,7 +340,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
             <rect x="405" y="126" width="82" height="170" rx="11" fill="#0d0f12"/>
             <rect x="432" y="131" width="28" height="6" rx="3" fill="#121212"/>
             <circle cx="446" cy="196" r="24" stroke="#ffffff" stroke-opacity=".12" stroke-width="7"/>
-            <circle class="ring" cx="446" cy="196" r="24" stroke="#2bd17e" stroke-width="7" stroke-linecap="round" pathLength="1" transform="rotate(-90 446 196)"/>
+            <circle class="ring" cx="446" cy="196" r="24" stroke="#3b8be6" stroke-width="7" stroke-linecap="round" pathLength="1" transform="rotate(-90 446 196)"/>
             <text x="446" y="200" fill="#fff" font-family="Sora,sans-serif" font-weight="700" font-size="12" text-anchor="middle">5G</text>
             <g fill="#ffffff" fill-opacity=".18"><rect x="416" y="238" width="60" height="7" rx="3.5"/><rect x="416" y="252" width="44" height="7" rx="3.5"/><rect x="416" y="266" width="52" height="7" rx="3.5"/></g>
           </g>
