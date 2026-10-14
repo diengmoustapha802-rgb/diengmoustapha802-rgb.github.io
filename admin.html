@@ -147,6 +147,7 @@ main{padding-block:24px 60px}
     <section id="tab-commandes">
       <div class="top"><h2>Commandes reçues</h2>
         <select id="filtre" style="width:auto"><option value="">Toutes</option><option value="nouvelle">Nouvelles</option><option value="confirmee">Confirmées</option><option value="livree">Livrées</option><option value="annulee">Annulées</option></select>
+        <button class="btn red" id="purge" type="button" hidden style="padding:8px 12px">🗑 Supprimer les annulées (<span id="nbA">0</span>)</button>
       </div>
       <div class="list" id="cList"><p class="empty">Chargement…</p></div>
     </section>
@@ -264,6 +265,7 @@ $("alerteOk").onclick=()=>{$("alerte").hidden=true;document.title="Espace géran
   document.querySelector('[data-tab="commandes"]').click();$("filtre").value="";drawCommandes();window.scrollTo({top:0,behavior:"smooth"})};
 $("filtre").onchange=drawCommandes;
 function drawCommandes(){
+  const nA=commandes.filter(c=>c.statut==="annulee").length;$("nbA").textContent=nA;$("purge").hidden=!nA;
   const fl=$("filtre").value,list=commandes.filter(c=>!fl||c.statut===fl);
   $("cList").innerHTML=list.length?list.map(c=>{const d=c.date?.toDate?c.date.toDate().toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}):"";
     return `<div class="order ${esc(c.statut)}">
@@ -275,11 +277,22 @@ function drawCommandes(){
         ${c.notes?`<div style="grid-column:1/-1"><span>Note du client :</span> ${esc(c.notes)}</div>`:""}</div>
       <ul>${(c.articles||[]).map(a=>`<li>${a.quantite} × ${esc(a.nom)} — ${f(a.prix*a.quantite)}</li>`).join("")}</ul>
       <div class="ofoot"><span class="total">Total : ${f(c.total)}</span>
-        <select data-statut="${c.id}" aria-label="Statut">${Object.entries(STATUTS).map(([k,v])=>`<option value="${k}" ${c.statut===k?"selected":""}>${v}</option>`).join("")}</select></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><select data-statut="${c.id}" aria-label="Statut">${Object.entries(STATUTS).map(([k,v])=>`<option value="${k}" ${c.statut===k?"selected":""}>${v}</option>`).join("")}</select>${c.statut==="annulee"?`<button class="btn red" type="button" data-delc="${c.id}" data-num="${esc(c.numero)}" style="padding:8px 12px">Supprimer</button>`:""}</div></div>
     </div>`}).join(""):'<p class="empty">Aucune commande pour l\'instant. Elles apparaîtront ici dès qu\'un client valide son panier.</p>';
 }
 $("cList").onchange=async e=>{const s=e.target.closest("[data-statut]");if(!s)return;
   try{await updateDoc(doc(db,"commandes",s.dataset.statut),{statut:s.value});toast("Statut mis à jour")}catch(err){console.error(err);toast("Mise à jour impossible")}};
+
+// Supprimer une commande annulée
+$("cList").addEventListener("click",async e=>{const b=e.target.closest("[data-delc]");if(!b)return;
+  if(!confirm(`Supprimer définitivement la commande ${b.dataset.num} ?`))return;
+  try{await deleteDoc(doc(db,"commandes",b.dataset.delc));toast("Commande supprimée")}catch(err){console.error(err);toast("Suppression impossible (vérifie les règles Firebase)")}});
+// Supprimer toutes les commandes annulées
+$("purge").onclick=async()=>{const list=commandes.filter(c=>c.statut==="annulee");if(!list.length)return;
+  if(!confirm(`Supprimer définitivement ${list.length} commande(s) annulée(s) ? Cette action est irréversible.`))return;
+  $("purge").disabled=true;let ok=0;
+  for(const c of list){try{await deleteDoc(doc(db,"commandes",c.id));ok++}catch(err){console.error(err)}}
+  $("purge").disabled=false;toast(ok===list.length?`${ok} commande(s) supprimée(s)`:`${ok} sur ${list.length} supprimée(s) (vérifie les règles Firebase)`)};
 </script>
 </body>
 </html>
