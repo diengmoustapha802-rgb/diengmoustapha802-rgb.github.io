@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Espace gérant · Moustapha Tech</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Espace gérant · My Flash</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
 [hidden]{display:none!important}
@@ -99,7 +100,7 @@ main{padding-block:24px 60px}
 <!-- ESPACE GÉRANT -->
 <div id="app" hidden>
   <header><div class="wrap">
-    <div class="logo">MOUSTAPHA.TECH<small>GÉRANT</small></div>
+    <div class="logo" style="display:flex;align-items:center;gap:8px"><img src="logo.png" alt="" width="36" height="36">MY FLASH<small>GÉRANT</small></div>
     <nav class="tabs">
       <button data-tab="commandes" aria-pressed="true">Commandes<b id="nbC">0</b></button>
       <button data-tab="produits" aria-pressed="false">Produits<b id="nbP">0</b></button>
@@ -262,9 +263,9 @@ let commandes=[],chargeC=false;
 function bip(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.35)}catch(e){}}
 function alerter(c){
   $("alerteTxt").textContent=`${c.numero||""} · ${c.client||""} · ${f(c.total)}`;$("alerte").hidden=false;bip();
-  document.title="🔔 Nouvelle commande · Moustapha Tech";
+  document.title="🔔 Nouvelle commande · My Flash";
 }
-$("alerteOk").onclick=()=>{$("alerte").hidden=true;document.title="Espace gérant · Moustapha Tech";
+$("alerteOk").onclick=()=>{$("alerte").hidden=true;document.title="Espace gérant · My Flash";
   document.querySelector('[data-tab="commandes"]').click();$("filtre").value="";drawCommandes();window.scrollTo({top:0,behavior:"smooth"})};
 $("filtre").onchange=drawCommandes;
 function drawCommandes(){
