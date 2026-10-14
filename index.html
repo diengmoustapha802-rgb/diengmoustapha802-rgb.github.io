@@ -305,7 +305,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
   <div id="lines"></div>
   <div id="dfoot" hidden style="display:grid;gap:12px">
     <div class="tot"><span class="big">Sous-total</span><span class="big" id="dsub"></span></div>
-    <p style="margin:0;color:var(--muted);font-size:13px">Livraison et paiement à l'étape suivante.</p>
+    <p style="margin:0;color:var(--muted);font-size:13px">Paiement à l'étape suivante.</p>
     <button class="pay" id="goCheckout">Passer la commande</button>
   </div>
 </aside>
@@ -329,13 +329,6 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
       <label for="region">Région / Département (facultatif)<select id="region">
         <option>Dakar</option><option>Thiès</option><option>Diourbel</option><option>Saint-Louis</option><option>Louga</option><option>Kaolack</option><option>Fatick</option><option>Kaffrine</option><option>Ziguinchor</option><option>Kolda</option><option>Sédhiou</option><option>Tambacounda</option><option>Kédougou</option><option>Matam</option>
       </select></label>
-      <label for="zone"><span>Livraison <i>*</i></span><select id="zone">
-        <option value="0">Retrait en boutique (gratuit)</option>
-        <option value="2500">Dakar centre (2 500 F)</option>
-        <option value="4000">Banlieue : Pikine, Guédiawaye… (4 000 F)</option>
-        <option value="5000">Rufisque, Keur Massar, Diamniadio (5 000 F)</option>
-        <option value="7000">Autres régions (7 000 F)</option>
-      </select></label>
       <label for="tel"><span>Numéro de téléphone <i>*</i></span><input id="tel" required type="tel" inputmode="tel" autocomplete="tel" placeholder="77 123 45 67"></label>
       <label for="email">Adresse e-mail (facultatif)<input id="email" type="email" autocomplete="email" placeholder="exemple@gmail.com"></label>
       <h3>Informations complémentaires</h3>
@@ -347,7 +340,6 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
       <div id="cItems"></div>
       <div class="c-tot">
         <div><span>Sous-total</span><span id="sub"></span></div>
-        <div><span>Livraison</span><span id="liv"></span></div>
         <div class="big"><span>Total</span><span id="total"></span></div>
       </div>
       <div class="c-pay" role="radiogroup" aria-label="Moyen de paiement">
@@ -446,8 +438,7 @@ function drawCart(){const ids=Object.keys(cart).filter(k=>cart[k]>0);
   $("lines").innerHTML=ids.map(id=>{const p=P.find(x=>x.id==id);return `<div class="line"><b>${p.b} ${p.n.split("·")[0]}</b><span class="p">${f(p.p*cart[id])}</span>
   <div class="qty"><button data-d="-1" data-id="${id}" aria-label="Retirer un">−</button><span>${cart[id]}</span><button data-d="1" data-id="${id}" aria-label="Ajouter un">+</button></div></div>`}).join("");
   $("dsub").textContent=f(subtotal());$("dfoot").hidden=false}
-function totals(){const s=subtotal(),l=+$("zone").value;$("sub").textContent=f(s);$("liv").textContent=l?f(l):"Gratuit";$("total").textContent=f(s+l);return s+l}
-$("zone").onchange=totals;
+function totals(){const s=subtotal();$("sub").textContent=f(s);$("total").textContent=f(s);return s}
 $("lines").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;const id=b.dataset.id;cart[id]=Math.max(0,cart[id]+ +b.dataset.d);if(!cart[id])delete cart[id];save();upd();drawCart()};
 
 // Page de commande
@@ -465,19 +456,18 @@ $("checkout").onsubmit=async e=>{e.preventDefault();
   const t=totals(),n="MT-"+Math.floor(1000+Math.random()*9000);
   const paym=document.querySelector('input[name="paym"]:checked').value;
   const client=[$("prenom").value.trim(),$("nom").value.trim()].filter(Boolean).join(" ")||"Client";
-  const zoneTxt=$("zone").options[$("zone").selectedIndex].text;
   const articles=Object.keys(cart).map(id=>{const p=P.find(x=>x.id==id);return p?{id:String(id),nom:p.b+" "+p.n,prix:p.p,quantite:cart[id]}:null}).filter(Boolean);
   try{
     await addDoc(collection(db,"commandes"),{numero:n,client,telephone:$("tel").value.trim(),email:$("email").value.trim(),
       pays:$("pays").value,region:$("region").value,adresse:$("adr").value.trim(),notes:$("notes").value.trim(),
-      livraison:zoneTxt,fraisLivraison:+$("zone").value,paiement:paym,articles,total:t,statut:"nouvelle",date:serverTimestamp()});
+      paiement:paym,articles,total:t,statut:"nouvelle",date:serverTimestamp()});
     const msg=`Bonjour Moustapha Tech, je viens de passer la commande ${n} :\n`+articles.map(a=>`- ${a.quantite} x ${a.nom} (${f(a.prix*a.quantite)})`).join("\n")
-      +`\nTotal : ${f(t)}\nLivraison : ${zoneTxt}\nAdresse : ${$("adr").value.trim()}, ${$("region").value}\nPaiement : ${paym}\nNom : ${client} - Tél : ${$("tel").value.trim()}`+($("notes").value.trim()?`\nNote : ${$("notes").value.trim()}`:"");
+      +`\nTotal : ${f(t)}\nAdresse : ${$("adr").value.trim()}, ${$("region").value}\nPaiement : ${paym}\nNom : ${client} - Tél : ${$("tel").value.trim()}`+($("notes").value.trim()?`\nNote : ${$("notes").value.trim()}`:"");
     const wa="https://wa.me/221788740712?text="+encodeURIComponent(msg);
     // Notification instantanée sur le téléphone du gérant (application ntfy)
     try{fetch("https://ntfy.sh/"+NTFY_SUJET+"?title="+encodeURIComponent("Nouvelle commande "+n+" - "+f(t))+"&priority=high&tags=moneybag",{method:"POST",body:msg});}catch(e){}
     $("done").innerHTML=`<h2>Merci, votre commande est reçue ✅</h2>
-      <div class="c-tot"><div><span>Numéro de commande</span><b>${n}</b></div><div><span>Total</span><b>${f(t)}</b></div><div><span>Paiement</span><span>${paym}</span></div><div><span>Livraison</span><span>${zoneTxt}</span></div></div>
+      <div class="c-tot"><div><span>Numéro de commande</span><b>${n}</b></div><div><span>Total</span><b>${f(t)}</b></div><div><span>Paiement</span><span>${paym}</span></div></div>
       <p style="margin:0">Nous vous appelons au <b>${$("tel").value.trim()}</b> pour confirmer la livraison. Pour aller plus vite, envoyez-nous aussi votre commande sur WhatsApp.</p>
       <a class="c-go" style="text-align:center;text-decoration:none;background:#1f9d55" href="${wa}" target="_blank" rel="noopener">Envoyer ma commande sur WhatsApp</a>
       <button class="c-back" id="backShop" type="button">Retour à la boutique</button>`;

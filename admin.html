@@ -269,7 +269,7 @@ function drawCommandes(){
     return `<div class="order ${esc(c.statut)}">
       <div class="ohead"><b>${esc(c.numero)}</b><span>${d}</span></div>
       <div class="ometa"><div><span>Client :</span> ${esc(c.client)}</div><div><span>Tél :</span> ${esc(c.telephone)}</div>
-        <div><span>Livraison :</span> ${esc(c.livraison)}</div><div><span>Paiement :</span> ${esc(c.paiement)}</div>
+        ${c.livraison?`<div><span>Livraison :</span> ${esc(c.livraison)}</div>`:""}<div><span>Paiement :</span> ${esc(c.paiement)}</div>
         ${c.adresse?`<div style="grid-column:1/-1"><span>Adresse :</span> ${esc(c.adresse)}${c.region?", "+esc(c.region):""}</div>`:""}
         ${c.email?`<div><span>E-mail :</span> ${esc(c.email)}</div>`:""}
         ${c.notes?`<div style="grid-column:1/-1"><span>Note du client :</span> ${esc(c.notes)}</div>`:""}</div>
