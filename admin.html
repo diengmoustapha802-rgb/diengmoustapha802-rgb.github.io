@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Espace gérant · Moustapha Tech</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#f7f7f5;--surface:#fff;--ink:#121212;--muted:#5f5b52;--line:#e6e2d9;--ok:#11845b;--warn:#b26a00;--bad:#c0392b;
+  --display:"Sora",system-ui,sans-serif;--body:"DM Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em}
+button{font:inherit;cursor:pointer}
+input,select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:500;color:var(--muted)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+.btn{border:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.btn.red{background:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+.err{color:var(--bad);font-size:14px}
+
+/* Connexion */
+#login{min-height:100vh;display:grid;place-items:center;padding:16px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;width:min(380px,100%);display:grid;gap:14px}
+.box p{margin:0;color:var(--muted);font-size:14px}
+
+/* En-tête */
+header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;gap:12px;padding-block:12px;flex-wrap:wrap}
+.logo{font-family:var(--display);font-weight:800;font-size:17px}
+.logo small{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--muted);margin-left:6px;letter-spacing:.06em}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tabs button{border:0;background:none;padding:8px 12px;border-radius:8px;font-weight:500}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.tabs b{font-family:var(--mono);font-size:12px;margin-left:4px}
+main{padding-block:24px 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.top h2{font-size:22px}
+
+/* Formulaire produit */
+.form{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:14px;margin-bottom:20px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cats{display:flex;flex-wrap:wrap;gap:8px}
+.cats label{flex-direction:row;align-items:center;gap:6px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--ink);cursor:pointer}
+.cats input,.check input{width:auto}
+.check{flex-direction:row;align-items:center;gap:8px;color:var(--ink)}
+.photo{display:flex;gap:12px;align-items:center}
+.photo img{width:90px;height:68px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Listes */
+.list{display:grid;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center}
+.item img,.ph{width:64px;height:48px;object-fit:contain;border-radius:8px;background:var(--bg)}
+.item .n{font-weight:700;font-size:14px;min-width:0}
+.item .m{color:var(--muted);font-size:13px;font-family:var(--mono)}
+.item .act{display:flex;gap:6px}
+.item .act button{padding:7px 10px;font-size:13px}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:6px;border:1px solid var(--line);margin-left:6px}
+.empty{color:var(--muted);text-align:center;padding:30px;background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+
+.order{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:14px;padding:14px;display:grid;gap:8px}
+.order.confirmee{border-left-color:#2b6cb0}.order.livree{border-left-color:var(--ok)}.order.annulee{border-left-color:var(--muted);opacity:.7}
+.ohead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.ohead b{font-family:var(--mono)}
+.ohead span{color:var(--muted);font-size:13px}
+.order ul{margin:0;padding-left:18px;font-size:14px}
+.ometa{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:4px 16px;font-size:14px}
+.ometa span{color:var(--muted)}
+.ofoot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ofoot select{width:auto}
+.total{font-weight:700;font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;z-index:20}
+@media (max-width:600px){.row{grid-template-columns:1fr}.item{grid-template-columns:52px 1fr}.item .act{grid-column:1/-1}.tabs{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+
+<!-- ÉCRAN DE CONNEXION -->
+<section id="login" hidden>
+  <form class="box" id="loginForm">
+    <h1 style="font-size:20px">Espace gérant</h1>
+    <p>Connecte-toi avec l'e-mail et le mot de passe créés dans Firebase.</p>
+    <label for="email">E-mail<input id="email" type="email" required autocomplete="username"></label>
+    <label for="pass">Mot de passe<input id="pass" type="password" required autocomplete="current-password"></label>
+    <span class="err" id="loginErr" hidden></span>
+    <button class="btn" type="submit">Se connecter</button>
+  </form>
+</section>
+
+<!-- ESPACE GÉRANT -->
+<div id="app" hidden>
+  <header><div class="wrap">
+    <div class="logo">MOUSTAPHA.TECH<small>GÉRANT</small></div>
+    <nav class="tabs">
+      <button data-tab="produits" aria-pressed="true">Produits<b id="nbP">0</b></button>
+      <button data-tab="commandes" aria-pressed="false">Commandes<b id="nbC">0</b></button>
+      <a class="btn ghost" href="./" target="_blank" style="text-decoration:none;padding:8px 12px">Voir la boutique</a>
+      <button class="btn ghost" id="logout" style="padding:8px 12px">Déconnexion</button>
+    </nav>
+  </div></header>
+
+  <main class="wrap">
+    <!-- PRODUITS -->
+    <section id="tab-produits">
+      <div class="top"><h2>Mes produits</h2><button class="btn" id="newBtn">+ Ajouter un produit</button></div>
+
+      <form class="form" id="pForm" hidden>
+        <h3 id="formTitle" style="font-size:17px">Nouveau produit</h3>
+        <label for="fNom">Nom du produit<input id="fNom" required placeholder="Ex. HP 250 G10 · Core i7 · 16 Go · SSD 512 Go"></label>
+        <div class="row">
+          <label for="fMarque">Marque<input id="fMarque" list="marques" required placeholder="Ex. HP"></label>
+          <label for="fPrix">Prix de vente (F CFA)<input id="fPrix" type="number" min="0" step="500" required placeholder="465000"></label>
+        </div>
+        <div class="row">
+          <label for="fAncien">Ancien prix barré (facultatif, pour une promo)<input id="fAncien" type="number" min="0" step="500" placeholder="Laisser vide si pas de promo"></label>
+          <label class="check" style="align-self:end"><input type="checkbox" id="fVedette"> Mettre en avant dans « Produits vedettes »</label>
+        </div>
+        <div><div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:6px">Rayons</div><div class="cats" id="fCats"></div></div>
+        <div class="photo">
+          <img id="fPreview" alt="" hidden>
+          <label for="fPhoto" style="flex:1">Photo du produit<input id="fPhoto" type="file" accept="image/*"></label>
+        </div>
+        <span class="err" id="formErr" hidden></span>
+        <div class="actions">
+          <button class="btn" type="submit" id="saveBtn">Enregistrer</button>
+          <button class="btn ghost" type="button" id="cancelBtn">Annuler</button>
+        </div>
+      </form>
+
+      <div class="list" id="pList"><p class="empty">Chargement…</p></div>
+    </section>
+
+    <!-- COMMANDES -->
+    <section id="tab-commandes" hidden>
+      <div class="top"><h2>Commandes reçues</h2>
+        <select id="filtre" style="width:auto"><option value="">Toutes</option><option value="nouvelle">Nouvelles</option><option value="confirmee">Confirmées</option><option value="livree">Livrées</option><option value="annulee">Annulées</option></select>
+      </div>
+      <div class="list" id="cList"><p class="empty">Chargement…</p></div>
+    </section>
+  </main>
+</div>
+
+<datalist id="marques"><option>Apple</option><option>ASUS</option><option>ASUS ROG</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option></datalist>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+import { db, auth } from "./firebase.js";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const RAYONS=[["graph","Graphisme & montage"],["bureau","Bureautique"],["gaming","Gaming"],["etud","Étudiants"],["pro","Professionnel"],["2en1","2-en-1"],["apple","MacBook & Apple"]];
+const STATUTS={nouvelle:"Nouvelle",confirmee:"Confirmée",livree:"Livrée",annulee:"Annulée"};
+const $=id=>document.getElementById(id);
+const f=n=>(+n||0).toLocaleString("fr-FR").replace(/ | /g," ")+" F CFA";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let tt;const toast=m=>{$("toast").textContent=m;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>$("toast").hidden=true,2200)};
+
+/* ---------- Connexion ---------- */
+let stopP=null,stopC=null;
+onAuthStateChanged(auth,user=>{
+  $("login").hidden=!!user;$("app").hidden=!user;
+  if(user)start();else{stopP&&stopP();stopC&&stopC();}
+});
+$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginErr").hidden=true;
+  try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("pass").value)}
+  catch(err){$("loginErr").textContent=err.code==="auth/invalid-api-key"?"Configuration Firebase incorrecte : vérifie le fichier firebase.js.":"E-mail ou mot de passe incorrect.";$("loginErr").hidden=false}};
+$("logout").onclick=()=>signOut(auth);
+
+/* ---------- Onglets ---------- */
+document.querySelector(".tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;
+  document.querySelectorAll("[data-tab]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  $("tab-produits").hidden=b.dataset.tab!=="produits";$("tab-commandes").hidden=b.dataset.tab!=="commandes"};
+
+/* ---------- Produits ---------- */
+let produits=[],editId=null,photo="";
+$("fCats").innerHTML=RAYONS.map(([k,n])=>`<label><input type="checkbox" value="${k}"> ${n}</label>`).join("");
+
+function start(){
+  stopP=onSnapshot(collection(db,"produits"),snap=>{
+    produits=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.nom||"").localeCompare(b.nom||""));
+    $("nbP").textContent=produits.length;drawProduits();
+  },denied);
+  stopC=onSnapshot(query(collection(db,"commandes"),orderBy("date","desc")),snap=>{
+    commandes=snap.docs.map(d=>({id:d.id,...d.data()}));
+    $("nbC").textContent=commandes.filter(c=>c.statut==="nouvelle").length;drawCommandes();
+  },denied);
+}
+function denied(err){console.error(err);
+  const m=err.code==="permission-denied"?"Ce compte n'a pas l'accès gérant. Vérifie les règles Firestore.":"Erreur de connexion à la base de données.";
+  $("pList").innerHTML=$("cList").innerHTML=`<p class="empty">${m}</p>`}
+
+function drawProduits(){
+  $("pList").innerHTML=produits.length?produits.map(p=>`<div class="item">
+    ${p.image?`<img src="${p.image}" alt="">`:'<div class="ph"></div>'}
+    <div><div class="n">${esc(p.marque)} · ${esc(p.nom)}${p.vedette?'<span class="tag">VEDETTE</span>':""}${p.ancienPrix?'<span class="tag">PROMO</span>':""}</div>
+      <div class="m">${f(p.prix)}${p.ancienPrix?` <s>${f(p.ancienPrix)}</s>`:""}</div></div>
+    <div class="act"><button class="btn ghost" data-edit="${p.id}">Modifier</button><button class="btn ghost" data-del="${p.id}">Supprimer</button></div>
+  </div>`).join(""):'<p class="empty">Aucun produit pour l\'instant. Clique sur « + Ajouter un produit » pour mettre le premier en vente.</p>';
+}
+function openForm(p){
+  editId=p?p.id:null;photo=p?.image||"";
+  $("formTitle").textContent=p?"Modifier le produit":"Nouveau produit";
+  $("fNom").value=p?.nom||"";$("fMarque").value=p?.marque||"";$("fPrix").value=p?.prix||"";$("fAncien").value=p?.ancienPrix||"";
+  $("fVedette").checked=!!p?.vedette;$("fPhoto").value="";
+  $("fCats").querySelectorAll("input").forEach(i=>i.checked=(p?.categories||[]).includes(i.value));
+  $("fPreview").src=photo;$("fPreview").hidden=!photo;$("formErr").hidden=true;
+  $("pForm").hidden=false;$("pForm").scrollIntoView({behavior:"smooth"});$("fNom").focus();
+}
+$("newBtn").onclick=()=>openForm(null);
+$("cancelBtn").onclick=()=>{$("pForm").hidden=true};
+
+// Photo : réduite automatiquement pour être enregistrée dans la base
+$("fPhoto").onchange=()=>{const file=$("fPhoto").files[0];if(!file)return;
+  const img=new Image();img.onload=()=>{const max=700,r=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");c.width=Math.round(img.width*r);c.height=Math.round(img.height*r);
+    const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+    let q=.8;photo=c.toDataURL("image/jpeg",q);while(photo.length>700000&&q>.3){q-=.1;photo=c.toDataURL("image/jpeg",q)}
+    $("fPreview").src=photo;$("fPreview").hidden=false;URL.revokeObjectURL(img.src)};
+  img.src=URL.createObjectURL(file)};
+
+$("pForm").onsubmit=async e=>{e.preventDefault();
+  const cats=[...$("fCats").querySelectorAll("input:checked")].map(i=>i.value);
+  if(!cats.length){$("formErr").textContent="Choisis au moins un rayon pour que le produit apparaisse dans la boutique.";$("formErr").hidden=false;return}
+  const data={nom:$("fNom").value.trim(),marque:$("fMarque").value.trim(),prix:+$("fPrix").value,ancienPrix:+$("fAncien").value||0,
+    categories:cats,vedette:$("fVedette").checked,image:photo,maj:serverTimestamp()};
+  if(data.ancienPrix&&data.ancienPrix<=data.prix){$("formErr").textContent="L'ancien prix doit être plus élevé que le prix de vente.";$("formErr").hidden=false;return}
+  $("saveBtn").disabled=true;$("saveBtn").textContent="Enregistrement…";
+  try{editId?await updateDoc(doc(db,"produits",editId),data):await addDoc(collection(db,"produits"),data);
+    $("pForm").hidden=true;toast(editId?"Produit modifié":"Produit ajouté à la boutique")}
+  catch(err){console.error(err);$("formErr").textContent="Enregistrement impossible. Vérifie ta connexion internet et réessaie.";$("formErr").hidden=false}
+  finally{$("saveBtn").disabled=false;$("saveBtn").textContent="Enregistrer"}};
+
+$("pList").onclick=async e=>{
+  const ed=e.target.closest("[data-edit]");if(ed)return openForm(produits.find(p=>p.id===ed.dataset.edit));
+  const del=e.target.closest("[data-del]");if(!del)return;
+  if(del.dataset.sure!=="1"){del.dataset.sure="1";del.textContent="Confirmer ?";del.classList.add("red");del.classList.remove("ghost");
+    setTimeout(()=>{del.dataset.sure="";del.textContent="Supprimer";del.classList.remove("red");del.classList.add("ghost")},4000);return}
+  try{await deleteDoc(doc(db,"produits",del.dataset.del));toast("Produit supprimé")}catch(err){console.error(err);toast("Suppression impossible")}};
+
+/* ---------- Commandes ---------- */
+let commandes=[];
+$("filtre").onchange=drawCommandes;
+function drawCommandes(){
+  const fl=$("filtre").value,list=commandes.filter(c=>!fl||c.statut===fl);
+  $("cList").innerHTML=list.length?list.map(c=>{const d=c.date?.toDate?c.date.toDate().toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}):"";
+    return `<div class="order ${esc(c.statut)}">
+      <div class="ohead"><b>${esc(c.numero)}</b><span>${d}</span></div>
+      <div class="ometa"><div><span>Client :</span> ${esc(c.client)}</div><div><span>Tél :</span> ${esc(c.telephone)}</div>
+        <div><span>Livraison :</span> ${esc(c.livraison)}</div><div><span>Paiement :</span> ${esc(c.paiement)}</div>
+        ${c.adresse?`<div style="grid-column:1/-1"><span>Adresse :</span> ${esc(c.adresse)}</div>`:""}</div>
+      <ul>${(c.articles||[]).map(a=>`<li>${a.quantite} × ${esc(a.nom)} — ${f(a.prix*a.quantite)}</li>`).join("")}</ul>
+      <div class="ofoot"><span class="total">Total : ${f(c.total)}</span>
+        <select data-statut="${c.id}" aria-label="Statut">${Object.entries(STATUTS).map(([k,v])=>`<option value="${k}" ${c.statut===k?"selected":""}>${v}</option>`).join("")}</select></div>
+    </div>`}).join(""):'<p class="empty">Aucune commande pour l\'instant. Elles apparaîtront ici dès qu\'un client valide son panier.</p>';
+}
+$("cList").onchange=async e=>{const s=e.target.closest("[data-statut]");if(!s)return;
+  try{await updateDoc(doc(db,"commandes",s.dataset.statut),{statut:s.value});toast("Statut mis à jour")}catch(err){console.error(err);toast("Mise à jour impossible")}};
+</script>
+</body>
+</html>

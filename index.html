@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moustapha Tech</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: boutique de PC — bandeau promo, menu à rayons, bannière, marques, rayons par usage, FAQ, newsletter, pied 4 colonnes */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#121212; --muted:#5f5b52; --line:#ebe7de;
+  --gold:#121212; --gold-text:#121212; --gold-ink:#ffffff; --dark:#ffffff; --on-dark:#121212; --hot:#d94b2b;
+  --soft:#ffffff; --hover:rgba(0,0,0,.05);
+  --display:"Sora",system-ui,sans-serif; --body:"DM Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+/* Site toujours blanc, écriture noire (pas de mode sombre) */
+.promo-bar{background:#ffffff!important;color:#121212!important;border-bottom:1px solid var(--line)}
+.promo-bar .cd{background:#121212!important;color:#ffffff!important}
+.news{background:#ffffff!important;color:#121212!important;border-top:1px solid var(--line)}
+.news input[type=email]{border:1px solid var(--line)!important}
+.news button{background:#121212!important;color:#ffffff!important}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+button{font:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* Bandeau promo */
+.promo-bar{background:var(--gold);color:var(--gold-ink);font-size:13px;font-weight:500}
+.promo-bar .wrap{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;padding-block:8px;text-align:center}
+.cd{font-family:var(--mono);background:var(--gold-ink);color:var(--gold);padding:2px 8px;border-radius:5px;font-variant-numeric:tabular-nums}
+
+/* En-tête */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--dark);color:var(--on-dark);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;padding-block:14px}
+.logo{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.03em;white-space:nowrap}
+.logo em{font-style:normal;color:var(--gold-text)}
+nav{display:flex;gap:4px;flex:1}
+nav>a,nav>.dd>button{background:none;border:0;color:var(--on-dark);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:500;font-size:14px}
+nav>a:hover,nav>.dd>button:hover{background:var(--hover)}
+.dd{position:relative}
+.dd-menu{position:absolute;top:100%;left:0;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:6px;min-width:240px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.dd-menu a{display:block;padding:9px 12px;border-radius:8px;text-decoration:none;font-size:14px}
+.dd-menu a:hover{background:var(--bg)}
+.tools{display:flex;gap:8px;align-items:center}
+.tools input{width:200px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--soft);color:var(--on-dark);font:inherit;font-size:14px}
+.tools input::placeholder{color:var(--muted)}
+.cartbtn{position:relative;border:0;background:var(--gold);color:var(--gold-ink);padding:9px 14px;border-radius:999px;font-weight:700;font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.burger{display:none;border:1px solid var(--line);background:none;color:var(--on-dark);padding:8px 12px;border-radius:8px;font-weight:700;font-size:13px;letter-spacing:.06em}
+
+/* Bannière */
+.hero{background:var(--soft);color:var(--on-dark);overflow:hidden;border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;padding-block:48px 56px}
+.hero small{font-family:var(--mono);color:var(--gold-text);letter-spacing:.1em;text-transform:uppercase;font-size:12px}
+.hero h1{font-size:clamp(30px,5vw,54px);line-height:1.04;margin-block:12px 14px;max-width:14ch}
+.hero h1 span{color:var(--gold-text)}
+.hero p{max-width:44ch;opacity:.8;margin:0 0 22px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.b1{border:0;background:var(--gold);color:var(--gold-ink);padding:13px 22px;border-radius:999px;font-weight:700}
+.b2{border:1px solid var(--on-dark);background:none;color:var(--on-dark);padding:13px 22px;border-radius:999px;font-weight:500}
+.laptop{width:100%;max-width:460px;justify-self:end}
+
+/* Marques */
+.brands{border-bottom:1px solid var(--line);background:var(--surface)}
+.brands .wrap{display:flex;gap:10px;overflow-x:auto;padding-block:16px}
+.brands button{flex:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 18px;border-radius:999px;font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.02em}
+.brands button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+/* Sections */
+section.block{padding-block:44px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.eyebrow{font-family:var(--mono);font-size:12px;color:var(--gold-text);letter-spacing:.1em;text-transform:uppercase}
+.head h2{font-size:clamp(22px,3vw,30px);margin-top:4px}
+.head p{color:var(--muted);margin:6px 0 0;max-width:52ch}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chips span{font-size:12px;font-weight:500;border:1px solid var(--line);padding:4px 10px;border-radius:999px;background:var(--surface)}
+.badge{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--bg);padding:6px 12px;border-radius:8px;white-space:nowrap}
+.see{border:1px solid var(--ink);background:none;color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;white-space:nowrap}
+.alt{background:var(--soft);border-block:1px solid var(--line)}
+
+/* Produits */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.alt .card{background:var(--surface)}
+.pic{aspect-ratio:4/3;max-width:100%;border-radius:10px;background:linear-gradient(160deg,var(--bg),var(--line));display:grid;place-items:center;position:relative}
+.alt .pic{background:linear-gradient(160deg,var(--surface),var(--line))}
+.pic svg{width:62%}
+.pic img{width:100%;height:100%;object-fit:contain;border-radius:10px;padding:6px}
+.off{position:absolute;top:8px;left:8px;background:var(--hot);color:#fff;font-family:var(--mono);font-size:11px;padding:3px 7px;border-radius:6px}
+.brand{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.card h3{font-family:var(--body);font-size:14px;font-weight:700;line-height:1.35}
+.price{margin-top:auto;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.price b{font-size:17px}
+.price s{font-size:12px;color:var(--muted)}
+.add{border:0;background:var(--ink);color:var(--bg);padding:10px;border-radius:10px;font-weight:700;font-size:14px}
+.add:hover{background:var(--gold);color:var(--gold-ink)}
+.empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:30px 0}
+
+/* FAQ */
+.faq{max-width:760px}
+details{border-bottom:1px solid var(--line);padding-block:14px}
+summary{font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";font-family:var(--mono);color:var(--gold);font-size:18px}
+details[open] summary::after{content:"−"}
+details p{color:var(--muted);margin:8px 0 0}
+
+/* Newsletter */
+.news{background:var(--gold);color:var(--gold-ink)}
+.news .wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;padding-block:36px}
+.news h2{font-size:24px}
+.news p{margin:6px 0 0}
+.news form{display:flex;flex-direction:column;gap:8px}
+.news .row{display:flex;gap:8px}
+.news input[type=email]{flex:1;min-width:0;padding:12px 14px;border-radius:999px;border:0;font:inherit;background:#fff;color:#121212}
+.news button{border:0;background:var(--gold-ink);color:var(--gold);padding:12px 20px;border-radius:999px;font-weight:700}
+.news label{font-size:13px;display:flex;gap:8px;align-items:center}
+
+/* Pied de page */
+footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px solid var(--line)}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;padding-block:40px 28px}
+.fcols h4{font-family:var(--display);font-size:14px;margin:0 0 10px;color:var(--gold-text)}
+.fcols p,.fcols li{opacity:.75;margin:0}
+.fcols ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.social{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.social span{border:1px solid var(--line);padding:5px 10px;border-radius:999px;font-size:12px}
+.fbot{border-top:1px solid var(--line)}
+.fbot .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:16px;font-size:13px;opacity:.75}
+.pays{display:flex;gap:8px;flex-wrap:wrap}
+.pays span{border:1px solid var(--line);padding:3px 9px;border-radius:6px;font-family:var(--mono);font-size:11px}
+
+/* Bouton contact */
+.contact{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:25;border:0;background:var(--gold);color:var(--gold-ink);padding:12px 18px;border-radius:999px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+
+/* Panier */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--surface);z-index:31;display:flex;flex-direction:column;gap:14px;overflow-y:auto;
+  padding:calc(16px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) 18px}
+.dhead{display:flex;justify-content:space-between;align-items:center}
+.x{border:1px solid var(--line);background:none;color:var(--ink);width:36px;height:36px;border-radius:50%}
+.line{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding-block:10px;border-bottom:1px solid var(--line);font-size:14px}
+.line b{min-width:0}
+.line .p{font-family:var(--mono);text-align:right}
+.qty{display:flex;gap:8px;align-items:center}
+.qty button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.drawer label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted)}
+.drawer input,.drawer select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+.tot{display:grid;grid-template-columns:1fr auto;gap:6px;font-variant-numeric:tabular-nums}
+.tot .big{font-weight:700;font-size:17px}
+.pay{border:0;background:var(--ink);color:var(--bg);padding:14px;border-radius:12px;font-weight:700;font-size:16px}
+.ok{border:1px solid var(--gold);border-radius:12px;padding:14px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:40}
+
+@media (max-width:960px){.grid{grid-template-columns:repeat(3,1fr)}.tools input{width:140px}}
+@media (max-width:820px){
+  nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--dark);border-bottom:1px solid var(--line);flex-direction:column;padding:8px max(16px,env(safe-area-inset-left,0px)) 16px}
+  nav.open{display:flex}
+  .burger{display:block}
+  .bar{position:relative;flex-wrap:wrap}
+  .tools{margin-left:auto}
+  .tools input{display:none}
+  .dd-menu{position:static;box-shadow:none;margin-top:4px}
+  .hero .wrap{grid-template-columns:1fr;padding-block:32px 40px}
+  .laptop{justify-self:center;max-width:320px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .news .wrap{grid-template-columns:1fr}
+  .fcols{grid-template-columns:1fr 1fr}
+}
+@media (max-width:460px){.fcols{grid-template-columns:1fr}.card{padding:9px}.price b{font-size:15px}.news .row{flex-direction:column}}
+</style>
+</head>
+<body style="margin:0">
+
+
+<div class="promo-bar"><div class="wrap">
+  <span><b>PC de la semaine</b> : jusqu'à -15 % sur une sélection, stock limité</span>
+  <span class="cd" id="cd">--:--:--</span>
+</div></div>
+
+<header><div class="wrap bar">
+  <div class="logo">MOUSTAPHA<em>.</em>TECH</div>
+  <button class="burger" id="burger" aria-expanded="false" aria-controls="nav">MENU</button>
+  <nav id="nav">
+    <a href="#top">Accueil</a>
+    <a href="#vedette">Boutique</a>
+    <div class="dd">
+      <button id="ddBtn" aria-expanded="false" aria-controls="ddMenu">Nos ordinateurs ▾</button>
+      <div class="dd-menu" id="ddMenu" hidden></div>
+    </div>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Rechercher un PC…" aria-label="Rechercher">
+    <button class="cartbtn" id="openCart">Panier · <span id="cartTotal">0 F</span></button>
+  </div>
+</div></header>
+
+<main id="top">
+  <section class="hero"><div class="wrap">
+    <div>
+      <small>Ordinateurs neufs · Dakar</small>
+      <h1>Le bon PC pour <span>chaque usage</span>.</h1>
+      <p>Étudiants, bureau, gaming ou montage vidéo : des portables neufs, garantis 12 mois, livrés en 24 à 48 h à Dakar.</p>
+      <div class="btns"><button class="b1" data-go="vedette">Voir la boutique</button><button class="b2" data-go="faq">Livraison et garantie</button></div>
+    </div>
+    <svg class="laptop" viewBox="0 0 400 260" fill="none" aria-hidden="true">
+      <rect x="60" y="20" width="280" height="180" rx="12" fill="var(--surface)" opacity=".08"/>
+      <rect x="60" y="20" width="280" height="180" rx="12" stroke="var(--gold)" stroke-width="4"/>
+      <rect x="78" y="38" width="244" height="144" rx="4" fill="var(--gold)" opacity=".14"/>
+      <path d="M100 150 L150 110 L190 135 L240 80 L300 120" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M20 210 H380 L360 236 H40 Z" fill="var(--gold)"/>
+      <rect x="170" y="212" width="60" height="6" rx="3" fill="var(--gold-ink)" opacity=".4"/>
+    </svg>
+  </div></section>
+
+  <div class="brands"><div class="wrap" id="brands" role="group" aria-label="Filtrer par marque"></div></div>
+
+  <section class="block" id="vedette"><div class="wrap">
+    <div class="head"><div><div class="eyebrow">Sélection</div><h2 id="vTitle">Produits vedettes</h2></div><button class="see" id="reset" hidden>Tout afficher</button></div>
+    <div class="grid" id="gVedette"></div>
+  </div></section>
+
+  <div id="rayons"></div>
+
+  <section class="block" id="faq"><div class="wrap faq">
+    <div class="head"><div><div class="eyebrow">Questions fréquentes</div><h2>Avant de commander</h2></div></div>
+    <details open><summary>Quels sont les délais de livraison ?</summary><p>24 à 48 h à Dakar et banlieue. Comptez 2 à 4 jours pour les autres régions du Sénégal.</p></details>
+    <details><summary>Comment payer ?</summary><p>Par Wave, Orange Money ou carte bancaire. Le paiement à la livraison est possible à Dakar.</p></details>
+    <details><summary>Les ordinateurs sont-ils garantis ?</summary><p>Oui, tous nos ordinateurs neufs sont garantis 12 mois, facture à l'appui.</p></details>
+    <details><summary>Puis-je retourner un produit ?</summary><p>Vous avez 7 jours pour signaler un défaut. L'appareil est échangé après vérification en boutique.</p></details>
+    <details><summary>Comment vous contacter ?</summary><p>Par WhatsApp ou téléphone au +221 77 000 00 00, du lundi au samedi de 9 h à 20 h.</p></details>
+  </div></section>
+
+  <section class="news"><div class="wrap">
+    <div><h2>Recevez les promos en premier</h2><p>Une alerte par semaine avec le PC de la semaine et les arrivages.</p></div>
+    <form id="newsForm">
+      <div class="row"><input type="email" id="nmail" required placeholder="Votre e-mail" aria-label="Votre e-mail"><button type="submit">S'inscrire</button></div>
+      <label><input type="checkbox" id="nok" required> J'accepte de recevoir les offres par e-mail.</label>
+      <span id="nmsg" hidden><b>Inscription enregistrée.</b> Merci !</span>
+    </form>
+  </div></section>
+</main>
+
+<footer id="contact">
+  <div class="wrap fcols">
+    <div><h4>MOUSTAPHA.TECH</h4><p>Ordinateurs portables neufs et accessoires, livrés partout au Sénégal.</p>
+      <div class="social"><span>Facebook</span><span>Instagram</span><span>TikTok</span><span>WhatsApp</span></div></div>
+    <div><h4>Catégories</h4><ul id="fcats"></ul></div>
+    <div><h4>Informations</h4><ul><li>Livraison et retours</li><li>Garantie</li><li>FAQ</li><li>Conditions de vente</li><li>À propos</li></ul></div>
+    <div><h4>Contact</h4><ul><li>+221 77 000 00 00</li><li>Dakar, Sénégal</li><li>Lun–sam, 9 h–20 h</li></ul></div>
+  </div>
+  <div class="fbot"><div class="wrap"><span>© 2026 Moustapha Tech. Tous droits réservés.</span><div class="pays"><span>WAVE</span><span>ORANGE MONEY</span><span>CARTE</span></div></div></div>
+</footer>
+
+<button class="contact" id="contactBtn">Contactez-nous</button>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Panier">
+  <div class="dhead"><h2>Votre panier</h2><button class="x" id="closeCart" aria-label="Fermer">✕</button></div>
+  <div id="lines"></div>
+  <form id="checkout" hidden><div style="display:grid;gap:12px">
+    <label for="nom">Nom complet<input id="nom" required placeholder="Ex. Awa Diop"></label>
+    <label for="tel">Téléphone<input id="tel" required inputmode="tel" placeholder="77 123 45 67"></label>
+    <label for="zone">Livraison<select id="zone">
+      <option value="0">Retrait en boutique (gratuit)</option>
+      <option value="2500">Dakar centre (2 500 F)</option>
+      <option value="4000">Banlieue : Pikine, Guédiawaye… (4 000 F)</option>
+      <option value="5000">Rufisque, Keur Massar, Diamniadio (5 000 F)</option>
+      <option value="7000">Autres régions (7 000 F)</option>
+    </select></label>
+    <label for="adr">Adresse ou point de repère<input id="adr" placeholder="Ex. Sacré-Cœur 3, près de la pharmacie"></label>
+    <label for="paym">Paiement<select id="paym"><option>Wave</option><option>Orange Money</option><option>À la livraison</option></select></label>
+    <div class="tot"><span>Sous-total</span><span id="sub"></span><span>Livraison</span><span id="liv"></span><span class="big">Total</span><span class="big" id="total"></span></div>
+    <button class="pay" type="submit">Valider la commande</button>
+  </div></form>
+  <div id="done" hidden></div>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const CATS=[
+ {k:"graph",n:"Graphisme & montage vidéo",d:"Écrans précis et cartes graphiques dédiées pour Photoshop, Premiere ou DaVinci.",chips:["GPU dédié","Écran 100 % sRGB","32 Go RAM"]},
+ {k:"bureau",n:"Bureautique",d:"Rapides et fiables pour Word, Excel, réunions en ligne et navigation.",chips:["Léger & portable","Longue autonomie","SSD rapide"]},
+ {k:"gaming",n:"Gaming",d:"Écrans à haute fréquence et refroidissement renforcé pour jouer sans ralentir.",chips:["RTX","Écran 144 Hz+","Clavier rétroéclairé"],badge:"144+ FPS"},
+ {k:"etud",n:"Étudiants",d:"Le meilleur rapport prix/performance pour les cours, les exposés et les séries.",chips:["Petit budget","Léger","Autonomie"],badge:"Budget / Performance"},
+ {k:"pro",n:"Professionnel & entreprise",d:"Sécurité, solidité et service pour les équipes.",chips:["Lecteur d'empreinte","Châssis renforcé"]},
+ {k:"2en1",n:"2-en-1 convertibles",d:"Écran tactile qui se replie en tablette.",chips:["Tactile","Stylet"]},
+ {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro neufs, puces Apple.",chips:["macOS","Puce M"]}
+];
+let P=[]; // rempli automatiquement depuis la base de données
+const SHOWN=["graph","bureau","gaming","etud"];
+const BRANDS=["Tout","MSI","Lenovo","HP","Dell","ASUS ROG","ASUS","Apple"];
+const $=id=>document.getElementById(id);
+const f=n=>n.toLocaleString("fr-FR").replace(/ | /g," ")+" F CFA";
+const pic='<svg viewBox="0 0 120 80" fill="none" aria-hidden="true"><rect x="22" y="8" width="76" height="50" rx="4" stroke="var(--ink)" stroke-width="3"/><rect x="29" y="15" width="62" height="36" rx="2" fill="var(--gold)" opacity=".35"/><path d="M8 62h104l-6 10H14z" fill="var(--ink)"/></svg>';
+const card=p=>`<article class="card"><div class="pic">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.img?`<img src="${p.img}" alt="${p.n}" loading="lazy">`:pic}</div>
+ <div class="brand">${p.b}</div><h3>${p.n}</h3>
+ <div class="price"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>
+ <button class="add" data-id="${p.id}">Ajouter au panier</button></article>`;
+
+let brand="Tout",q="",filterCat=null,cart={};
+try{cart=JSON.parse(localStorage.getItem("mt-cart")||"{}")||{}}catch(e){}
+const save=()=>{try{localStorage.setItem("mt-cart",JSON.stringify(cart))}catch(e){}};
+
+$("ddMenu").innerHTML=CATS.map(c=>`<a href="#vedette" data-cat="${c.k}">${c.n}</a>`).join("");
+$("fcats").innerHTML=CATS.slice(0,5).map(c=>`<li>${c.n}</li>`).join("");
+$("brands").innerHTML=BRANDS.map(b=>`<button data-b="${b}" aria-pressed="${b==="Tout"}">${b}</button>`).join("");
+
+function renderRayons(){
+$("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const items=P.filter(p=>p.c.includes(k)).slice(0,4);if(!items.length)return "";
+ return `<section class="block ${i%2===0?"alt":""}"><div class="wrap">
+ <div class="head"><div><div class="eyebrow">Catégorie</div><h2>${c.n}</h2><p>${c.d}</p><div class="chips">${c.chips.map(x=>`<span>${x}</span>`).join("")}</div></div>
+ <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${c.badge?`<span class="badge">${c.badge}</span>`:""}<button class="see" data-cat="${k}">Voir tout</button></div></div>
+ <div class="grid">${items.map(card).join("")}</div></div></section>`}).join("");
+}
+
+function renderVedette(){
+  let list=P.filter(p=>(brand==="Tout"||p.b===brand)&&(!filterCat||p.c.includes(filterCat))&&(!q||(p.b+" "+p.n).toLowerCase().includes(q)));
+  if(brand==="Tout"&&!filterCat&&!q){const v=list.filter(p=>p.v);if(v.length)list=v;}
+  $("vTitle").textContent=filterCat?CATS.find(c=>c.k===filterCat).n:q?`Résultats pour « ${q} »`:brand!=="Tout"?brand:"Produits vedettes";
+  $("reset").hidden=brand==="Tout"&&!filterCat&&!q;
+  $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun ordinateur ne correspond. Essayez une autre marque ou un autre mot.</p>':'<p class="empty">Les produits arrivent bientôt.</p>');
+}
+function goVedette(){document.getElementById("vedette").scrollIntoView({behavior:"smooth"})}
+$("brands").onclick=e=>{const b=e.target.closest("button");if(!b)return;brand=b.dataset.b;filterCat=null;
+  [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x===b));renderVedette()};
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-cat]");if(c){e.preventDefault();filterCat=c.dataset.cat;brand="Tout";
+    [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
+  const g=e.target.closest("[data-go]");if(g)document.getElementById(g.dataset.go).scrollIntoView({behavior:"smooth"});
+  const a=e.target.closest(".add");if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
+  if(!e.target.closest(".dd"))$("ddMenu").hidden=true;
+});
+$("reset").onclick=()=>{brand="Tout";filterCat=null;q="";$("q").value="";[...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
+$("q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderVedette()};
+$("ddBtn").onclick=()=>{const m=$("ddMenu");m.hidden=!m.hidden;$("ddBtn").setAttribute("aria-expanded",!m.hidden)};
+$("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
+function closeMenus(){$("ddMenu").hidden=true;$("nav").classList.remove("open")}
+$("nav").addEventListener("click",e=>{if(e.target.matches("nav>a"))closeMenus()});
+
+// Compte à rebours jusqu'à dimanche minuit
+function tick(){const now=new Date(),end=new Date(now);end.setDate(now.getDate()+((7-now.getDay())%7||7));end.setHours(0,0,0,0);
+  let s=Math.max(0,Math.floor((end-now)/1000));const d=Math.floor(s/86400);s%=86400;
+  const h=String(Math.floor(s/3600)).padStart(2,"0"),m=String(Math.floor(s%3600/60)).padStart(2,"0"),x=String(s%60).padStart(2,"0");
+  $("cd").textContent=(d?d+" j ":"")+`${h}:${m}:${x}`}
+tick();setInterval(tick,1000);
+
+// Panier
+const subtotal=()=>Object.keys(cart).reduce((a,id)=>a+(P.find(x=>x.id==id)?.p||0)*cart[id],0);
+function upd(){$("cartTotal").textContent=subtotal().toLocaleString("fr-FR").replace(/ | /g," ")+" F"}
+let tt;function toast(m){$("toast").textContent=m;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>$("toast").hidden=true,1600)}
+function drawCart(){const ids=Object.keys(cart).filter(k=>cart[k]>0);$("done").hidden=true;
+  if(!ids.length){$("lines").innerHTML='<p style="color:var(--muted)">Votre panier est vide. Ajoutez un ordinateur pour commander.</p>';$("checkout").hidden=true;return}
+  $("lines").innerHTML=ids.map(id=>{const p=P.find(x=>x.id==id);return `<div class="line"><b>${p.b} ${p.n.split("·")[0]}</b><span class="p">${f(p.p*cart[id])}</span>
+  <div class="qty"><button data-d="-1" data-id="${id}" aria-label="Retirer un">−</button><span>${cart[id]}</span><button data-d="1" data-id="${id}" aria-label="Ajouter un">+</button></div></div>`}).join("");
+  $("checkout").hidden=false;totals()}
+function totals(){const s=subtotal(),l=+$("zone").value;$("sub").textContent=f(s);$("liv").textContent=l?f(l):"Gratuit";$("total").textContent=f(s+l);return s+l}
+$("zone").onchange=totals;
+$("lines").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;const id=b.dataset.id;cart[id]=Math.max(0,cart[id]+ +b.dataset.d);if(!cart[id])delete cart[id];save();upd();drawCart()};
+$("checkout").onsubmit=async e=>{e.preventDefault();
+  const btn=$("checkout").querySelector(".pay");btn.disabled=true;btn.textContent="Envoi en cours…";
+  const t=totals(),n="MT-"+Math.floor(1000+Math.random()*9000);
+  const articles=Object.keys(cart).map(id=>{const p=P.find(x=>x.id==id);return p?{id:String(id),nom:p.b+" "+p.n,prix:p.p,quantite:cart[id]}:null}).filter(Boolean);
+  try{
+    await addDoc(collection(db,"commandes"),{numero:n,client:$("nom").value.trim(),telephone:$("tel").value.trim(),
+      livraison:$("zone").options[$("zone").selectedIndex].text,fraisLivraison:+$("zone").value,adresse:$("adr").value.trim(),
+      paiement:$("paym").value,articles,total:t,statut:"nouvelle",date:serverTimestamp()});
+    $("done").innerHTML=`<div class="ok"><b>Commande ${n} enregistrée.</b><br>Merci ${$("nom").value}. Montant : ${f(t)}, paiement par ${$("paym").value}. Nous vous appelons au ${$("tel").value} pour confirmer la livraison.</div>`;
+    $("done").hidden=false;$("checkout").hidden=true;$("lines").innerHTML="";cart={};save();upd();
+  }catch(err){console.error(err);toast("La commande n'a pas été envoyée. Vérifiez votre connexion et réessayez.");}
+  finally{btn.disabled=false;btn.textContent="Valider la commande";}
+};
+const open=v=>{$("drawer").hidden=$("scrim").hidden=!v;if(v)drawCart()};
+$("openCart").onclick=()=>open(true);$("closeCart").onclick=()=>open(false);$("scrim").onclick=()=>open(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){open(false);closeMenus()}});
+$("contactBtn").onclick=()=>document.getElementById("contact").scrollIntoView({behavior:"smooth"});
+$("newsForm").onsubmit=e=>{e.preventDefault();$("nmsg").hidden=false;$("nmail").value="";$("nok").checked=false};
+renderVedette();renderRayons();upd();
+
+// Produits en direct depuis la base de données
+onSnapshot(collection(db,"produits"),snap=>{
+  P=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||""}});
+  for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
+  save();renderVedette();renderRayons();upd();
+},err=>{console.error(err);$("gVedette").innerHTML='<p class="empty">Impossible de charger les produits pour le moment. Rechargez la page.</p>';});
+</script>
+
+</body>
+</html>
