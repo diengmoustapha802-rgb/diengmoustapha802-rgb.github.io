@@ -297,7 +297,9 @@ const CATS=[
  {k:"2en1",n:"2-en-1 convertibles",d:"Écran tactile qui se replie en tablette.",chips:["Tactile","Stylet"]},
  {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro neufs, puces Apple.",chips:["macOS","Puce M"]}
 ];
-let P=[]; // rempli automatiquement depuis la base de données
+let P=[];
+// Sujet secret pour les notifications de commande (application ntfy sur ton téléphone)
+const NTFY_SUJET="moustaphatech-commandes-k7q4z9"; // rempli automatiquement depuis la base de données
 const SHOWN=["graph","bureau","gaming","etud"];
 const BRANDS=["Tout","MSI","Lenovo","HP","Dell","ASUS ROG","ASUS","Apple"];
 const $=id=>document.getElementById(id);
@@ -375,7 +377,13 @@ $("checkout").onsubmit=async e=>{e.preventDefault();
     await addDoc(collection(db,"commandes"),{numero:n,client:$("nom").value.trim(),telephone:$("tel").value.trim(),
       livraison:$("zone").options[$("zone").selectedIndex].text,fraisLivraison:+$("zone").value,adresse:$("adr").value.trim(),
       paiement:$("paym").value,articles,total:t,statut:"nouvelle",date:serverTimestamp()});
-    $("done").innerHTML=`<div class="ok"><b>Commande ${n} enregistrée.</b><br>Merci ${$("nom").value}. Montant : ${f(t)}, paiement par ${$("paym").value}. Nous vous appelons au ${$("tel").value} pour confirmer la livraison.</div>`;
+    const msg=`Bonjour Moustapha Tech, je viens de passer la commande ${n} :\n`+articles.map(a=>`- ${a.quantite} x ${a.nom} (${f(a.prix*a.quantite)})`).join("\n")
+      +`\nTotal : ${f(t)}\nLivraison : ${$("zone").options[$("zone").selectedIndex].text}${$("adr").value.trim()?" - "+$("adr").value.trim():""}\nPaiement : ${$("paym").value}\nNom : ${$("nom").value.trim()} - Tél : ${$("tel").value.trim()}`;
+    const wa="https://wa.me/221788740712?text="+encodeURIComponent(msg);
+    // Notification instantanée sur le téléphone du gérant (application ntfy)
+    try{fetch("https://ntfy.sh/"+NTFY_SUJET+"?title="+encodeURIComponent("Nouvelle commande "+n+" - "+f(t))+"&priority=high&tags=moneybag",{method:"POST",body:msg});}catch(e){}
+    $("done").innerHTML=`<div class="ok"><b>Commande ${n} enregistrée.</b><br>Merci ${$("nom").value}. Montant : ${f(t)}, paiement par ${$("paym").value}.<br><br><b>Dernière étape :</b> envoyez-nous votre commande sur WhatsApp pour qu'on la confirme tout de suite.</div>
+      <a class="pay" style="display:block;text-align:center;text-decoration:none;margin-top:12px;background:#1f9d55;color:#fff" href="${wa}" target="_blank" rel="noopener">Envoyer ma commande sur WhatsApp</a>`;
     $("done").hidden=false;$("checkout").hidden=true;$("lines").innerHTML="";cart={};save();upd();
   }catch(err){console.error(err);toast("La commande n'a pas été envoyée. Vérifiez votre connexion et réessayez.");}
   finally{btn.disabled=false;btn.textContent="Valider la commande";}
