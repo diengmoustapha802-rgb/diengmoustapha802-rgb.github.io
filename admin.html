@@ -115,7 +115,8 @@ main{padding-block:24px 60px}
     </div>
     <!-- PRODUITS -->
     <section id="tab-produits" hidden>
-      <div class="top"><h2>Mes produits</h2><button class="btn" id="newBtn">+ Ajouter un produit</button></div>
+      <div class="top"><h2>Mes produits</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn ghost" style="cursor:pointer;display:inline-block">⇪ Importer un fichier<input type="file" id="impFile" accept=".json,application/json" hidden></label><button class="btn" id="newBtn">+ Ajouter un produit</button></div></div>
+      <p id="impMsg" class="empty" hidden style="text-align:left;padding:8px 0"></p>
 
       <form class="form" id="pForm" hidden>
         <h3 id="formTitle" style="font-size:17px">Nouveau produit</h3>
@@ -128,6 +129,7 @@ main{padding-block:24px 60px}
           <label for="fAncien">Ancien prix barré (facultatif, pour une promo)<input id="fAncien" type="number" min="0" step="500" placeholder="Laisser vide si pas de promo"></label>
           <label class="check" style="align-self:end"><input type="checkbox" id="fVedette"> Mettre en avant dans « Produits vedettes »</label>
         </div>
+        <label for="fEtat">État<select id="fEtat"><option value="neuf">Neuf</option><option value="reconditionne">Reconditionné</option></select></label>
         <div><div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:6px">Rayons</div><div class="cats" id="fCats"></div></div>
         <div class="photo">
           <img id="fPreview" alt="" hidden>
@@ -154,13 +156,13 @@ main{padding-block:24px 60px}
   </main>
 </div>
 
-<datalist id="marques"><option>Apple</option><option>ASUS</option><option>ASUS ROG</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option><option>Xiaomi</option><option>Tecno</option><option>Infinix</option><option>Google Pixel</option><option>Logitech</option><option>JBL</option><option>Anker</option></datalist>
+<datalist id="marques"><option>Apple</option><option>ASUS</option><option>ASUS ROG</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option><option>Microsoft</option><option>Xiaomi</option><option>Tecno</option><option>Infinix</option><option>Google Pixel</option><option>Logitech</option><option>JBL</option><option>Anker</option></datalist>
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
 import { db, auth } from "./firebase.js";
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const RAYONS=[["graph","Graphisme & montage"],["bureau","Bureautique"],["gaming","Gaming"],["etud","Étudiants"],["pro","Professionnel"],["2en1","2-en-1"],["apple","MacBook & Apple"],["iphone","iPhone"],["android","Android"],["montre","Apple Watch & montres"],["acc","Accessoires"]];
 const STATUTS={nouvelle:"Nouvelle",confirmee:"Confirmée",livree:"Livrée",annulee:"Annulée"};
@@ -209,7 +211,7 @@ function denied(err){console.error(err);
 function drawProduits(){
   $("pList").innerHTML=produits.length?produits.map(p=>`<div class="item">
     ${p.image?`<img src="${p.image}" alt="">`:'<div class="ph"></div>'}
-    <div><div class="n">${esc(p.marque)} · ${esc(p.nom)}${p.vedette?'<span class="tag">VEDETTE</span>':""}${p.ancienPrix?'<span class="tag">PROMO</span>':""}</div>
+    <div><div class="n">${esc(p.marque)} · ${esc(p.nom)}${p.vedette?'<span class="tag">VEDETTE</span>':""}${p.ancienPrix?'<span class="tag">PROMO</span>':""}${p.etat==="reconditionne"?'<span class="tag">RECONDITIONNÉ</span>':""}</div>
       <div class="m">${f(p.prix)}${p.ancienPrix?` <s>${f(p.ancienPrix)}</s>`:""}</div></div>
     <div class="act"><button class="btn ghost" data-edit="${p.id}">Modifier</button><button class="btn ghost" data-del="${p.id}">Supprimer</button></div>
   </div>`).join(""):'<p class="empty">Aucun produit pour l\'instant. Clique sur « + Ajouter un produit » pour mettre le premier en vente.</p>';
@@ -218,7 +220,7 @@ function openForm(p){
   editId=p?p.id:null;photo=p?.image||"";
   $("formTitle").textContent=p?"Modifier le produit":"Nouveau produit";
   $("fNom").value=p?.nom||"";$("fMarque").value=p?.marque||"";$("fPrix").value=p?.prix||"";$("fAncien").value=p?.ancienPrix||"";
-  $("fVedette").checked=!!p?.vedette;$("fPhoto").value="";
+  $("fVedette").checked=!!p?.vedette;$("fEtat").value=p?.etat||"neuf";$("fPhoto").value="";
   $("fCats").querySelectorAll("input").forEach(i=>i.checked=(p?.categories||[]).includes(i.value));
   $("fPreview").src=photo;$("fPreview").hidden=!photo;$("formErr").hidden=true;
   $("pForm").hidden=false;$("pForm").scrollIntoView({behavior:"smooth"});$("fNom").focus();
@@ -239,7 +241,7 @@ $("pForm").onsubmit=async e=>{e.preventDefault();
   const cats=[...$("fCats").querySelectorAll("input:checked")].map(i=>i.value);
   if(!cats.length){$("formErr").textContent="Choisis au moins un rayon pour que le produit apparaisse dans la boutique.";$("formErr").hidden=false;return}
   const data={nom:$("fNom").value.trim(),marque:$("fMarque").value.trim(),prix:+$("fPrix").value,ancienPrix:+$("fAncien").value||0,
-    categories:cats,vedette:$("fVedette").checked,image:photo,maj:serverTimestamp()};
+    categories:cats,vedette:$("fVedette").checked,etat:$("fEtat").value,image:photo,maj:serverTimestamp()};
   if(data.ancienPrix&&data.ancienPrix<=data.prix){$("formErr").textContent="L'ancien prix doit être plus élevé que le prix de vente.";$("formErr").hidden=false;return}
   $("saveBtn").disabled=true;$("saveBtn").textContent="Enregistrement…";
   try{editId?await updateDoc(doc(db,"produits",editId),data):await addDoc(collection(db,"produits"),data);
@@ -293,6 +295,22 @@ $("purge").onclick=async()=>{const list=commandes.filter(c=>c.statut==="annulee"
   $("purge").disabled=true;let ok=0;
   for(const c of list){try{await deleteDoc(doc(db,"commandes",c.id));ok++}catch(err){console.error(err)}}
   $("purge").disabled=false;toast(ok===list.length?`${ok} commande(s) supprimée(s)`:`${ok} sur ${list.length} supprimée(s) (vérifie les règles Firebase)`)};
+
+// Import en masse depuis un fichier .json (liste de produits)
+$("impFile").onchange=async()=>{const file=$("impFile").files[0];$("impFile").value="";if(!file)return;
+  let list;try{list=JSON.parse(await file.text())}catch(e){toast("Fichier illisible");return}
+  if(!Array.isArray(list)||!list.length){toast("Le fichier ne contient aucun produit");return}
+  if(!confirm(`Importer ${list.length} produits dans la boutique ? Les produits déjà importés avec ce fichier seront mis à jour, pas en double.`))return;
+  const m=$("impMsg");m.hidden=false;let ok=0,ko=0;
+  for(const x of list){
+    const data={nom:String(x.nom||"").trim(),marque:String(x.marque||"").trim(),prix:+x.prix||0,ancienPrix:+x.ancienPrix||0,
+      categories:Array.isArray(x.categories)&&x.categories.length?x.categories:["bureau"],vedette:!!x.vedette,etat:x.etat==="reconditionne"?"reconditionne":"neuf",
+      image:String(x.image||""),maj:serverTimestamp()};
+    if(!data.nom||!data.prix){ko++;continue}
+    try{x.id?await setDoc(doc(db,"produits",String(x.id)),data):await addDoc(collection(db,"produits"),data);ok++}catch(err){console.error(err);ko++}
+    m.textContent=`Import en cours… ${ok+ko} / ${list.length}`;
+  }
+  m.textContent=`Import terminé : ${ok} produit(s) ajouté(s)`+(ko?`, ${ko} en erreur.`:".");toast("Import terminé")};
 </script>
 </body>
 </html>

@@ -131,6 +131,7 @@ section.block{padding-block:44px}
 .pic{overflow:hidden}
 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:6px;background:#fff}
 .pic .off{z-index:1}
+.rec{position:absolute;top:8px;right:8px;z-index:1;background:#fff;color:#121212;border:1px solid #121212;font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase}
 .off{position:absolute;top:8px;left:8px;background:var(--hot);color:#fff;font-family:var(--mono);font-size:11px;padding:3px 7px;border-radius:6px}
 .brand{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .card h3{font-family:var(--body);font-size:14px;font-weight:700;line-height:1.35}
@@ -286,9 +287,9 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <div>
       <small>Ordinateurs, téléphones, Apple Watch & accessoires · Dakar</small>
       <h1>Le bon PC pour <span>chaque usage</span>.</h1>
-      <p>Ordinateurs, iPhone, Android, Apple Watch et accessoires neufs, garantis 12 mois, livrés en 24 à 48 h à Dakar.</p>
+      <p>Ordinateurs neufs et reconditionnés, iPhone, Android, Apple Watch et accessoires, garantis et livrés en 24 à 48 h à Dakar.</p>
       <div class="btns"><button class="b1" data-go="vedette">Voir la boutique</button><button class="b2" data-go="faq">Livraison et garantie</button></div>
-      <div class="stats"><div><b data-n="12">12</b><span>mois de garantie</span></div><div><b data-n="48" data-p="h">48h</b><span>livraison max. à Dakar</span></div><div><b data-n="100" data-p=" %">100 %</b><span>produits neufs</span></div></div>
+      <div class="stats"><div><b data-n="12">12</b><span>mois de garantie sur le neuf</span></div><div><b data-n="48" data-p="h">48h</b><span>livraison max. à Dakar</span></div><div><b data-n="7" data-p=" j">7 j</b><span>pour signaler un défaut</span></div></div>
     </div>
     <div class="scene" aria-hidden="true">
       <video id="heroVid" class="hvid" muted autoplay loop playsinline preload="metadata" src="hero.mp4" hidden></video>
@@ -347,7 +348,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <div class="head"><div><div class="eyebrow">Questions fréquentes</div><h2>Avant de commander</h2></div></div>
     <details open><summary>Quels sont les délais de livraison ?</summary><p>24 à 48 h à Dakar et banlieue. Comptez 2 à 4 jours pour les autres régions du Sénégal.</p></details>
     <details><summary>Comment payer ?</summary><p>Par Wave, Orange Money ou carte bancaire. Le paiement à la livraison est possible à Dakar.</p></details>
-    <details><summary>Les ordinateurs sont-ils garantis ?</summary><p>Oui, tous nos ordinateurs neufs sont garantis 12 mois, facture à l'appui.</p></details>
+    <details><summary>Les ordinateurs sont-ils garantis ?</summary><p>Oui. Les ordinateurs neufs sont garantis 12 mois, facture à l'appui. Les ordinateurs reconditionnés (étiquette « Reconditionné ») ont leur propre garantie, précisée à la commande.</p></details>
     <details><summary>Puis-je retourner un produit ?</summary><p>Vous avez 7 jours pour signaler un défaut. L'appareil est échangé après vérification en boutique.</p></details>
     <details><summary>Comment vous contacter ?</summary><p>Par WhatsApp ou téléphone au +221 78 874 07 12, du lundi au samedi de 9 h à 20 h.</p></details>
   </div></section>
@@ -364,7 +365,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
 
 <footer id="contact">
   <div class="wrap fcols">
-    <div><h4>MOUSTAPHA.TECH</h4><p>Ordinateurs portables neufs et accessoires, livrés partout au Sénégal.</p>
+    <div><h4>MOUSTAPHA.TECH</h4><p>Ordinateurs neufs et reconditionnés, téléphones et accessoires, livrés partout au Sénégal.</p>
       <div class="social"><span>Facebook</span><span>Instagram</span><span>TikTok</span><a href="https://wa.me/221788740712?text=Bonjour%20Moustapha%20Tech%2C%20j%27ai%20une%20question%20sur%20un%20ordinateur." target="_blank" rel="noopener" style="text-decoration:none"><span>WhatsApp</span></a></div></div>
     <div><h4>Catégories</h4><ul id="fcats"></ul></div>
     <div><h4>Informations</h4><ul><li>Livraison et retours</li><li>Garantie</li><li>FAQ</li><li>Conditions de vente</li><li>À propos</li></ul></div>
@@ -442,7 +443,7 @@ const CATS=[
  {k:"etud",n:"Étudiants",d:"Le meilleur rapport prix/performance pour les cours, les exposés et les séries.",chips:["Petit budget","Léger","Autonomie"],badge:"Budget / Performance"},
  {k:"pro",n:"Professionnel & entreprise",d:"Sécurité, solidité et service pour les équipes.",chips:["Lecteur d'empreinte","Châssis renforcé"]},
  {k:"2en1",n:"2-en-1 convertibles",d:"Écran tactile qui se replie en tablette.",chips:["Tactile","Stylet"]},
- {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro neufs, puces Apple.",chips:["macOS","Puce M"]},
+ {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro, neufs et reconditionnés.",chips:["macOS","Puce M"]},
  {k:"iphone",n:"iPhone",d:"iPhone neufs, toutes capacités, garantis.",chips:["iOS","Face ID","Neuf scellé"]},
  {k:"android",n:"Smartphones Android",d:"Samsung, Xiaomi, Tecno, Pixel… des téléphones Android neufs pour tous les budgets.",chips:["Double SIM","Grande autonomie","Tous budgets"]},
  {k:"montre",n:"Apple Watch & montres",d:"Apple Watch neuves et montres connectées, garanties.",chips:["Apple Watch","Santé & sport","GPS"]},
@@ -452,12 +453,12 @@ let P=[];
 // Sujet secret pour les notifications de commande (application ntfy sur ton téléphone)
 const NTFY_SUJET="moustaphatech-commandes-k7q4z9"; // rempli automatiquement depuis la base de données
 const SHOWN=["graph","bureau","gaming","etud","pro","2en1","apple","iphone","android","montre","acc"];
-const BRANDS=["Tout","MSI","Lenovo","HP","Dell","ASUS ROG","ASUS","Apple","Samsung"];
+const BRANDS=["Tout","HP","Dell","Lenovo","Apple","Microsoft","MSI","ASUS ROG","ASUS","Samsung"];
 const QUICK=[["iphone","iPhone"],["android","Android"],["montre","Apple Watch"],["acc","Accessoires"]];
 const $=id=>document.getElementById(id);
 const f=n=>n.toLocaleString("fr-FR").replace(/ | /g," ")+" F CFA";
 const pic='<svg viewBox="0 0 120 80" fill="none" aria-hidden="true"><rect x="22" y="8" width="76" height="50" rx="4" stroke="var(--ink)" stroke-width="3"/><rect x="29" y="15" width="62" height="36" rx="2" fill="var(--gold)" opacity=".35"/><path d="M8 62h104l-6 10H14z" fill="var(--ink)"/></svg>';
-const card=p=>`<article class="card"><div class="pic">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.img?`<img src="${p.img}" alt="${p.n}" loading="lazy">`:pic}</div>
+const card=p=>`<article class="card"><div class="pic">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.r?`<span class="rec">Reconditionné</span>`:""}${pic}${p.img?`<img src="${p.img}" alt="${p.n}" loading="lazy" onerror="this.remove()">`:""}</div>
  <div class="brand">${p.b}</div><h3>${p.n}</h3>
  <div class="price"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>
  <button class="add" data-id="${p.id}">Ajouter au panier</button></article>`;
@@ -576,7 +577,7 @@ renderVedette();renderRayons();upd();
 
 // Produits en direct depuis la base de données
 onSnapshot(collection(db,"produits"),snap=>{
-  P=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||""}});
+  P=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",r:x.etat==="reconditionne"}});
   for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
   save();renderVedette();renderRayons();upd();
 },err=>{console.error(err);$("gVedette").innerHTML='<p class="empty">Impossible de charger les produits pour le moment. Rechargez la page.</p>';});
