@@ -6,6 +6,8 @@
 <title>Moustapha Tech</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
+[hidden]{display:none!important}
+img{max-width:100%}
 /* Layout: boutique de PC — bandeau promo, menu à rayons, bannière, marques, rayons par usage, FAQ, newsletter, pied 4 colonnes */
 :root{
   --bg:#ffffff; --surface:#ffffff; --ink:#121212; --muted:#5f5b52; --line:#ebe7de;
@@ -88,7 +90,9 @@ section.block{padding-block:44px}
 .pic{aspect-ratio:4/3;max-width:100%;border-radius:10px;background:linear-gradient(160deg,var(--bg),var(--line));display:grid;place-items:center;position:relative}
 .alt .pic{background:linear-gradient(160deg,var(--surface),var(--line))}
 .pic svg{width:62%}
-.pic img{width:100%;height:100%;object-fit:contain;border-radius:10px;padding:6px}
+.pic{overflow:hidden}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:6px;background:#fff}
+.pic .off{z-index:1}
 .off{position:absolute;top:8px;left:8px;background:var(--hot);color:#fff;font-family:var(--mono);font-size:11px;padding:3px 7px;border-radius:6px}
 .brand{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .card h3{font-family:var(--body);font-size:14px;font-weight:700;line-height:1.35}
