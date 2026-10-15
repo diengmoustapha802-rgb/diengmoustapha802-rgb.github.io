@@ -131,6 +131,13 @@ header{border-bottom:2px solid var(--navy)!important}
 .f-thumbs button{flex:none;width:68px;height:68px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:4px}
 .f-thumbs button[aria-pressed="true"]{border:2px solid var(--navy)}
 .f-thumbs img{width:100%;height:100%;object-fit:contain}
+/* Accueil comme Infinitech : vedette (8), rayons de 4 produits + bouton « Voir tous » */
+.more{display:flex;justify-content:center;margin-top:22px}
+.more .see{padding:12px 26px}
+.encart{margin-top:22px;border:1px dashed var(--line);border-radius:14px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:#fff}
+.encart b{display:block;font-family:var(--display);font-size:16px;color:var(--navy)}
+.encart span{color:var(--muted);font-size:14px}
+.flegal{display:flex;gap:14px;flex-wrap:wrap}.flegal a{text-decoration:none}.flegal a:hover{text-decoration:underline}
 /* Galerie photos : flèches, compteur, glisser au doigt */
 .f-main{touch-action:pan-y}
 .f-main img{position:absolute;inset:0;background:#fff;transition:opacity .2s}
@@ -334,7 +341,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
   <button class="burger" id="burger" aria-expanded="false" aria-controls="nav">MENU</button>
   <nav id="nav">
     <a href="#top">Accueil</a>
-    <a href="#vedette">Boutique</a>
+    <a href="#vedette" data-shop>Boutique</a>
     <div class="dd">
       <button id="ddBtn" aria-expanded="false" aria-controls="ddMenu">Nos produits ▾</button>
       <div class="dd-menu" id="ddMenu" hidden></div>
@@ -355,10 +362,10 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
 <main id="top">
   <section class="hero"><div class="wrap">
     <div>
-      <small>Ordinateurs, téléphones, Apple Watch & accessoires · Dakar</small>
-      <h1>Le bon PC pour <span>chaque usage</span>.</h1>
+      <small>Vente de PC, téléphones & accessoires · Dakar</small>
+      <h1>L'ordinateur qu'il vous faut, <span>au juste prix</span>.</h1>
       <p>Ordinateurs neufs et reconditionnés, iPhone, Android, Apple Watch et accessoires, garantis et livrés en 24 à 48 h à Dakar.</p>
-      <div class="btns"><button class="b1" data-go="vedette">Voir la boutique</button><button class="b2" data-go="faq">Livraison et garantie</button></div>
+      <div class="btns"><button class="b1" data-shop>Voir la boutique</button><button class="b2" data-go="vedette">Découvrir My Flash</button></div>
       <div class="stats"><div><b data-n="12">12</b><span>mois de garantie sur le neuf</span></div><div><b data-n="48" data-p="h">48h</b><span>livraison max. à Dakar</span></div><div><b data-n="7" data-p=" j">7 j</b><span>pour signaler un défaut</span></div></div>
     </div>
     <div class="scene" aria-hidden="true">
@@ -408,14 +415,15 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
   <div class="brands"><div class="wrap" id="brands" role="group" aria-label="Filtrer par marque"></div></div>
 
   <section class="block" id="vedette"><div class="wrap">
-    <div class="head"><div><div class="eyebrow">Sélection</div><h2 id="vTitle">Tous nos produits</h2></div><button class="see" id="reset" hidden>Tout afficher</button></div>
+    <div class="head"><div><div class="eyebrow">Sélection</div><h2 id="vTitle">Produits en vedette</h2></div><button class="see" id="reset" hidden>Tout afficher</button></div>
     <div class="grid" id="gVedette"></div>
+    <div class="more" id="seeAllWrap"><button class="see" data-shop>Voir toute la boutique</button></div>
   </div></section>
 
   <div id="rayons"></div>
 
   <section class="block" id="faq"><div class="wrap faq">
-    <div class="head"><div><div class="eyebrow">Questions fréquentes</div><h2>Avant de commander</h2></div></div>
+    <div class="head"><div><div class="eyebrow">Besoin d'aide ?</div><h2>Questions fréquentes</h2></div></div>
     <details open><summary>Quels sont les délais de livraison ?</summary><p>24 à 48 h à Dakar et banlieue. Comptez 2 à 4 jours pour les autres régions du Sénégal.</p></details>
     <details><summary>Comment payer ?</summary><p>Par Wave, Orange Money ou carte bancaire. Le paiement à la livraison est possible à Dakar.</p></details>
     <details><summary>Les ordinateurs sont-ils garantis ?</summary><p>Oui. Les ordinateurs neufs sont garantis 12 mois, facture à l'appui. Les ordinateurs reconditionnés (étiquette « Reconditionné ») ont leur propre garantie, précisée à la commande.</p></details>
@@ -424,7 +432,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
   </div></section>
 
   <section class="news"><div class="wrap">
-    <div><h2>Recevez les promos en premier</h2><p>Une alerte par semaine avec le PC de la semaine et les arrivages.</p></div>
+    <div><h2>Restez informé</h2><p>Recevez nos promos, le PC de la semaine et les nouveaux arrivages en premier.</p></div>
     <form id="newsForm">
       <div class="row"><input type="email" id="nmail" required placeholder="Votre e-mail" aria-label="Votre e-mail"><button type="submit">S'inscrire</button></div>
       <label><input type="checkbox" id="nok" required> J'accepte de recevoir les offres par e-mail.</label>
@@ -441,7 +449,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <div><h4>Informations</h4><ul><li>Livraison et retours</li><li>Garantie</li><li>FAQ</li><li>Conditions de vente</li><li>À propos</li></ul></div>
     <div><h4>Contact</h4><ul><li>+221 78 874 07 12</li><li>Dakar, Sénégal</li><li>Lun–sam, 9 h–20 h</li></ul></div>
   </div>
-  <div class="fbot"><div class="wrap"><span>© 2026 My Flash. Tous droits réservés.</span><div class="pays"><span>WAVE</span><span>ORANGE MONEY</span><span>CARTE</span></div></div></div>
+  <div class="fbot"><div class="wrap"><span>© 2026 My Flash. Tous droits réservés.</span><span class="flegal"><a href="#contact">Mentions légales</a><a href="#contact">Politique de confidentialité</a></span><div class="pays"><span>WAVE</span><span>ORANGE MONEY</span><span>CARTE</span></div></div></div>
 </footer>
 
 <a class="contact" id="contactBtn" href="https://wa.me/221788740712?text=Bonjour%20My%20Flash%2C%20j%27ai%20une%20question%20sur%20un%20ordinateur." target="_blank" rel="noopener">Contactez-nous sur WhatsApp</a>
@@ -547,7 +555,7 @@ const card=p=>`<article class="card"><div class="pic" data-open="${p.id}" role="
  <div class="price"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>
  <button class="add" data-id="${p.id}">Ajouter au panier</button></article>`;
 
-let brand="Tout",q="",filterCat=null,cart={};
+let brand="Tout",q="",filterCat=null,showAll=false,cart={};
 try{cart=JSON.parse(localStorage.getItem("mt-cart")||"{}")||{}}catch(e){}
 const save=()=>{try{localStorage.setItem("mt-cart",JSON.stringify(cart))}catch(e){}};
 
@@ -555,36 +563,48 @@ $("ddMenu").innerHTML=CATS.map(c=>`<a href="#vedette" data-cat="${c.k}">${c.n}</
 $("fcats").innerHTML=CATS.map(c=>`<li>${c.n}</li>`).join("");
 $("brands").innerHTML=BRANDS.map(b=>`<button data-b="${b}" aria-pressed="${b==="Tout"}">${b}</button>`).join("")+QUICK.map(([k,n])=>`<button data-cat="${k}">${n}</button>`).join("");
 
+const PCS=["graph","bureau","gaming","etud","pro","2en1","apple"];
+const voirTous=(k,c,n)=>(PCS.includes(k)?"Voir tous les PC "+c.n.replace(/^(PC|Ordinateurs)\s+/i,""):"Voir tous les produits "+c.n)+` (${n})`;
+// Mélange les marques (HP, Dell, Lenovo, Apple…) pour un accueil varié
+function melange(list){const g={};list.forEach(p=>(g[p.b||"?"]=g[p.b||"?"]||[]).push(p));const ks=Object.keys(g),out=[];
+  for(let i=0;out.length<list.length;i++)ks.forEach(k=>{if(g[k][i])out.push(g[k][i])});return out}
+let VUS=new Set();
 function renderRayons(){
-$("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const items=P.filter(p=>p.c.includes(k));if(!items.length)return "";
+$("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const items=P.filter(p=>p.c.includes(k));if(!items.length)return "";const mx=melange(items),pick=[...mx.filter(p=>!VUS.has(p.id)),...mx.filter(p=>VUS.has(p.id))].slice(0,4);pick.forEach(p=>VUS.add(p.id));
  return `<section class="block ${i%2===0?"alt":""}"><div class="wrap">
  <div class="head"><div><div class="eyebrow">Catégorie</div><h2>${c.n}</h2><p>${c.d}</p><div class="chips">${c.chips.map(x=>`<span>${x}</span>`).join("")}</div></div>
- <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${c.badge?`<span class="badge">${c.badge}</span>`:""}<button class="see" data-cat="${k}">Voir tout</button></div></div>
- <div class="grid">${items.map(card).join("")}</div></div></section>`}).join("");
+ ${c.badge?`<span class="badge">${c.badge}</span>`:""}</div>
+ <div class="grid">${pick.map(card).join("")}</div>
+ ${k==="bureau"?`<div class="encart"><div><b>Envie de voir plus de PC Bureautique ?</b><span>Toute la gamme Bureautique est à découvrir, toutes marques confondues.</span></div><button class="see" data-cat="bureau">Voir la gamme</button></div>`:""}
+ <div class="more"><button class="see" data-cat="${k}">${voirTous(k,c,items.length)}</button></div></div></section>`}).join("");
 }
 
 function renderVedette(){
   const norm=x=>(x||"").trim().toLowerCase();
   let list=P.filter(p=>(brand==="Tout"||norm(p.b)===norm(brand))&&(!filterCat||p.c.includes(filterCat))&&(!q||(p.b+" "+p.n).toLowerCase().includes(q)));
   if(brand==="Tout"&&!filterCat&&!q){list=[...list.filter(p=>p.v),...list.filter(p=>!p.v)];}
-  $("vTitle").textContent=filterCat?CATS.find(c=>c.k===filterCat).n:q?`Résultats pour « ${q} »`:brand!=="Tout"?brand:"Tous nos produits";
-  const all=brand==="Tout"&&!filterCat&&!q;
+  const all=brand==="Tout"&&!filterCat&&!q&&!showAll;
+  if(all){list=[...list.filter(p=>p.v),...melange(list.filter(p=>!p.v))].slice(0,8);VUS=new Set(list.map(p=>p.id));}
+  $("vTitle").textContent=filterCat?CATS.find(c=>c.k===filterCat).n:q?`Résultats pour « ${q} »`:brand!=="Tout"?brand:showAll?`Toute la boutique (${list.length})`:"Produits en vedette";
+  $("seeAllWrap").hidden=!all;
   $("reset").hidden=all;
   // Filtre actif : on cache les rayons pour ne montrer que les produits choisis
   $("rayons").hidden=!all;
   $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun produit ne correspond. Essayez une autre marque ou un autre mot.</p>':'<p class="empty">Les produits arrivent bientôt.</p>');
 }
 function goVedette(){document.getElementById("vedette").scrollIntoView({behavior:"smooth"})}
-$("brands").onclick=e=>{const b=e.target.closest("button");if(!b||b.dataset.cat)return;brand=b.dataset.b;filterCat=null;
+$("brands").onclick=e=>{const b=e.target.closest("button");if(!b||b.dataset.cat)return;brand=b.dataset.b;filterCat=null;showAll=false;
   [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x===b));renderVedette();if(brand!=="Tout")goVedette()};
 document.addEventListener("click",e=>{
-  const c=e.target.closest("[data-cat]");if(c){e.preventDefault();filterCat=c.dataset.cat;brand="Tout";
+  const c=e.target.closest("[data-cat]");if(c){e.preventDefault();filterCat=c.dataset.cat;brand="Tout";showAll=false;
     [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
   const g=e.target.closest("[data-go]");if(g)document.getElementById(g.dataset.go).scrollIntoView({behavior:"smooth"});
+  const sh=e.target.closest("[data-shop]");if(sh){e.preventDefault();showAll=true;filterCat=null;brand="Tout";q="";$("q").value="";
+    [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
   const a=e.target.closest(".add");if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
   if(!e.target.closest(".dd"))$("ddMenu").hidden=true;
 });
-$("reset").onclick=()=>{brand="Tout";filterCat=null;q="";$("q").value="";[...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
+$("reset").onclick=()=>{brand="Tout";filterCat=null;q="";showAll=false;$("q").value="";[...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
 $("q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderVedette()};
 $("ddBtn").onclick=()=>{const m=$("ddMenu");m.hidden=!m.hidden;$("ddBtn").setAttribute("aria-expanded",!m.hidden)};
 $("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
