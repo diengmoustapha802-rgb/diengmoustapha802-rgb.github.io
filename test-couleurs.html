@@ -3,35 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Test couleurs – My Flash</title>
+<title>Test options – My Flash</title>
 <style>
-  body{font-family:system-ui,Arial,sans-serif;background:#fff;color:#222;margin:0;padding:16px;max-width:520px;margin:auto}
+  body{font-family:system-ui,-apple-system,Arial,sans-serif;background:#fff;color:#111;margin:0 auto;padding:16px;max-width:520px}
   h2{color:#0b1f4b;font-size:18px;margin:24px 0 10px}
-  .carte{border:1px solid #e3e7ef;border-radius:12px;padding:16px;margin-bottom:16px}
-  .wa{display:inline-block;margin-top:12px;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:8px;font-weight:600}
-  .prix{color:#0b1f4b;font-weight:700;font-size:18px;margin:4px 0 12px}
+  .carte{border:1px solid #e3e7ef;border-radius:12px;padding:20px 16px;margin-bottom:16px}
+  .nom{font-size:24px;font-weight:600;margin:0 0 8px}
+  .prix{font-size:24px;font-weight:700;margin:0 0 24px}
+  .wa{display:block;text-align:center;background:#111;color:#fff;text-decoration:none;padding:16px;border-radius:10px;font-weight:600;font-size:16px}
 </style>
 </head>
 <body>
 
-<h2>1. Espace gérant – ajout d'un produit</h2>
-<div class="carte">
-  <div data-mf-couleurs-gerant></div>
+<h2>Vue client – montre avec plusieurs options</h2>
+<div class="carte" data-mf-produit>
+  <p class="nom">Montre connectée Sport</p>
+  <p class="prix" data-mf-prix>35 000 F CFA</p>
+
+  <div data-mf-options="
+    Matière: Silicone, Cuir, Métal |
+    Bracelet: Rose, Bleu lavande, Marron, Beige, Noir, Rose poudré, Kaki, Vert sapin, Gris, Rouge, Turquoise, Vert olive, Gris foncé, Blanc, Bleu ciel, Orange |
+    Boîtier: Noir, Vert sapin, Gris, Or rose, Bleu marine, Or +5000, Argent |
+    Boucle: Or +5000, Argent, Noir, Noir/Or
+  "></div>
+
+  <a class="wa" data-mf-whatsapp data-produit="Montre connectée Sport" data-prix="35 000 F CFA">Commander sur WhatsApp</a>
 </div>
 
-<h2>2. Page produit – vue client</h2>
+<h2>Vue client – produit simple</h2>
 <div class="carte" data-mf-produit>
-  <strong>iPhone 15 128 Go</strong>
-  <div class="prix">545 000 F CFA</div>
+  <p class="nom">iPhone 15 128 Go</p>
+  <p class="prix" data-mf-prix>545 000 F CFA</p>
   <div data-mf-couleurs="Noir, Bleu, Rose, Vert"></div>
   <a class="wa" data-mf-whatsapp data-produit="iPhone 15 128 Go" data-prix="545 000 F CFA">Commander sur WhatsApp</a>
 </div>
 
-<div class="carte" data-mf-produit>
-  <strong>Montre connectée</strong>
-  <div class="prix">35 000 F CFA</div>
-  <div data-mf-couleurs="Noir, Blanc, Marron, Noir/Or, Argent/Bleu"></div>
-  <a class="wa" data-mf-whatsapp data-produit="Montre connectée" data-prix="35 000 F CFA">Commander sur WhatsApp</a>
+<h2>Espace gérant – ajout d'un produit</h2>
+<div class="carte">
+  <div data-mf-couleurs-gerant></div>
 </div>
 
 <script src="couleurs.js"></script>
