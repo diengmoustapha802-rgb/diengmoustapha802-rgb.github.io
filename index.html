@@ -475,7 +475,7 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
       </div>
       <div class="c-pay" role="radiogroup" aria-label="Moyen de paiement">
         <label class="opt"><input type="radio" name="paym" value="Paiement à la livraison" checked><span><b>Paiement à la livraison</b><small>Payer en argent comptant à la livraison.</small></span></label>
-        <label class="opt"><input type="radio" name="paym" value="Wave"><span><b><span class="wave-dot"></span>Wave</b><small>Payez tout de suite avec Wave après avoir validé la commande.</small></span></label>
+        <label class="opt"><input type="radio" name="paym" value="Wave"><span><b><span class="wave-dot"></span>Wave</b><small>Vous êtes redirigé vers Wave pour payer dès que vous validez la commande.</small></span></label>
         <label class="opt"><input type="radio" name="paym" value="Orange Money"><span><b>Orange Money</b><small>Envoyez le montant au 78 874 07 12 après confirmation.</small></span></label>
       </div>
       <button class="c-go" type="submit">🔒 Commander</button>
@@ -515,7 +515,7 @@ let P=[];
 // ---------- Paiement Wave ----------
 // Colle ici ton lien de paiement Wave Business (tableau de bord Wave Business > Lien de paiement).
 // Exemple : "https://pay.wave.com/m/M_sn_XXXXXXX/c/sn/"  — laisse vide tant que tu ne l'as pas.
-const WAVE_LIEN="";
+const WAVE_LIEN="https://pay.wave.com/m/M_sn_L7pzYx4QYOm7/c/sn/";
 const WAVE_NUMERO="78 874 07 12";
 function lienWave(montant){if(!WAVE_LIEN)return "";try{const u=new URL(WAVE_LIEN);u.searchParams.set("amount",String(montant));return u.toString()}catch(e){return ""}}
 const NTFY_SUJET="moustaphatech-commandes-k7q4z9"; // rempli automatiquement depuis la base de données
@@ -631,6 +631,8 @@ $("checkout").onsubmit=async e=>{e.preventDefault();
     $("backShop").onclick=closeCaisse;
     const cw=$("copyWave");if(cw)cw.onclick=async()=>{try{await navigator.clipboard.writeText(WAVE_NUMERO.replace(/\s/g,""));toast("Numéro copié")}catch(e){toast(WAVE_NUMERO)}};
     $("checkout").reset();cart={};save();upd();
+    // Wave : on emmène directement le client sur la page de paiement Wave
+    if(paym==="Wave"&&lienWave(t)){const w=lienWave(t);toast("Ouverture de Wave…");setTimeout(()=>{window.location.href=w},1200)}
   }catch(err){console.error(err);toast("La commande n'a pas été envoyée. Vérifiez votre connexion et réessayez.");}
   finally{btn.disabled=false;btn.textContent="🔒 Commander";}
 };
