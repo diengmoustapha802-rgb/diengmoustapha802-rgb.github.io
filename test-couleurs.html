@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test couleurs – My Flash</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;background:#fff;color:#222;margin:0;padding:16px;max-width:520px;margin:auto}
+  h2{color:#0b1f4b;font-size:18px;margin:24px 0 10px}
+  .carte{border:1px solid #e3e7ef;border-radius:12px;padding:16px;margin-bottom:16px}
+  .wa{display:inline-block;margin-top:12px;background:#25d366;color:#fff;text-decoration:none;padding:11px 16px;border-radius:8px;font-weight:600}
+  .prix{color:#0b1f4b;font-weight:700;font-size:18px;margin:4px 0 12px}
+</style>
+</head>
+<body>
+
+<h2>1. Espace gérant – ajout d'un produit</h2>
+<div class="carte">
+  <div data-mf-couleurs-gerant></div>
+</div>
+
+<h2>2. Page produit – vue client</h2>
+<div class="carte" data-mf-produit>
+  <strong>iPhone 15 128 Go</strong>
+  <div class="prix">545 000 F CFA</div>
+  <div data-mf-couleurs="Noir, Bleu, Rose, Vert"></div>
+  <a class="wa" data-mf-whatsapp data-produit="iPhone 15 128 Go" data-prix="545 000 F CFA">Commander sur WhatsApp</a>
+</div>
+
+<div class="carte" data-mf-produit>
+  <strong>Montre connectée</strong>
+  <div class="prix">35 000 F CFA</div>
+  <div data-mf-couleurs="Noir, Blanc, Marron, Noir/Or, Argent/Bleu"></div>
+  <a class="wa" data-mf-whatsapp data-produit="Montre connectée" data-prix="35 000 F CFA">Commander sur WhatsApp</a>
+</div>
+
+<script src="couleurs.js"></script>
+</body>
+</html>
