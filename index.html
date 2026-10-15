@@ -394,6 +394,68 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
   .fcols{grid-template-columns:1fr 1fr}
 }
 @media (max-width:460px){.fcols{grid-template-columns:1fr}.card{padding:9px}.price b{font-size:15px}.news .row{flex-direction:column}}
+
+/* ===== En-tête et bannière en grand, façon Infinitech ===== */
+.bar{padding-block:20px;gap:28px}
+.logo img{width:58px;height:58px}
+.logo{font-size:23px}
+nav{justify-content:center;gap:8px}
+nav>a,nav>.dd>button{font-size:16.5px;padding:10px 14px;color:#374151}
+nav>a:hover,nav>.dd>button:hover{color:var(--navy)}
+.tools input{height:44px}
+.cartbtn{padding:12px 18px;font-size:15px}
+.hero.dk{background:radial-gradient(1200px 600px at 75% 40%,#13305c 0%,#0a1a33 45%,#060e1d 100%);color:#fff;border-bottom:0}
+.hero.dk::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(closest-side at 70% 50%,#000,transparent);mask-image:radial-gradient(closest-side at 70% 50%,#000,transparent);pointer-events:none}
+.hero.dk .wrap{position:relative;min-height:620px;padding-block:80px 84px;grid-template-columns:1.15fr .95fr;gap:40px}
+.hero.dk .pill{display:inline-flex;align-items:center;gap:10px;font-family:var(--body);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd;border:1.5px solid rgba(147,197,253,.45);background:rgba(59,130,246,.08);padding:9px 18px;border-radius:999px}
+.hero.dk .pill i{width:8px;height:8px;border-radius:50%;background:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.2)}
+.hero.dk h1{color:#fff;font-size:clamp(40px,6.2vw,80px);line-height:1.04;margin-block:26px 22px;max-width:none;letter-spacing:-.03em}
+.hero.dk h1 span{background:linear-gradient(90deg,#60a5fa,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero.dk p{color:rgba(255,255,255,.82);opacity:1;font-size:18px;line-height:1.65;max-width:50ch;margin-bottom:32px}
+.hero.dk p b{color:#fff}
+.hero.dk .btns{gap:14px}
+.hero.dk .b1{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,#3b82f6,#1e63b0);color:#fff;border:0;padding:17px 30px;border-radius:10px;font-size:17px;box-shadow:0 12px 30px rgba(59,130,246,.35)}
+.hero.dk .b2{display:inline-flex;align-items:center;gap:10px;background:transparent;border:1.5px solid rgba(255,255,255,.75)!important;color:#fff!important;padding:17px 28px;border-radius:10px;font-size:17px;font-weight:700}
+.hero.dk .b2 svg{width:20px;height:20px}
+.hero.dk .b1:hover{filter:brightness(1.1)}.hero.dk .b2:hover{background:rgba(255,255,255,.08)}
+.hero.dk .stats{margin-top:38px;gap:34px}
+.hero.dk .stats b{color:#fff;font-size:28px}
+.hero.dk .stats span{color:rgba(255,255,255,.65);font-size:13px}
+.hero.dk .scene{max-width:600px}
+.hero.dk .scene .anim{filter:drop-shadow(0 30px 60px rgba(0,0,0,.5))}
+@media (max-width:1100px){nav>a,nav>.dd>button{font-size:15px;padding:9px 10px}.bar{gap:16px}}
+@media (max-width:820px){.bar{padding-block:12px}.logo img{width:46px;height:46px}.logo{font-size:19px}
+  nav>a,nav>.dd>button{font-size:16px}
+  .hero.dk .wrap{min-height:0;padding-block:40px 48px;grid-template-columns:1fr;gap:28px}
+  .hero.dk h1{font-size:clamp(36px,10vw,52px);margin-block:18px 16px}.hero.dk p{font-size:16px}
+  .hero.dk .pill{font-size:12px;padding:7px 14px}.hero.dk .b1,.hero.dk .b2{padding:15px 22px;font-size:16px}}
+
+/* Recherche en loupe (s'ouvre au clic) */
+@media (min-width:821px){
+ .tools{position:relative}
+ .tools input{width:46px;height:46px;padding:0 0 0 44px;border-radius:999px;cursor:pointer;color:transparent;transition:width .25s,box-shadow .25s;
+   background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b1f3a' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 13px center/20px}
+ .tools input::placeholder{color:transparent}
+ .tools input:focus,.tools input:not(:placeholder-shown){position:absolute;right:0;top:50%;transform:translateY(-50%);width:min(340px,60vw);z-index:6;cursor:text;color:var(--ink);box-shadow:0 12px 30px rgba(11,31,58,.18);border-color:var(--navy)}
+ .tools input:focus::placeholder{color:var(--muted)}
+}
+
+/* Écriture plus noire */
+:root{--ink:#000;--muted:#2b2b2b;--on-dark:#000}
+body{color:#000}
+nav>a,nav>.dd>button{color:#000!important;font-weight:600}
+nav>a:hover,nav>.dd>button:hover{color:var(--navy)!important}
+.dd-menu a{color:#111;font-weight:500}
+.card h3,.card h3 a,.price b,.f-info h1,.f-price b{color:#000}
+.brand{color:#333}
+.rhead p,.head p,details p,.news p,.encart span{color:#2b2b2b}
+.rhead h2,.head h2,summary{color:#000}
+.dark .rhead h2{color:#fff}
+.rchips span{color:#000}
+.bc .nm{color:#111}
+.fcols p,.fcols li{opacity:1;color:#222}
+.fbot .wrap{opacity:1;color:#222}
+.stats span{color:#333}
 </style>
 </head>
 <body style="margin:0">
@@ -422,18 +484,18 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <a href="#contact">Contact</a>
   </nav>
   <div class="tools">
-    <input id="q" type="search" placeholder="Rechercher…" aria-label="Rechercher">
+    <input id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher">
     <button class="cartbtn" id="openCart">Panier · <span id="cartTotal">0 F</span></button>
   </div>
 </div></header>
 
 <main id="top">
-  <section class="hero"><div class="wrap">
+  <section class="hero dk"><div class="wrap">
     <div>
-      <small>Vente de PC, téléphones & accessoires · Dakar</small>
-      <h1>L'ordinateur qu'il vous faut, <span>au juste prix</span>.</h1>
-      <p>Ordinateurs neufs et reconditionnés, iPhone, Android, Apple Watch et accessoires, garantis et livrés en 24 à 48 h à Dakar.</p>
-      <div class="btns"><button class="b1" data-shop>Voir la boutique</button><button class="b2" data-go="vedette">Découvrir My Flash</button></div>
+      <small class="pill"><i></i>Vente de PC, téléphones &amp; accessoires</small>
+      <h1>L'ordinateur qu'il vous faut,<br><span>au juste prix</span></h1>
+      <p><b>My Flash</b> vous propose une large gamme d'ordinateurs portables neufs et reconditionnés, d'iPhone, de smartphones Android, d'Apple Watch et d'accessoires, avec garantie et livraison en 24 à 48 h à Dakar.</p>
+      <div class="btns"><button class="b1" data-go="vedette">Découvrir My Flash <span aria-hidden="true">→</span></button><button class="b2" data-shop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 8H6"/></svg>Voir la boutique</button></div>
       <div class="stats"><div><b data-n="12">12</b><span>mois de garantie sur le neuf</span></div><div><b data-n="48" data-p="h">48h</b><span>livraison max. à Dakar</span></div><div><b data-n="7" data-p=" j">7 j</b><span>pour signaler un défaut</span></div></div>
     </div>
     <div class="scene" aria-hidden="true">
