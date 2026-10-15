@@ -1047,7 +1047,7 @@ async function chargerSource(){
 chargerSource();setInterval(chargerSource,10*60*1000); // vérifie les nouveautés toutes les 10 min
 
 onSnapshot(collection(db,"produits"),snap=>{
-  MINE=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",imgs:x.image?[x.image]:[],d:x.description||"",r:x.etat==="reconditionne",col:Array.isArray(x.couleurs)?x.couleurs:[],h:!!x.masque}});
+  MINE=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",imgs:[x.image,...(Array.isArray(x.autresImages)?x.autresImages:[])].filter(Boolean),d:x.description||"",r:x.etat==="reconditionne",col:Array.isArray(x.couleurs)?x.couleurs:[],h:!!x.masque}});
   mineOk=true;fusion();
 },err=>{console.error(err);mineOk=true;fusion();});
 
