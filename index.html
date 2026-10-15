@@ -935,6 +935,10 @@ $("fiche").addEventListener("touchend",e=>{if(gx===null)return;const dx=e.change
   if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))galGo(galI+(dx<0?1:-1))},{passive:true});
 document.addEventListener("keydown",e=>{if($("fiche").hidden||e.target.matches("input,textarea,select"))return;
   if(e.key==="ArrowRight")galGo(galI+1);if(e.key==="ArrowLeft")galGo(galI-1)});
+// Descriptions complètes des ordinateurs (fiche technique, points forts…) — fichier descriptions.json
+var DESC={};
+fetch("descriptions.json?v=2").then(r=>r.ok?r.json():{}).then(j=>{DESC=j||{};if(ficheId)ouvrirFiche(ficheId,false)}).catch(()=>{});
+const descDe=p=>{const own=MINE.find(m=>m.id===p.id);if(own&&own.d&&own.d.trim())return own.d.trim();return DESC[p.id]||(p.d||"").trim()};
 function ouvrirFiche(id,push=true){
   const p=P.find(x=>x.id==id);if(!p)return false;
   ficheId=id;ficheQ=1;const imgs=(p.imgs&&p.imgs.length?p.imgs:(p.img?[p.img]:[]));galImgs=imgs;galI=0;
@@ -953,7 +957,7 @@ function ouvrirFiche(id,push=true){
       <div class="f-qty"><span>Quantité</span><button type="button" data-fq="-1" aria-label="Moins">−</button><output id="fQ">1</output><button type="button" data-fq="1" aria-label="Plus">+</button></div>
       <div class="f-btns"><button class="f-buy" id="fAdd">Ajouter au panier</button><button class="f-buy" id="fNow" style="background:#fff;color:var(--navy);border:1px solid var(--navy)">Commander maintenant</button><a class="f-wa" href="${wa}" target="_blank" rel="noopener">Poser une question sur WhatsApp</a></div>
       <div class="f-assur"><div><b>24–48 h</b>Livraison Dakar</div><div><b>${p.r?"Garantie":"12 mois"}</b>${p.r?"précisée à la commande":"de garantie"}</div><div><b>À la livraison</b>Paiement possible</div></div>
-      ${p.d&&p.d.trim()?`<div class="f-desc"><h2>Description</h2>${esc(p.d.trim())}</div>`:""}
+      ${descDe(p)?`<div class="f-desc"><h2>Description</h2>${esc(descDe(p))}</div>`:""}
     </div>
     ${sim.length?`<div class="f-sim" style="grid-column:1/-1"><h2>Produits similaires</h2><div class="grid">${sim.map(card).join("")}</div></div>`:""}`;
   $("fiche").hidden=false;$("fiche").scrollTop=0;document.body.style.overflow="hidden";
