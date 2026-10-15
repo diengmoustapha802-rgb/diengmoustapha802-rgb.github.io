@@ -1012,6 +1012,8 @@ function fusion(){
     const ph=photosDe(m);if(ph&&ph.length>1){x.imgs=ph;x.img=ph[0];}
     else if(l&&l.imgs&&l.imgs.length){const tout=[...(m.img&&!l.imgs.includes(m.img)&&m.img.startsWith("data:")?[m.img]:[]),...l.imgs];
       x.imgs=[...new Set(tout)].slice(0,8);x.img=x.imgs[0];}
+    // Reprend la description complète Infinitech (fiche technique, points forts…) si le produit n'a pas la sienne
+    if(l&&l.d&&l.d.trim()&&!(m.d&&m.d.trim()))x.d=l.d;
     return x});
   P=[...vus.filter(p=>!p.h),...LIVE.filter(p=>!ids.has(p.id)&&!noms.has(normN(p.n))).map(p=>{const ph=photosDe(p);return ph&&ph.length>(p.imgs||[]).length?{...p,imgs:ph,img:ph[0]}:p})];
   if(mineOk&&liveOk)for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
