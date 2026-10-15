@@ -812,7 +812,13 @@ const $=id=>document.getElementById(id);
 const f=n=>n.toLocaleString("fr-FR").replace(/ | /g," ")+" F CFA";
 const pic='<svg viewBox="0 0 120 80" fill="none" aria-hidden="true"><rect x="22" y="8" width="76" height="50" rx="4" stroke="var(--ink)" stroke-width="3"/><rect x="29" y="15" width="62" height="36" rx="2" fill="var(--gold)" opacity=".35"/><path d="M8 62h104l-6 10H14z" fill="var(--ink)"/></svg>';
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const card=p=>`<article class="card"><div class="pic" data-open="${p.id}" role="link" tabindex="0" aria-label="Voir ${esc(p.n)}">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.r?`<span class="rec">Reconditionné</span>`:""}${pic}${p.img?`<img src="${esc(p.img)}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">`:""}${p.imgs&&p.imgs.length>1?`<img class="img2" src="${esc(p.imgs[1])}" alt="" loading="lazy" onerror="this.remove()"><span class="nph">${p.imgs.length} photos</span>`:""}</div>
+// Photos : vignette (~300 px) pour les cartes, version moyenne (~1000 px) pour la fiche, au lieu de l'original (2560 px)
+const SZ={};
+function pick(ss,w=800){const c=String(ss||"").split(",").map(x=>x.trim().split(/\s+/)).filter(a=>a[0]&&/w$/.test(a[1]||"")).map(a=>[a[0],parseInt(a[1])]).sort((a,b)=>a[1]-b[1]);return (c.find(a=>a[1]>=w)||c[c.length-1]||[""])[0]}
+const szKey=u=>String(u||"").replace(/-\d+x\d+(?=\.\w+$)/,"");
+const thu=u=>{if(!u||String(u).startsWith("data:"))return u;const z=SZ[szKey(u)];return z&&z[0]||u};
+const med=u=>{if(!u||String(u).startsWith("data:"))return u;const z=SZ[szKey(u)];return z&&z[1]||u};
+const card=p=>`<article class="card"><div class="pic" data-open="${p.id}" role="link" tabindex="0" aria-label="Voir ${esc(p.n)}">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.r?`<span class="rec">Reconditionné</span>`:""}${pic}${p.img?`<img src="${esc(thu(p.img))}" alt="${esc(p.n)}" loading="lazy" decoding="async" onerror="this.remove()">`:""}${p.imgs&&p.imgs.length>1?`<img class="img2" src="${esc(thu(p.imgs[1]))}" alt="" loading="lazy" decoding="async" onerror="this.remove()"><span class="nph">${p.imgs.length} photos</span>`:""}</div>
  <div class="brand">${esc(p.b)}</div><h3><a href="#produit=${encodeURIComponent(p.id)}" data-open="${p.id}">${esc(p.n)}</a></h3>
  <div class="price"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>
  <button class="add" data-id="${p.id}">Ajouter au panier</button></article>`;
@@ -899,7 +905,7 @@ const nomP=p=>p.b&&!p.n.toLowerCase().startsWith(p.b.toLowerCase())?p.b+" "+p.n:
 const subtotal=()=>Object.keys(cart).reduce((a,id)=>a+(cp(id)?.p||0)*cart[id],0);
 function upd(){$("cartTotal").textContent=subtotal().toLocaleString("fr-FR").replace(/ | /g," ")+" F"}
 let tt;function toast(m){$("toast").textContent=m;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>$("toast").hidden=true,1600)}
-const pic2=p=>p.img?`<img src="${esc(p.img)}" alt="">`:pic;
+const pic2=p=>p.img?`<img src="${esc(thu(p.img))}" alt="">`:pic;
 function drawCart(){const ids=Object.keys(cart).filter(k=>cart[k]>0&&cp(k));
   if(!ids.length){$("lines").innerHTML='<p style="color:var(--muted)">Votre panier est vide. Ajoutez un produit pour commander.</p>';$("dfoot").hidden=true;return}
   $("lines").innerHTML=ids.map(id=>{const p=cp(id);return `<div class="line"><b>${esc(nomP(p).split("·")[0])}${esc(cn(id))}</b><span class="p">${f(p.p*cart[id])}</span>
@@ -973,7 +979,7 @@ let ficheId=null,ficheQ=1,galImgs=[],galI=0;
 // Galerie : passer d'une photo à l'autre (flèches, vignettes, doigt, clavier)
 function galGo(i){
   if(galImgs.length<2)return;galI=(i+galImgs.length)%galImgs.length;
-  const im=$("fImg");if(im)im.src=galImgs[galI];
+  const im=$("fImg");if(im){im.style.backgroundImage=`url("${thu(galImgs[galI])}")`;im.src=med(galImgs[galI])}
   const c=$("gCount");if(c)c.textContent=(galI+1)+" / "+galImgs.length;
   $("fiche").querySelectorAll("[data-gi]").forEach(b=>{const on=+b.dataset.gi===galI;b.setAttribute("aria-pressed",on);if(on)b.scrollIntoView({block:"nearest",inline:"nearest"})});
   const d=$("gDots");if(d)[...d.children].forEach((x,k)=>x.classList.toggle("on",k===galI));
@@ -996,8 +1002,8 @@ function ouvrirFiche(id,push=true){
   const sim=P.filter(x=>x.id!==p.id&&x.c.some(c=>p.c.includes(c))).slice(0,4);
   const wa="https://wa.me/221788740712?text="+encodeURIComponent(`Bonjour My Flash, je suis intéressé par : ${nomP(p)} (${f(p.p)}). Est-il disponible ?`);
   $("ficheBody").innerHTML=`<div>
-      <div class="f-main">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.r?`<span class="rec">Reconditionné</span>`:""}${pic}${imgs[0]?`<img id="fImg" src="${esc(imgs[0])}" alt="${esc(p.n)}" onerror="this.remove()">`:""}${imgs.length>1?`<button type="button" class="g-nav g-prev" data-gnav="-1" aria-label="Photo précédente">‹</button><button type="button" class="g-nav g-next" data-gnav="1" aria-label="Photo suivante">›</button><span class="g-count" id="gCount">1 / ${imgs.length}</span><span class="g-dots" id="gDots">${imgs.map((u,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</span>`:""}</div>
-      ${imgs.length>1?`<div class="f-thumbs">${imgs.map((u,i)=>`<button type="button" data-gi="${i}" aria-pressed="${i===0}" aria-label="Photo ${i+1}"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join("")}</div>`:""}
+      <div class="f-main">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.r?`<span class="rec">Reconditionné</span>`:""}${pic}${imgs[0]?`<img id="fImg" src="${esc(med(imgs[0]))}" style="background:#fff url(&quot;${esc(thu(imgs[0]))}&quot;) center/contain no-repeat" alt="${esc(p.n)}" fetchpriority="high" onerror="this.remove()">`:""}${imgs.length>1?`<button type="button" class="g-nav g-prev" data-gnav="-1" aria-label="Photo précédente">‹</button><button type="button" class="g-nav g-next" data-gnav="1" aria-label="Photo suivante">›</button><span class="g-count" id="gCount">1 / ${imgs.length}</span><span class="g-dots" id="gDots">${imgs.map((u,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</span>`:""}</div>
+      ${imgs.length>1?`<div class="f-thumbs">${imgs.map((u,i)=>`<button type="button" data-gi="${i}" aria-pressed="${i===0}" aria-label="Photo ${i+1}"><img src="${esc(thu(u))}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>`:""}
     </div>
     <div class="f-info">
       ${(()=>{const c=CATS.find(x=>p.c.includes(x.k));return `<div class="f-crumb"><a href="#top" data-fermer>Accueil</a>${c?` › <a href="#vedette" data-cat="${c.k}">${esc(c.n)}</a>`:""}</div>`})()}
@@ -1012,7 +1018,8 @@ function ouvrirFiche(id,push=true){
       <div class="f-assur"><div><b>24–48 h</b>Livraison Dakar</div><div><b>${p.r?"Garantie":"12 mois"}</b>${p.r?"précisée à la commande":"de garantie"}</div><div><b>À la livraison</b>Paiement possible</div></div>
       ${descDe(p)?`<div class="f-desc"><h2>Description</h2>${esc(descDe(p))}</div>`:""}
     </div>
-    ${sim.length?`<div class="f-sim" style="grid-column:1/-1"><h2>Produits similaires</h2><div class="grid">${sim.map(card).join("")}</div></div>`:""}`;
+    <div id="fSim" style="grid-column:1/-1"></div>`;
+  setTimeout(()=>{const z=$("fSim");if(z&&ficheId===id&&sim.length)z.outerHTML=`<div class="f-sim" style="grid-column:1/-1"><h2>Produits similaires</h2><div class="grid">${sim.map(card).join("")}</div></div>`},60);
   ficheCol="";if(p.col&&p.col.length&&window.MFCouleurs)MFCouleurs.afficherProduit($("fCol"),JSON.stringify(p.col),(g,o)=>{ficheCol=o.nom});
   $("fiche").hidden=false;$("fiche").scrollTop=0;document.documentElement.classList.remove("fd");document.body.style.overflow="hidden";
   document.title=p.n+" · My Flash";
@@ -1034,6 +1041,7 @@ $("fiche").addEventListener("click",e=>{
   if(e.target.closest("#fNow")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();fermerFiche();history.replaceState(null,"",location.pathname);openCaisse()}
 });
 document.addEventListener("click",e=>{const o=e.target.closest("[data-open]");if(!o||e.target.closest(".add"))return;e.preventDefault();ouvrirFiche(o.dataset.open)});
+document.addEventListener("pointerdown",e=>{const o=e.target.closest("[data-open]");const p=o&&cp(o.dataset.open);if(p&&p.imgs&&p.imgs[0]){const i=new Image();i.src=med(p.imgs[0])}},{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches(".pic[data-open]"))ouvrirFiche(e.target.dataset.open)});
 let ficheAuto=true;function ficheDepuisLien(){if(!ficheAuto)return;const m=location.hash.match(/^#produit=(.+)$/);if(m&&ouvrirFiche(decodeURIComponent(m[1]),false))ficheAuto=false}
 
@@ -1066,6 +1074,7 @@ function photosDe(p){const k=PHOTOS[p.id]?p.id:PH_IMG[phBase(p.img)];if(!k)retur
   const g=PHOTOS[k].map(u=>PH_BASE+u),own=phBase(p.img);
   return [...new Set([...(p.img&&(own.startsWith("data:")||g.includes(own))?[p.img]:[]),...g])].slice(0,12);}
 function fusion(){
+  LIVE.forEach(p=>(p.sz||[]).forEach(([k,t,m])=>{if(k&&!SZ[k])SZ[k]=[t,m]}));
   const ids=new Set(MINE.map(p=>p.id)),noms=new Set(MINE.map(p=>normN(p.n)));
   // Complète chaque produit de l'espace gérant avec toutes les photos Infinitech (3, 4 photos…)
   const parId=new Map(LIVE.map(p=>[p.id,p])),parNom=new Map(LIVE.map(p=>[normN(p.n),p]));
@@ -1091,7 +1100,7 @@ function deMoi(id,x){return {id:id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.
 function deWoo(x){
       const u=Math.pow(10,+x.prices.currency_minor_unit||0),prix=Math.round(+x.prices.price/u),reg=Math.round(+x.prices.regular_price/u);
       const n=unent(x.name||"").replace(/^[^A-Za-z0-9]+/,"").trim(),g=devine(n,prix);
-      return {id:slugId(x.slug),b:g.b,n,p:prix,o:reg>prix?reg:0,c:g.c,v:false,img:(x.images&&x.images[0]&&(x.images[0].src||x.images[0].thumbnail))||"",imgs:(x.images||[]).map(i=>i.src).filter(Boolean).slice(0,8),d:txt(x.short_description)+"\n\n"+txt(x.description),r:!/\bneuf\b/i.test(n)}}
+      return {id:slugId(x.slug),b:g.b,n,p:prix,o:reg>prix?reg:0,c:g.c,v:false,img:(x.images&&x.images[0]&&(x.images[0].src||x.images[0].thumbnail))||"",imgs:(x.images||[]).map(i=>i.src).filter(Boolean).slice(0,8),sz:(x.images||[]).filter(i=>i.src).map(i=>[szKey(i.src),i.thumbnail||"",pick(i.srcset)]),d:txt(x.short_description)+"\n\n"+txt(x.description),r:!/\bneuf\b/i.test(n)}}
 const fv=v=>!v?undefined:"stringValue"in v?v.stringValue:"integerValue"in v?+v.integerValue:"doubleValue"in v?+v.doubleValue:"booleanValue"in v?v.booleanValue:"arrayValue"in v?(v.arrayValue.values||[]).map(fv):"mapValue"in v?Object.fromEntries(Object.entries(v.mapValue.fields||{}).map(([k,y])=>[k,fv(y)])):null;
 async function chargerSource(){
   try{
