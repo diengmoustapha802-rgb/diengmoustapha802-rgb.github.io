@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informations · My Flash</title>
+<meta name="description" content="À propos de My Flash, conditions de vente, mentions légales et politique de confidentialité.">
+<link rel="icon" type="image/png" href="logo.png">
+<meta property="og:title" content="Informations · My Flash"><meta property="og:image" content="https://diengmoustapha802-rgb.github.io/apercu.png">
+<style>
+  :root{
+    --marine:#0b1f4b;      /* bleu marine du logo */
+    --bleu:#1e5bd8;        /* bleu clair du logo */
+    --fond:#ffffff;
+    --gris:#f4f6fa;
+    --texte:#1b2333;
+    --texte-doux:#5b6478;
+    --bordure:#e3e7ef;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fond);color:var(--texte);line-height:1.55}
+  a{color:inherit;text-decoration:none}
+
+  /* ===== BARRE DU HAUT ===== */
+  .topbar{border-bottom:1px solid var(--bordure);background:#fff}
+  .topbar .in{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .topbar .lg{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--marine);letter-spacing:.5px}
+  .topbar .back{background:var(--marine);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;white-space:nowrap}
+  /* ===== EN-TÊTE DE PAGE ===== */
+  .fil-ariane{max-width:1100px;margin:0 auto;padding:24px 16px 0;font-size:14px;color:var(--texte-doux)}
+  .fil-ariane a:hover{color:var(--bleu)}
+  .faq-titre{max-width:1100px;margin:0 auto;padding:12px 16px 8px}
+  .faq-titre h1{font-size:36px;color:var(--marine)}
+  .faq-titre p{color:var(--texte-doux);margin-top:6px}
+
+  /* ===== BLOC FAQ ===== */
+  .faq{max-width:1100px;margin:0 auto;padding:24px 16px 64px;display:grid;grid-template-columns:220px 1fr;gap:40px}
+  .faq-menu{position:sticky;top:20px;align-self:start;display:flex;flex-direction:column;gap:6px}
+  .faq-menu a{padding:10px 14px;border-radius:8px;font-size:15px;color:var(--texte-doux);border-left:3px solid transparent}
+  .faq-menu a:hover{background:var(--gris);color:var(--marine);border-left-color:var(--bleu)}
+  .faq-groupe{margin-bottom:36px;scroll-margin-top:20px}
+  .faq-groupe h2{font-size:20px;color:var(--marine);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bleu);display:inline-block}
+  details{border:1px solid var(--bordure);border-radius:10px;margin-bottom:10px;background:#fff;transition:box-shadow .2s}
+  details[open]{box-shadow:0 4px 14px rgba(11,31,75,.08);border-color:var(--bleu)}
+  summary{list-style:none;cursor:pointer;padding:16px 50px 16px 18px;font-weight:600;color:var(--marine);position:relative}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--bleu);transition:transform .2s}
+  details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+  .reponse{padding:0 18px 18px;color:var(--texte-doux)}
+  .reponse ul{margin:8px 0 0 18px}
+
+  .faq-aide{margin-top:20px;background:var(--marine);color:#fff;border-radius:12px;padding:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .faq-aide p{opacity:.85;margin-top:4px}
+  .btn-wa{background:#25d366;color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;white-space:nowrap}
+  .btn-wa:hover{background:#1ebe5a}
+
+  /* ===== PIED DE PAGE (même organisation qu'Infinitech) ===== */
+  footer{background:var(--marine);color:#cfd6e6}
+  .pied{max-width:1100px;margin:0 auto;padding:48px 16px 24px;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:32px}
+  .pied h4{color:#fff;font-size:14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+  .pied h4::after{content:"";display:block;width:28px;height:2px;background:var(--bleu);margin-top:8px;margin-bottom:12px}
+  .pied ul{list-style:none}
+  .pied li{margin-bottom:9px;font-size:14px}
+  .pied li a:hover{color:#fff}
+  .pied .marque{font-size:20px;color:#fff;font-weight:700;margin-bottom:8px}
+  .pied .desc{font-size:14px;margin-bottom:16px}
+  .reseaux{display:flex;gap:10px}
+  .reseaux a{width:36px;height:36px;border:1px solid rgba(255,255,255,.25);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .reseaux a:hover{background:var(--bleu);border-color:var(--bleu)}
+  .paiements{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .paiements span{border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 12px;font-size:12px;color:#fff}
+  .pied-bas{max-width:1100px;margin:0 auto;padding:16px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px}
+  .pied-bas a{margin-left:16px}
+  .pied-bas a:hover{color:#fff}
+
+  .wa-flottant{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:50}
+
+  @media (max-width:800px){
+    .faq{grid-template-columns:1fr;gap:16px}
+    .faq-menu{position:static;flex-direction:row;overflow-x:auto;gap:8px}
+    .faq-menu a{white-space:nowrap;border:1px solid var(--bordure);border-left:1px solid var(--bordure)}
+    .faq-titre h1{font-size:28px}
+    .pied{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:500px){ .pied{grid-template-columns:1fr} }
+  .doc p,.doc li{color:var(--texte-doux);margin-bottom:10px}.doc ul{margin:0 0 12px 20px}.doc h3{color:var(--marine);font-size:16px;margin:18px 0 8px}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="in"><a class="lg" href="index.html"><img src="logo.png" alt="" width="40" height="40">MY FLASH</a><a class="back" href="index.html">← Retour à la boutique</a></div></div>
+
+<div class="fil-ariane"><a href="index.html">Accueil</a> / Informations</div>
+<div class="faq-titre">
+  <h1>Informations</h1>
+  <p>Qui nous sommes et comment se passent vos achats chez My Flash.</p>
+</div>
+
+<section class="faq">
+  <nav class="faq-menu">
+    <a href="#a-propos">À propos</a>
+    <a href="#cgv">Conditions de vente</a>
+    <a href="#mentions">Mentions légales</a>
+    <a href="#confidentialite">Confidentialité</a>
+  </nav>
+  <div class="doc">
+    <div class="faq-groupe" id="a-propos">
+      <h2>À propos de My Flash</h2>
+      <p>My Flash est une boutique basée à Dakar, spécialisée dans les ordinateurs portables, les MacBook, les iPhone, les smartphones Android, les Apple Watch et les accessoires.</p>
+      <p>Notre objectif : vous aider à trouver l'appareil adapté à votre usage et à votre budget, avec des prix clairs, une livraison rapide et un vrai suivi après l'achat.</p>
+    </div>
+
+    <div class="faq-groupe" id="cgv">
+      <h2>Conditions générales de vente</h2>
+      <h3>Prix</h3>
+      <p>Les prix sont indiqués en francs CFA (F CFA), toutes taxes comprises. Les frais de livraison éventuels vous sont confirmés au moment de la commande.</p>
+      <h3>Commande</h3>
+      <p>Vous pouvez commander sur le site ou sur WhatsApp. Chaque commande reçoit un numéro. Nous vous appelons pour confirmer la disponibilité, l'adresse et l'heure de livraison avant tout envoi.</p>
+      <h3>Paiement</h3>
+      <ul><li>Wave</li><li>Orange Money</li><li>Espèces à la livraison (Dakar) ou en boutique</li></ul>
+      <p>Pour certaines commandes, notamment hors de Dakar, un acompte peut être demandé.</p>
+      <h3>Livraison</h3>
+      <p>Livraison sous 24 à 48 h à Dakar et en banlieue. Comptez 2 à 4 jours pour les autres régions du Sénégal, par transporteur.</p>
+      <h3>Garantie et retours</h3>
+      <p>Les produits neufs sont garantis 12 mois, facture à l'appui. La garantie des produits reconditionnés est précisée à la commande. Vous disposez de 7 jours après la livraison pour signaler un défaut : l'appareil est alors réparé ou échangé après vérification en boutique.</p>
+      <p>La garantie ne couvre pas la casse, l'oxydation (contact avec un liquide) ni les dommages causés par une mauvaise utilisation.</p>
+    </div>
+
+    <div class="faq-groupe" id="mentions">
+      <h2>Mentions légales</h2>
+      <p><strong>Boutique :</strong> My Flash, Dakar, Sénégal.</p>
+      <p><strong>Contact :</strong> +221 78 874 07 12 (téléphone et WhatsApp).</p>
+      <p><strong>Hébergement du site :</strong> GitHub Pages (GitHub, Inc.). Données des commandes : Google Firebase.</p>
+      <p>Les noms de marques et de produits cités (Apple, HP, Dell, Lenovo, Samsung…) appartiennent à leurs propriétaires respectifs.</p>
+    </div>
+
+    <div class="faq-groupe" id="confidentialite">
+      <h2>Politique de confidentialité</h2>
+      <p>Quand vous commandez, nous enregistrons votre nom, votre numéro de téléphone, votre adresse de livraison et, si vous le donnez, votre e-mail.</p>
+      <p>Ces informations servent uniquement à traiter votre commande, vous livrer et assurer le service après-vente. Elles ne sont jamais vendues ni transmises à d'autres entreprises.</p>
+      <p>Si vous vous inscrivez à nos offres, votre e-mail sert seulement à vous envoyer nos promotions. Vous pouvez demander à tout moment la suppression de vos données en nous écrivant sur WhatsApp.</p>
+      <p>Votre panier est gardé sur votre propre appareil pour ne pas le perdre si vous fermez la page.</p>
+    </div>
+
+    <div class="faq-aide">
+      <div>
+        <strong>Une question ?</strong>
+        <p>Notre équipe vous répond directement sur WhatsApp.</p>
+      </div>
+      <a class="btn-wa" href="https://wa.me/221788740712" target="_blank" rel="noopener">Contactez-nous</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================== PIED DE PAGE ================== -->
+<footer>
+  <div class="pied">
+    <div>
+      <div class="marque">My Flash</div>
+      <p class="desc">Vente d'ordinateurs, téléphones, Apple Watch et accessoires neufs, toutes marques, à Dakar.</p>
+      <div class="reseaux">
+        <a href="https://wa.me/221788740712" target="_blank" aria-label="WhatsApp">WA</a>
+      </div>
+    </div>
+    <div>
+      <h4>Catégories</h4>
+      <ul>
+        <li><a href="index.html#rayon=bureau">Ordinateurs</a></li>
+        <li><a href="index.html#rayon=apple">MacBook / Apple</a></li>
+        <li><a href="index.html#rayon=iphone">iPhone</a></li>
+        <li><a href="index.html#rayon=android">Téléphones Android</a></li>
+        <li><a href="index.html#rayon=montre">Apple Watch</a></li>
+        <li><a href="index.html#rayon=acc">Accessoires</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Informations</h4>
+      <ul>
+        <li><a href="faq.html#livraison">Livraison & retours</a></li>
+        <li><a href="faq.html#garantie">Garantie & SAV</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="infos.html#cgv">Conditions générales de vente</a></li>
+        <li><a href="infos.html#a-propos">À propos</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="https://wa.me/221788740712" target="_blank" rel="noopener">📞 +221 78 874 07 12</a></li>
+        <li>📍 Dakar, Sénégal</li>
+      </ul>
+      <div class="paiements">
+        <span>Wave</span><span>Orange Money</span><span>À la livraison</span>
+      </div>
+    </div>
+  </div>
+  <div class="pied-bas">
+    <span>© 2026 My Flash. Tous droits réservés.</span>
+    <span><a href="infos.html#mentions">Mentions légales</a><a href="infos.html#confidentialite">Politique de confidentialité</a></span>
+  </div>
+</footer>
+
+<a class="wa-flottant" href="https://wa.me/221788740712" target="_blank" aria-label="WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
+</a>
+
+</body>
+</html>

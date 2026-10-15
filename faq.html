@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ – My Flash</title>
+<title>FAQ · My Flash</title>
+<meta name="description" content="Commande, paiement, livraison, garantie : toutes les réponses avant d'acheter chez My Flash à Dakar.">
+<link rel="icon" type="image/png" href="logo.png">
+<meta property="og:title" content="FAQ · My Flash"><meta property="og:image" content="https://diengmoustapha802-rgb.github.io/apercu.png">
 <style>
   :root{
     --marine:#0b1f4b;      /* bleu marine du logo */
@@ -18,6 +21,11 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fond);color:var(--texte);line-height:1.55}
   a{color:inherit;text-decoration:none}
 
+  /* ===== BARRE DU HAUT ===== */
+  .topbar{border-bottom:1px solid var(--bordure);background:#fff}
+  .topbar .in{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .topbar .lg{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--marine);letter-spacing:.5px}
+  .topbar .back{background:var(--marine);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;white-space:nowrap}
   /* ===== EN-TÊTE DE PAGE ===== */
   .fil-ariane{max-width:1100px;margin:0 auto;padding:24px 16px 0;font-size:14px;color:var(--texte-doux)}
   .fil-ariane a:hover{color:var(--bleu)}
@@ -79,7 +87,7 @@
 </head>
 <body>
 
-<!-- ⚠️ Colle ici ton en-tête habituel (logo + menu) si tu veux le même que les autres pages -->
+<div class="topbar"><div class="in"><a class="lg" href="index.html"><img src="logo.png" alt="" width="40" height="40">MY FLASH</a><a class="back" href="index.html">← Retour à la boutique</a></div></div>
 
 <div class="fil-ariane"><a href="index.html">Accueil</a> / FAQ</div>
 <div class="faq-titre">
@@ -120,9 +128,8 @@
         <summary>Quels moyens de paiement acceptez-vous ?</summary>
         <div class="reponse">
           <ul>
-            <li>Orange Money</li>
             <li>Wave</li>
-            <li>Carte bancaire</li>
+            <li>Orange Money</li>
             <li>Espèces à la livraison ou en boutique</li>
           </ul>
         </div>
@@ -141,7 +148,7 @@
       </details>
       <details>
         <summary>En combien de temps suis-je livré ?</summary>
-        <div class="reponse">En général le jour même ou le lendemain à Dakar, selon l'heure de la commande.</div>
+        <div class="reponse">Sous 24 à 48 h à Dakar et en banlieue, souvent le jour même ou le lendemain selon l'heure de la commande. Comptez 2 à 4 jours pour les autres régions.</div>
       </details>
       <details>
         <summary>Livrez-vous dans les régions ?</summary>
@@ -153,7 +160,7 @@
       <h2>Produits</h2>
       <details>
         <summary>Vos produits sont-ils neufs ?</summary>
-        <div class="reponse">Oui, My Flash vend des produits neufs : ordinateurs, MacBook, iPhone, téléphones Android, Apple Watch et accessoires.</div>
+        <div class="reponse">La grande majorité de nos produits sont neufs : ordinateurs, MacBook, iPhone, téléphones Android, Apple Watch et accessoires. Quelques ordinateurs sont reconditionnés : ils portent clairement l'étiquette « Reconditionné » sur le site.</div>
       </details>
       <details>
         <summary>Pouvez-vous m'aider à choisir un ordinateur ?</summary>
@@ -165,7 +172,7 @@
       <h2>Garantie & retours</h2>
       <details>
         <summary>Les produits sont-ils garantis ?</summary>
-        <div class="reponse">Oui, nos produits sont garantis. La durée de la garantie vous est indiquée à l'achat selon le produit.</div>
+        <div class="reponse">Oui. Les produits neufs sont garantis 12 mois, facture à l'appui. Pour les produits reconditionnés, la durée de garantie est précisée à la commande. Vous avez 7 jours après la livraison pour signaler un défaut.</div>
       </details>
       <details>
         <summary>Que faire si mon produit a un problème ?</summary>
@@ -178,34 +185,30 @@
         <strong>Vous n'avez pas trouvé votre réponse ?</strong>
         <p>Notre équipe vous répond directement sur WhatsApp.</p>
       </div>
-      <a class="btn-wa" href="https://wa.me/221788740712" target="_blank">Contactez-nous</a>
+      <a class="btn-wa" href="https://wa.me/221788740712" target="_blank" rel="noopener">Contactez-nous</a>
     </div>
   </div>
 </section>
 
 <!-- ================== PIED DE PAGE ================== -->
-<!-- Copie ce bloc <footer> sur toutes tes pages pour avoir le même bas de page partout -->
 <footer>
   <div class="pied">
     <div>
       <div class="marque">My Flash</div>
       <p class="desc">Vente d'ordinateurs, téléphones, Apple Watch et accessoires neufs, toutes marques, à Dakar.</p>
       <div class="reseaux">
-        <a href="#" aria-label="Facebook">f</a>
-        <a href="#" aria-label="Instagram">IG</a>
-        <a href="#" aria-label="TikTok">TT</a>
         <a href="https://wa.me/221788740712" target="_blank" aria-label="WhatsApp">WA</a>
       </div>
     </div>
     <div>
       <h4>Catégories</h4>
       <ul>
-        <li><a href="index.html#ordinateurs">Ordinateurs</a></li>
-        <li><a href="index.html#macbook">MacBook / Apple</a></li>
-        <li><a href="index.html#iphone">iPhone</a></li>
-        <li><a href="index.html#android">Téléphones Android</a></li>
-        <li><a href="index.html#montres">Apple Watch</a></li>
-        <li><a href="index.html#accessoires">Accessoires</a></li>
+        <li><a href="index.html#rayon=bureau">Ordinateurs</a></li>
+        <li><a href="index.html#rayon=apple">MacBook / Apple</a></li>
+        <li><a href="index.html#rayon=iphone">iPhone</a></li>
+        <li><a href="index.html#rayon=android">Téléphones Android</a></li>
+        <li><a href="index.html#rayon=montre">Apple Watch</a></li>
+        <li><a href="index.html#rayon=acc">Accessoires</a></li>
       </ul>
     </div>
     <div>
@@ -214,24 +217,24 @@
         <li><a href="faq.html#livraison">Livraison & retours</a></li>
         <li><a href="faq.html#garantie">Garantie & SAV</a></li>
         <li><a href="faq.html">FAQ</a></li>
-        <li><a href="#">Conditions générales de vente</a></li>
-        <li><a href="#">À propos</a></li>
+        <li><a href="infos.html#cgv">Conditions générales de vente</a></li>
+        <li><a href="infos.html#a-propos">À propos</a></li>
       </ul>
     </div>
     <div>
       <h4>Contact</h4>
       <ul>
-        <li><a href="https://wa.me/221788740712" target="_blank">📞 +221 78 874 07 12</a></li>
+        <li><a href="https://wa.me/221788740712" target="_blank" rel="noopener">📞 +221 78 874 07 12</a></li>
         <li>📍 Dakar, Sénégal</li>
       </ul>
       <div class="paiements">
-        <span>Orange Money</span><span>Wave</span><span>Carte bancaire</span>
+        <span>Wave</span><span>Orange Money</span><span>À la livraison</span>
       </div>
     </div>
   </div>
   <div class="pied-bas">
     <span>© 2026 My Flash. Tous droits réservés.</span>
-    <span><a href="#">Mentions légales</a><a href="#">Politique de confidentialité</a></span>
+    <span><a href="infos.html#mentions">Mentions légales</a><a href="infos.html#confidentialite">Politique de confidentialité</a></span>
   </div>
 </footer>
 
