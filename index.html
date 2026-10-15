@@ -456,6 +456,43 @@ nav>a:hover,nav>.dd>button:hover{color:var(--navy)!important}
 .fcols p,.fcols li{opacity:1;color:#222}
 .fbot .wrap{opacity:1;color:#222}
 .stats span{color:#333}
+
+/* ===== Page Contact façon Infinitech ===== */
+.cpage{display:none}
+body.pg-contact main{display:none}
+body.pg-contact .cpage{display:block}
+.cp-hero{background:radial-gradient(900px 400px at 50% 0%,#e6f0fb,#f6f9fd 60%,#fff);text-align:center;padding:72px 0 76px;border-bottom:1px solid var(--line)}
+.cp-pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #dbe5f2;color:var(--blue);font-weight:600;font-size:14px;padding:8px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(11,31,58,.06)}
+.cp-pill svg,.cp-btns svg{width:17px;height:17px}
+.cp-hero h1{font-size:clamp(36px,5.4vw,64px);line-height:1.08;margin:22px 0 18px;color:#000;letter-spacing:-.025em}
+.cpage h1 span,.cpage h2 span{background:linear-gradient(90deg,#1e63b0,#22a3d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cp-hero p{font-size:18px;line-height:1.6;color:#2b2b2b;margin:0 0 30px}
+.cp-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.cp-btns a{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer}
+.cp-b1{background:var(--navy);color:#fff;box-shadow:0 10px 24px rgba(11,31,58,.25)}.cp-b1:hover{background:var(--blue)}
+.cp-b2{background:#fff;color:#000;border:1.5px solid #d5dbe5}.cp-b2:hover{border-color:var(--navy)}
+.cp-sec{padding:72px 0;text-align:center;background:#fff}
+.cp-sec.soft{background:#f6f9fd;border-top:1px solid var(--line)}
+.cp-ey{font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.cp-sec h2{font-size:clamp(30px,4vw,46px);line-height:1.12;margin:12px 0 0;color:#000}
+.cp-sub{color:#2b2b2b;font-size:16px;margin:14px auto 0;max-width:46ch}
+.cp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:44px auto 0;max-width:1040px;text-align:left}
+.cp-card{display:flex;align-items:center;gap:16px;padding:18px 20px;background:#fff;border:1px solid #e5eaf1;border-radius:16px;text-decoration:none;color:#000;box-shadow:0 6px 18px rgba(11,31,58,.05);transition:transform .18s,box-shadow .18s,border-color .18s}
+.cp-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(11,31,58,.12);border-color:#c9d8ec}
+.cp-card .ci{flex:none;width:50px;height:50px;border-radius:13px;display:grid;place-items:center;background:#eaf2fb;color:var(--navy);transition:background .18s,color .18s}
+.cp-card:hover .ci{background:var(--navy);color:#fff}
+.cp-card .ci svg{width:22px;height:22px}
+.cp-card b{display:block;font-size:16px}
+.cp-card span{display:block;color:#2b2b2b;font-size:14px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-card>div{min-width:0}
+.cp-form{max-width:560px;margin:38px auto 0;background:#fff;border:1px solid #e5eaf1;border-radius:18px;padding:24px;display:grid;gap:12px;box-shadow:0 14px 40px rgba(11,31,58,.08);text-align:left}
+.cp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cp-form input,.cp-form textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;color:#000;padding:13px 14px;border:1px solid #d5dbe5;border-radius:10px;background:#fff;resize:vertical}
+.cp-form input:focus,.cp-form textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(30,99,176,.15)}
+.cp-form button{border:0;background:var(--navy);color:#fff;font-weight:700;font-size:16px;padding:15px;border-radius:999px;cursor:pointer;margin-top:4px}
+.cp-form button:hover{background:var(--blue)}
+.cp-form small{text-align:center;color:#444;font-size:12.5px}
+@media (max-width:600px){.cp-row{grid-template-columns:1fr}.cp-hero{padding:48px 0 52px}.cp-sec{padding:52px 0}.cp-hero p{font-size:16px}.cp-hero p br{display:none}}
 </style>
 </head>
 <body style="margin:0">
@@ -481,7 +518,7 @@ nav>a:hover,nav>.dd>button:hover{color:var(--navy)!important}
       <div class="dd-menu" id="ddMenu2" hidden><a href="#vedette" data-cat="iphone">iPhone</a><a href="#vedette" data-cat="android">Smartphones Android</a><a href="#vedette" data-cat="montre">Apple Watch &amp; montres</a><a href="#vedette" data-cat="acc">Accessoires</a></div>
     </div>
     <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
+    <a href="#contact-page" data-page="contact">Contact</a>
   </nav>
   <div class="tools">
     <input id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher">
@@ -570,6 +607,32 @@ nav>a:hover,nav>.dd>button:hover{color:var(--navy)!important}
     </form>
   </div></section>
 </main>
+
+<section id="contactPage" class="cpage" aria-label="Contact">
+  <div class="cp-hero"><div class="wrap">
+    <span class="cp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Basé à Dakar, Sénégal</span>
+    <h1>Parlons de votre<br><span>prochain ordinateur</span></h1>
+    <p>Une question sur nos produits, une commande ou le service après-vente ?<br>Notre équipe vous répond rapidement.</p>
+    <div class="cp-btns"><a class="cp-b2" id="cpCall"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>Appeler</a><a class="cp-b1" id="cpWa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>WhatsApp</a></div>
+  </div></div>
+  <div class="cp-sec"><div class="wrap">
+    <div class="cp-ey">Nos coordonnées</div>
+    <h2>Tous les moyens de<br>nous <span>joindre</span></h2>
+    <div class="cp-cards" id="cpCards"></div>
+  </div></div>
+  <div class="cp-sec soft"><div class="wrap">
+    <div class="cp-ey">Écrivez-nous</div>
+    <h2>Envoyez-nous un <span>message</span></h2>
+    <p class="cp-sub">Décrivez votre besoin, on vous répond rapidement par WhatsApp ou par téléphone.</p>
+    <form class="cp-form" id="cpForm">
+      <div class="cp-row"><input id="cpNom" required placeholder="Votre nom" aria-label="Votre nom" autocomplete="name"><input id="cpMail" type="email" placeholder="Votre email (optionnel)" aria-label="Votre email" autocomplete="email"></div>
+      <input id="cpTel" inputmode="tel" placeholder="Téléphone (optionnel)" aria-label="Téléphone" autocomplete="tel">
+      <textarea id="cpMsg" required rows="5" placeholder="Votre message" aria-label="Votre message"></textarea>
+      <button type="submit">Envoyer le message <span aria-hidden="true">→</span></button>
+      <small>Le message s'ouvre dans WhatsApp, prêt à être envoyé. Vos informations sont utilisées uniquement pour vous répondre.</small>
+    </form>
+  </div></div>
+</section>
 
 <footer id="contact">
   <div class="wrap fcols">
@@ -976,6 +1039,40 @@ onSnapshot(collection(db,"produits"),snap=>{
   MINE=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",imgs:x.image?[x.image]:[],d:x.description||"",r:x.etat==="reconditionne",h:!!x.masque}});
   mineOk=true;fusion();
 },err=>{console.error(err);mineOk=true;fusion();});
+
+// ===== Page Contact — remplis tes réseaux ici (laisse "" pour cacher une carte) =====
+const CONTACT={
+  tel:"+221 78 874 07 12",
+  whatsapp:"221788740712",
+  facebook:"",   // ex. "https://facebook.com/myflash"  (nom affiché : My Flash)
+  instagram:"",  // ex. "myflash.sn"  (sans @)
+  tiktok:"",     // ex. "myflash.sn"  (sans @)
+  adresse:"Dakar, Sénégal",
+  maps:"https://www.google.com/maps/search/?api=1&query=Dakar%2C+S%C3%A9n%C3%A9gal"
+};
+(function(){
+  const I=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+  const ic={tel:I('<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>'),
+    wa:I('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>'),fb:I('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/>'),
+    ig:I('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/>'),tt:I('<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>'),
+    pin:I('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>')};
+  const C=CONTACT,telHref="tel:"+C.tel.replace(/\s/g,""),waHref="https://wa.me/"+C.whatsapp;
+  const cards=[[ic.tel,"Téléphone",C.tel,telHref],[ic.wa,"WhatsApp","Discuter directement",waHref+"?text="+encodeURIComponent("Bonjour My Flash, j'ai une question.")],
+    C.facebook&&[ic.fb,"Facebook","My Flash",C.facebook],C.instagram&&[ic.ig,"Instagram","@"+C.instagram,"https://instagram.com/"+C.instagram],
+    C.tiktok&&[ic.tt,"TikTok","@"+C.tiktok,"https://www.tiktok.com/@"+C.tiktok],[ic.pin,"Localisation",C.adresse+" · Voir sur Google Maps",C.maps]].filter(Boolean);
+  $("cpCards").innerHTML=cards.map(([i,t,v,h])=>`<a class="cp-card" href="${h}"${h.startsWith("http")?' target="_blank" rel="noopener"':""}><span class="ci">${i}</span><div><b>${t}</b><span>${esc(v)}</span></div></a>`).join("");
+  $("cpCall").href=telHref;$("cpWa").href=waHref+"?text="+encodeURIComponent("Bonjour My Flash, j'aimerais avoir des informations.");
+  $("cpForm").onsubmit=e=>{e.preventDefault();
+    const t=`Bonjour My Flash,\n\n${$("cpMsg").value.trim()}\n\n— ${$("cpNom").value.trim()}${$("cpTel").value.trim()?"\nTél : "+$("cpTel").value.trim():""}${$("cpMail").value.trim()?"\nEmail : "+$("cpMail").value.trim():""}`;
+    window.open(waHref+"?text="+encodeURIComponent(t),"_blank");toast("Message prêt dans WhatsApp");};
+  const show=on=>{document.body.classList.toggle("pg-contact",on);window.scrollTo(0,0)};
+  document.addEventListener("click",e=>{
+    if(e.target.closest('[data-page="contact"]')){e.preventDefault();show(true);closeMenus();if(location.hash!=="#contact-page")history.pushState({pg:"contact"},"","#contact-page");return}
+    if(document.body.classList.contains("pg-contact")&&e.target.closest('nav a,nav .dd-menu a,.logo,[data-shop],[data-cat],[data-go]')){document.body.classList.remove("pg-contact");if(location.hash==="#contact-page")history.replaceState(null,"",location.pathname)}
+  },true);
+  window.addEventListener("popstate",()=>document.body.classList.toggle("pg-contact",location.hash==="#contact-page"));
+  if(location.hash==="#contact-page")document.body.classList.add("pg-contact");
+})();
 </script>
 
 </body>
