@@ -132,7 +132,39 @@ header{border-bottom:2px solid var(--navy)!important}
 .f-thumbs button[aria-pressed="true"]{border:2px solid var(--navy)}
 .f-thumbs img{width:100%;height:100%;object-fit:contain}
 /* Accueil comme Infinitech : vedette (8), rayons de 4 produits + bouton « Voir tous » */
-.more{display:flex;justify-content:center;margin-top:22px}
+.more{display:flex;justify-content:center;margin-top:26px}
+/* ===== Rayons style Infinitech : titre avec mot en dégradé, puces à icônes, grande vignette colorée ===== */
+section.ray{position:relative;padding-block:56px;background:#fff}
+section.ray::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#22c55e,#06b6d4,#3b82f6,#8b5cf6,#ec4899,#f97316)}
+section.ray.soft{background:#f6f8fc}
+section.ray.dark{background:#0a0d14;color:#fff}
+.rhead{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;margin-bottom:34px}
+.rey{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.rey::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+.dark .rey{color:#5eead4}
+.rhead h2{font-size:clamp(28px,4vw,46px);line-height:1.08;margin:12px 0 14px;letter-spacing:-.02em}
+.rhead h2 em{font-style:normal;-webkit-background-clip:text;background-clip:text;color:transparent}
+.rhead p{font-size:16px;line-height:1.65;color:var(--muted);max-width:52ch;margin:0 0 20px}
+.dark .rhead p{color:rgba(255,255,255,.78)}
+.rchips{display:flex;gap:10px;flex-wrap:wrap}
+.rchips span{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.rchips svg{width:16px;height:16px;flex:none;color:var(--blue)}
+.dark .rchips span{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.16);color:#fff}
+.dark .rchips svg{color:#5eead4}
+.rtile{position:relative;aspect-ratio:4/3;width:100%;max-width:420px;justify-self:end;display:grid;place-items:center;color:#fff;
+  clip-path:polygon(14% 0,100% 0,100% 86%,88% 100%,0 100%,0 14%);box-shadow:0 20px 50px rgba(30,60,140,.25)}
+.rtile>svg{width:38%;height:auto;filter:drop-shadow(0 6px 18px rgba(0,0,0,.25))}
+.rbadge{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:7px;background:rgba(10,13,20,.85);color:#fff;font-size:13px;font-weight:700;padding:7px 13px;border-radius:999px}
+.rbadge i{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.25)}
+.dark .card{background:#fff;color:var(--ink)}
+.rbtn{display:inline-flex;align-items:center;gap:10px;border:0;background:var(--navy);color:#fff;padding:14px 26px;border-radius:999px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 22px rgba(11,31,58,.22)}
+.rbtn:hover{background:var(--blue)}
+.rbtn b{font-weight:400;opacity:.75}
+.dark .rbtn{background:linear-gradient(90deg,#1e63b0,#3b82f6);box-shadow:0 8px 22px rgba(59,130,246,.35)}
+.dark .encart{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.2)}
+.dark .encart b{color:#fff}.dark .encart span{color:rgba(255,255,255,.75)}
+@media (max-width:820px){.rhead{grid-template-columns:1fr;gap:24px}.rtile{justify-self:stretch;max-width:none;aspect-ratio:16/9}.rtile>svg{width:24%}section.ray{padding-block:40px}.rhead p{font-size:15px}}
+
 .more .see{padding:12px 26px}
 .encart{margin-top:22px;border:1px dashed var(--line);border-radius:14px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:#fff}
 .encart b{display:block;font-family:var(--display);font-size:16px;color:var(--navy)}
@@ -522,18 +554,49 @@ import { db } from "./firebase.js";
 import { collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const CATS=[
- {k:"graph",n:"Graphisme & montage vidéo",d:"Écrans précis et cartes graphiques dédiées pour Photoshop, Premiere ou DaVinci.",chips:["GPU dédié","Écran 100 % sRGB","32 Go RAM"]},
- {k:"bureau",n:"Bureautique",d:"Rapides et fiables pour Word, Excel, réunions en ligne et navigation.",chips:["Léger & portable","Longue autonomie","SSD rapide"]},
- {k:"gaming",n:"Gaming",d:"Écrans à haute fréquence et refroidissement renforcé pour jouer sans ralentir.",chips:["RTX","Écran 144 Hz+","Clavier rétroéclairé"],badge:"144+ FPS"},
- {k:"etud",n:"Étudiants",d:"Le meilleur rapport prix/performance pour les cours, les exposés et les séries.",chips:["Petit budget","Léger","Autonomie"],badge:"Budget / Performance"},
- {k:"pro",n:"Professionnel & entreprise",d:"Sécurité, solidité et service pour les équipes.",chips:["Lecteur d'empreinte","Châssis renforcé"]},
- {k:"2en1",n:"2-en-1 convertibles",d:"Écran tactile qui se replie en tablette.",chips:["Tactile","Stylet"]},
- {k:"apple",n:"MacBook & Apple",d:"MacBook Air et Pro, neufs et reconditionnés.",chips:["macOS","Puce M"]},
- {k:"iphone",n:"iPhone",d:"iPhone neufs, toutes capacités, garantis.",chips:["iOS","Face ID","Neuf scellé"]},
- {k:"android",n:"Smartphones Android",d:"Samsung, Xiaomi, Tecno, Pixel… des téléphones Android neufs pour tous les budgets.",chips:["Double SIM","Grande autonomie","Tous budgets"]},
- {k:"montre",n:"Apple Watch & montres",d:"Apple Watch neuves et montres connectées, garanties.",chips:["Apple Watch","Santé & sport","GPS"]},
- {k:"acc",n:"Accessoires",d:"Souris, claviers, sacoches, chargeurs, écouteurs et tout pour équiper votre PC.",chips:["Souris & claviers","Chargeurs","Audio"]}
+ {k:"graph",n:"Graphisme & montage vidéo",pre:"Graphisme &",w:"Montage vidéo",tg:"linear-gradient(90deg,#06b6d4,#8b5cf6)",g:"linear-gradient(135deg,#f472b6,#8b5cf6 55%,#3b82f6)",ic:"brush",badge:"Écran 100 % sRGB",
+  d:"Des écrans fidèles aux couleurs, des cartes graphiques dédiées et beaucoup de mémoire pour travailler vite sur Photoshop, Premiere, DaVinci ou Illustrator.",chips:[["cpu","GPU dédié"],["eye","Écran haute fidélité"],["chip","RAM élevée"],["layers","Multitâche fluide"]]},
+ {k:"bureau",n:"Bureautique",pre:"Ordinateurs",w:"Bureautique",tg:"linear-gradient(90deg,#1e63b0,#06b6d4)",g:"linear-gradient(135deg,#22d3ee,#3b82f6 55%,#1e3a8a)",ic:"brief",badge:"Prêt pour Office",
+  d:"Rapides et fiables pour Word, Excel, les e-mails, les réunions en ligne et la navigation. Le bon choix pour le travail de tous les jours, au meilleur prix.",chips:[["doc","Word & Excel"],["globe","Navigation & e-mail"],["feather","Léger au quotidien"],["tag","Bon rapport qualité/prix"]]},
+ {k:"gaming",n:"Gaming",pre:"Ordinateurs",w:"Gaming",tg:"linear-gradient(90deg,#ec4899,#f97316)",g:"linear-gradient(135deg,#2dd4bf,#3b82f6 50%,#a855f7)",ic:"target",badge:"144+ FPS",dark:1,
+  d:"Pensés pour les joueurs exigeants : cartes graphiques dédiées, processeurs puissants et refroidissement renforcé, pour des parties fluides du début à la fin.",chips:[["cpu","GPU dédié"],["pulse","144 Hz+"],["snow","Refroidissement avancé"],["palette","RGB personnalisable"]]},
+ {k:"etud",n:"Étudiants",pre:"Ordinateurs",w:"Étudiants",tg:"linear-gradient(90deg,#22c55e,#06b6d4)",g:"linear-gradient(135deg,#a3e635,#22c55e 45%,#0ea5e9)",ic:"cap",badge:"Budget · Performance",
+  d:"Le meilleur rapport prix/performance pour les cours, les exposés, les recherches et les séries. Légers, endurants et faciles à emporter à la fac.",chips:[["feather","Léger & portable"],["battery","Longue autonomie"],["video","Cours en ligne"],["tag","Petit budget"]]},
+ {k:"pro",n:"Professionnel & entreprise",pre:"Professionnel &",w:"Business",tg:"linear-gradient(90deg,#1e63b0,#8b5cf6)",g:"linear-gradient(135deg,#64748b,#1e3a8a 55%,#0b1f3a)",ic:"shield",badge:"Sécurisé",
+  d:"Solides, sécurisés et faits pour durer : les PC des entreprises, avec lecteur d'empreinte, châssis renforcé et performances constantes.",chips:[["lock","Lecteur d'empreinte"],["shield","Châssis renforcé"],["layers","Multitâche"],["check","Fiabilité pro"]]},
+ {k:"2en1",n:"2-en-1 convertibles",pre:"2-en-1",w:"Convertibles",tg:"linear-gradient(90deg,#f97316,#ec4899)",g:"linear-gradient(135deg,#fb923c,#ec4899 55%,#8b5cf6)",ic:"tablet",badge:"Écran tactile",
+  d:"Un ordinateur qui se replie en tablette : écran tactile, stylet et charnière 360° pour prendre des notes, dessiner ou présenter partout.",chips:[["hand","Tactile"],["pen","Stylet"],["rotate","Charnière 360°"],["feather","Ultra-léger"]]},
+ {k:"apple",n:"MacBook & Apple",pre:"MacBook &",w:"Apple",tg:"linear-gradient(90deg,#64748b,#0b1f3a)",g:"linear-gradient(135deg,#e2e8f0,#94a3b8 50%,#334155)",ic:"laptop",badge:"Puce M",
+  d:"MacBook Air et MacBook Pro neufs et reconditionnés : écrans Retina, grande autonomie et la fluidité de macOS.",chips:[["chip","Puce M"],["eye","Écran Retina"],["battery","Grande autonomie"],["check","macOS"]]},
+ {k:"iphone",n:"iPhone",pre:"Nos",w:"iPhone",tg:"linear-gradient(90deg,#3b82f6,#8b5cf6)",g:"linear-gradient(135deg,#60a5fa,#6366f1 55%,#312e81)",ic:"phone",badge:"Neuf scellé",
+  d:"iPhone neufs, toutes capacités, garantis et livrés à Dakar.",chips:[["lock","Face ID"],["eye","Écran OLED"],["check","Neuf scellé"]]},
+ {k:"android",n:"Smartphones Android",pre:"Smartphones",w:"Android",tg:"linear-gradient(90deg,#22c55e,#14b8a6)",g:"linear-gradient(135deg,#86efac,#10b981 50%,#0f766e)",ic:"phone",badge:"Double SIM",
+  d:"Samsung, Xiaomi, Tecno, Pixel… des téléphones Android neufs pour tous les budgets.",chips:[["phone","Double SIM"],["battery","Grande autonomie"],["tag","Tous budgets"]]},
+ {k:"montre",n:"Apple Watch & montres",pre:"Apple Watch &",w:"Montres",tg:"linear-gradient(90deg,#f43f5e,#f97316)",g:"linear-gradient(135deg,#fda4af,#f43f5e 50%,#9f1239)",ic:"watch",badge:"Santé & sport",
+  d:"Apple Watch neuves et montres connectées, garanties.",chips:[["pulse","Santé & sport"],["globe","GPS"],["check","Garanties"]]},
+ {k:"acc",n:"Accessoires",pre:"Nos",w:"Accessoires",tg:"linear-gradient(90deg,#f59e0b,#ef4444)",g:"linear-gradient(135deg,#fde047,#f59e0b 50%,#ea580c)",ic:"head",badge:"Tout pour votre PC",
+  d:"Souris, claviers, sacoches, chargeurs, écouteurs et tout pour équiper votre ordinateur.",chips:[["mouse","Souris & claviers"],["battery","Chargeurs"],["head","Audio"]]}
 ];
+const SVGI=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const ICO={cpu:'<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+ pulse:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',snow:'<path d="M12 2v20M4.9 4.9l14.2 14.2M2 12h20M4.9 19.1 19.1 4.9"/>',palette:'<circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.2"/><circle cx="12" cy="7.5" r="1.2"/><circle cx="16" cy="10" r="1.2"/><path d="M12 21a3 3 0 0 1 0-6h2"/>',
+ eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',chip:'<rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7v10M11 7v10M15 7v10"/>',layers:'<path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/>',
+ doc:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+ feather:'<path d="M20 4c-6 0-12 4-14 12l-2 4M6 16h7"/><path d="M20 4c0 8-5 12-11 12"/>',tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+ battery:'<rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2M6 10v4M10 10v4"/>',video:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>',check:'<path d="m5 12 5 5 9-10"/>',
+ hand:'<path d="M8 13V5a2 2 0 0 1 4 0v6M12 11V4a2 2 0 0 1 4 0v7M16 11V7a2 2 0 0 1 4 0v7a8 8 0 0 1-16 0v-2a2 2 0 0 1 4 0"/>',pen:'<path d="m14 4 6 6L9 21H3v-6z"/>',rotate:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+ phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',mouse:'<rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/>',head:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/>'};
+const BIG={target:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"><circle cx="60" cy="60" r="34"/><circle cx="60" cy="60" r="12"/><path d="M60 8v20M60 92v20M8 60h20M92 60h20"/></svg>',
+ brush:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M100 14 54 60"/><path d="M54 60c-14-4-28 6-28 22 0 10-6 16-14 18 28 6 52-4 52-26z"/></svg>',
+ brief:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round"><rect x="14" y="36" width="92" height="64" rx="10"/><path d="M44 36V24h32v12M14 64h92"/></svg>',
+ cap:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M8 46 60 22l52 24-52 24z"/><path d="M30 58v24c18 14 42 14 60 0V58M104 50v26"/></svg>',
+ shield:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M60 10 20 26v30c0 26 17 44 40 52 23-8 40-26 40-52V26z"/><path d="m42 60 13 13 25-27"/></svg>',
+ tablet:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><rect x="16" y="20" width="70" height="86" rx="10"/><path d="m98 30 10 10-30 30H68V60z"/></svg>',
+ laptop:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round"><rect x="20" y="24" width="80" height="54" rx="6"/><path d="M6 92h108l-8 10H14z"/></svg>',
+ phone:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"><rect x="34" y="8" width="52" height="104" rx="12"/><path d="M54 94h12"/></svg>',
+ watch:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><rect x="28" y="30" width="64" height="60" rx="16"/><path d="M42 30 46 8h28l4 22M42 90l4 22h28l4-22M60 48v14l8 6"/></svg>',
+ head:'<svg viewBox="0 0 120 120" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round"><path d="M18 76V60a42 42 0 0 1 84 0v16"/><rect x="10" y="70" width="24" height="38" rx="8"/><rect x="86" y="70" width="24" height="38" rx="8"/></svg>'};
 let P=[];
 // Sujet secret pour les notifications de commande (application ntfy sur ton téléphone)
 // ---------- Paiement Wave ----------
@@ -564,19 +627,24 @@ $("fcats").innerHTML=CATS.map(c=>`<li>${c.n}</li>`).join("");
 $("brands").innerHTML=BRANDS.map(b=>`<button data-b="${b}" aria-pressed="${b==="Tout"}">${b}</button>`).join("")+QUICK.map(([k,n])=>`<button data-cat="${k}">${n}</button>`).join("");
 
 const PCS=["graph","bureau","gaming","etud","pro","2en1","apple"];
-const voirTous=(k,c,n)=>(PCS.includes(k)?"Voir tous les PC "+c.n.replace(/^(PC|Ordinateurs)\s+/i,""):"Voir tous les produits "+c.n)+` (${n})`;
+const voirTous=(k,c,n)=>(PCS.includes(k)?"Voir tous les PC "+c.n.replace(/^(PC|Ordinateurs)\s+/i,""):"Voir tous les produits "+c.n)+` <b>(${n})</b>`;
 // Mélange les marques (HP, Dell, Lenovo, Apple…) pour un accueil varié
 function melange(list){const g={};list.forEach(p=>(g[p.b||"?"]=g[p.b||"?"]||[]).push(p));const ks=Object.keys(g),out=[];
   for(let i=0;out.length<list.length;i++)ks.forEach(k=>{if(g[k][i])out.push(g[k][i])});return out}
 let VUS=new Set();
 function renderRayons(){
 $("rayons").innerHTML=SHOWN.map((k,i)=>{const c=CATS.find(x=>x.k===k);const items=P.filter(p=>p.c.includes(k));if(!items.length)return "";const mx=melange(items),pick=[...mx.filter(p=>!VUS.has(p.id)),...mx.filter(p=>VUS.has(p.id))].slice(0,4);pick.forEach(p=>VUS.add(p.id));
- return `<section class="block ${i%2===0?"alt":""}"><div class="wrap">
- <div class="head"><div><div class="eyebrow">Catégorie</div><h2>${c.n}</h2><p>${c.d}</p><div class="chips">${c.chips.map(x=>`<span>${x}</span>`).join("")}</div></div>
- ${c.badge?`<span class="badge">${c.badge}</span>`:""}</div>
+ return `<section class="block ray ${c.dark?"dark":(i%2?"soft":"")}"><div class="wrap">
+ <div class="rhead"><div>
+   <div class="rey">Catégorie</div>
+   <h2>${c.pre} <em style="background-image:${c.tg}">${c.w}</em></h2>
+   <p>${c.d}</p>
+   <div class="rchips">${c.chips.map(([ic,t])=>`<span>${SVGI(ICO[ic]||ICO.check)}${t}</span>`).join("")}</div>
+ </div>
+ <div class="rtile" style="background:${c.g}" aria-hidden="true">${c.badge?`<span class="rbadge"><i></i>${c.badge}</span>`:""}${BIG[c.ic]||BIG.laptop}</div></div>
  <div class="grid">${pick.map(card).join("")}</div>
  ${k==="bureau"?`<div class="encart"><div><b>Envie de voir plus de PC Bureautique ?</b><span>Toute la gamme Bureautique est à découvrir, toutes marques confondues.</span></div><button class="see" data-cat="bureau">Voir la gamme</button></div>`:""}
- <div class="more"><button class="see" data-cat="${k}">${voirTous(k,c,items.length)}</button></div></div></section>`}).join("");
+ <div class="more"><button class="rbtn" data-cat="${k}">${voirTous(k,c,items.length)} →</button></div></div></section>`}).join("");
 }
 
 function renderVedette(){
@@ -782,6 +850,8 @@ function fusion(){
     return x});
   P=[...vus.filter(p=>!p.h),...LIVE.filter(p=>!ids.has(p.id)&&!noms.has(normN(p.n))).map(p=>{const ph=photosDe(p);return ph&&ph.length>(p.imgs||[]).length?{...p,imgs:ph,img:ph[0]}:p})];
   if(mineOk&&liveOk)for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
+  // Les PC avec carte graphique NVIDIA RTX/GTX apparaissent aussi dans « Gaming »
+  P.forEach(p=>{if(/\b(rtx|gtx)\b/i.test(p.n)&&!p.c.includes("gaming"))p.c=[...p.c,"gaming"]});
   save();renderVedette();renderRayons();upd();ficheDepuisLien();
 }
 async function chargerSource(){
