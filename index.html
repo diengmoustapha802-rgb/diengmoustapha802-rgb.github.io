@@ -217,6 +217,25 @@ section.ray.dark{background:#0a0d14;color:#fff}
 .brands .wrap{display:flex;gap:10px;overflow-x:auto;padding-block:16px}
 .brands button{flex:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 18px;border-radius:999px;font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.02em}
 .brands button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+/* Bandeau des marques façon Infinitech : cartes qui défilent en escalier */
+.brands{background:linear-gradient(180deg,#fff,#f4f7fc);border-bottom:1px solid var(--line);overflow:hidden}
+.brands .wrap{display:block;overflow:hidden;padding-block:34px 26px;max-width:none;padding-inline:0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.mq{display:flex;gap:26px;width:max-content;animation:mq 38s linear infinite;padding-inline:13px}
+.brands:hover .mq,.brands:focus-within .mq{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.brands .bc{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:12px;width:190px;animation:esc 4.2s ease-in-out infinite;animation-delay:calc(var(--i) * -.6s)}
+@keyframes esc{0%,100%{transform:translateY(14px)}50%{transform:translateY(-14px)}}
+.bc .tile{width:100%;height:130px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 10px 26px rgba(11,31,58,.07);display:grid;place-items:center;transition:transform .2s,box-shadow .2s}
+.bc .wm{min-width:96px;padding:12px 18px;border-radius:10px;background:#dbe8f7;color:var(--navy);font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em;text-align:center}
+.bc .nm{font-weight:600;color:var(--muted);font-size:15px}
+.bc .nm::after{content:"";display:block;width:16px;height:2px;margin:6px auto 0;border-radius:2px;background:var(--line)}
+.bc:hover .tile,.bc:focus-visible .tile{transform:scale(1.04);box-shadow:0 16px 34px rgba(11,31,58,.14)}
+.bc:focus-visible .tile{outline:2px solid var(--blue);outline-offset:3px}
+.bc[aria-pressed="true"] .tile{border:2px solid var(--navy)}.bc[aria-pressed="true"] .wm{background:var(--navy);color:#fff}
+.bc[aria-pressed="true"] .nm{color:var(--navy)}.bc[aria-pressed="true"] .nm::after{background:var(--navy)}
+@media (max-width:820px){.brands .bc{width:140px}.bc .tile{height:96px;border-radius:14px}.bc .wm{font-size:16px;min-width:70px;padding:9px 12px}.mq{gap:16px;animation-duration:30s}.brands .wrap{padding-block:26px 18px}}
+@media (prefers-reduced-motion:reduce){.mq,.brands .bc{animation:none}.brands .wrap{overflow-x:auto}}
 
 /* Sections */
 section.block{padding-block:44px}
@@ -624,7 +643,8 @@ const save=()=>{try{localStorage.setItem("mt-cart",JSON.stringify(cart))}catch(e
 
 $("ddMenu").innerHTML=CATS.map(c=>`<a href="#vedette" data-cat="${c.k}">${c.n}</a>`).join("");
 $("fcats").innerHTML=CATS.map(c=>`<li>${c.n}</li>`).join("");
-$("brands").innerHTML=BRANDS.map(b=>`<button data-b="${b}" aria-pressed="${b==="Tout"}">${b}</button>`).join("")+QUICK.map(([k,n])=>`<button data-cat="${k}">${n}</button>`).join("");
+{const L=BRANDS.filter(b=>b!=="Tout"),one=(b,i,dup)=>`<button class="bc" data-b="${b}" style="--i:${i}" aria-pressed="false"${dup?' tabindex="-1" aria-hidden="true"':""} aria-label="Voir les produits ${b}"><span class="tile"><span class="wm">${b}</span></span><span class="nm">${b}</span></button>`;
+ $("brands").innerHTML=`<div class="mq">${L.map((b,i)=>one(b,i)).join("")}${L.map((b,i)=>one(b,i+L.length,1)).join("")}</div>`;}
 
 const PCS=["graph","bureau","gaming","etud","pro","2en1","apple"];
 const voirTous=(k,c,n)=>(PCS.includes(k)?"Voir tous les PC "+c.n.replace(/^(PC|Ordinateurs)\s+/i,""):"Voir tous les produits "+c.n)+` <b>(${n})</b>`;
@@ -661,18 +681,18 @@ function renderVedette(){
   $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun produit ne correspond. Essayez une autre marque ou un autre mot.</p>':'<p class="empty">Les produits arrivent bientôt.</p>');
 }
 function goVedette(){document.getElementById("vedette").scrollIntoView({behavior:"smooth"})}
-$("brands").onclick=e=>{const b=e.target.closest("button");if(!b||b.dataset.cat)return;brand=b.dataset.b;filterCat=null;showAll=false;
-  [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x===b));renderVedette();if(brand!=="Tout")goVedette()};
+$("brands").onclick=e=>{const b=e.target.closest("button");if(!b||b.dataset.cat)return;brand=brand===b.dataset.b?"Tout":b.dataset.b;filterCat=null;showAll=false;
+  [...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b===brand));renderVedette();if(brand!=="Tout")goVedette()};
 document.addEventListener("click",e=>{
   const c=e.target.closest("[data-cat]");if(c){e.preventDefault();filterCat=c.dataset.cat;brand="Tout";showAll=false;
-    [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
+    [...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
   const g=e.target.closest("[data-go]");if(g)document.getElementById(g.dataset.go).scrollIntoView({behavior:"smooth"});
   const sh=e.target.closest("[data-shop]");if(sh){e.preventDefault();showAll=true;filterCat=null;brand="Tout";q="";$("q").value="";
-    [...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
+    [...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
   const a=e.target.closest(".add");if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
   if(!e.target.closest(".dd"))$("ddMenu").hidden=true;
 });
-$("reset").onclick=()=>{brand="Tout";filterCat=null;q="";showAll=false;$("q").value="";[...$("brands").children].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
+$("reset").onclick=()=>{brand="Tout";filterCat=null;q="";showAll=false;$("q").value="";[...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
 $("q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderVedette()};
 $("ddBtn").onclick=()=>{const m=$("ddMenu");m.hidden=!m.hidden;$("ddBtn").setAttribute("aria-expanded",!m.hidden)};
 $("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
