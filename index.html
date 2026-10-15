@@ -51,6 +51,18 @@ nav>a:hover,nav>.dd>button:hover{background:var(--hover)}
 .dd-menu{position:absolute;top:100%;left:0;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:6px;min-width:240px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
 .dd-menu a{display:block;padding:9px 12px;border-radius:8px;text-decoration:none;font-size:14px}
 .dd-menu a:hover{background:var(--bg)}
+/* Menu « Nos ordinateurs » façon Infinitech */
+.ddb{display:inline-flex;align-items:center;gap:6px;position:relative}
+.ddb .chev{width:12px;height:12px;transition:transform .2s}
+.ddb::after{content:"";position:absolute;left:12px;right:30px;bottom:4px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .2s}
+.dd:hover .ddb::after,.ddb[aria-expanded="true"]::after{transform:scaleX(1)}
+.dd:hover .ddb .chev,.ddb[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.dd-menu{top:calc(100% + 10px);left:-6px;min-width:270px;border-radius:6px;padding:12px 8px;border:1px solid #eef0f4;box-shadow:0 18px 40px rgba(11,31,58,.12)}
+.dd-menu::before{content:"";position:absolute;left:0;right:0;top:-12px;height:12px}
+.dd-menu a{color:#4b5563;font-size:15px;line-height:1.35;padding:9px 14px;border-radius:6px;transition:background .15s,color .15s,padding .15s}
+.dd-menu a:hover,.dd-menu a:focus-visible{background:#f1f5fb;color:var(--navy);padding-left:18px}
+@media (hover:hover) and (min-width:821px){.dd:hover .dd-menu[hidden],.dd:focus-within .dd-menu[hidden]{display:block!important;animation:ddIn .18s ease-out}}
+@keyframes ddIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .tools{display:flex;gap:8px;align-items:center}
 .tools input{width:200px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--soft);color:var(--on-dark);font:inherit;font-size:14px}
 .tools input::placeholder{color:var(--muted)}
@@ -399,13 +411,13 @@ footer{background:var(--soft);color:var(--on-dark);font-size:14px;border-top:1px
     <a href="#top">Accueil</a>
     <a href="#vedette" data-shop>Boutique</a>
     <div class="dd">
-      <button id="ddBtn" aria-expanded="false" aria-controls="ddMenu">Nos produits ▾</button>
+      <button id="ddBtn" class="ddb" aria-expanded="false" aria-controls="ddMenu">Nos ordinateurs <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg></button>
       <div class="dd-menu" id="ddMenu" hidden></div>
     </div>
-    <a href="#vedette" data-cat="iphone">iPhone</a>
-    <a href="#vedette" data-cat="android">Android</a>
-    <a href="#vedette" data-cat="montre">Apple Watch</a>
-    <a href="#vedette" data-cat="acc">Accessoires</a>
+    <div class="dd">
+      <button id="ddBtn2" class="ddb" aria-expanded="false" aria-controls="ddMenu2">Téléphones &amp; accessoires <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg></button>
+      <div class="dd-menu" id="ddMenu2" hidden><a href="#vedette" data-cat="iphone">iPhone</a><a href="#vedette" data-cat="android">Smartphones Android</a><a href="#vedette" data-cat="montre">Apple Watch &amp; montres</a><a href="#vedette" data-cat="acc">Accessoires</a></div>
+    </div>
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -646,7 +658,7 @@ let brand="Tout",q="",filterCat=null,showAll=false,cart={};
 try{cart=JSON.parse(localStorage.getItem("mt-cart")||"{}")||{}}catch(e){}
 const save=()=>{try{localStorage.setItem("mt-cart",JSON.stringify(cart))}catch(e){}};
 
-$("ddMenu").innerHTML=CATS.map(c=>`<a href="#vedette" data-cat="${c.k}">${c.n}</a>`).join("");
+$("ddMenu").innerHTML=[["etud","Ordinateurs pour Étudiants"],["bureau","Ordinateurs Bureautique"],["gaming","Ordinateurs Gaming"],["graph","Ordinateurs Graphisme / Montage Vidéo"],["pro","Ordinateurs Professionnels / Business"],["2en1","2-en-1 / Convertibles Tactiles"],["apple","MacBook / Apple"]].map(([k,n])=>`<a href="#vedette" data-cat="${k}">${n}</a>`).join("");
 $("fcats").innerHTML=CATS.map(c=>`<li>${c.n}</li>`).join("");
 {const slugLogo=b=>b.toLowerCase().replace(/[^a-z0-9]+/g,"-");
  const ITEMS=[...BRANDS.filter(b=>b!=="Tout").map(b=>({b,n:b})),
@@ -698,13 +710,13 @@ document.addEventListener("click",e=>{
   const sh=e.target.closest("[data-shop]");if(sh){e.preventDefault();showAll=true;filterCat=null;brand="Tout";q="";$("q").value="";
     [...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
   const a=e.target.closest(".add");if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
-  if(!e.target.closest(".dd"))$("ddMenu").hidden=true;
+  const inDd=e.target.closest(".dd");document.querySelectorAll(".dd").forEach(d=>{if(d!==inDd){d.querySelector(".dd-menu").hidden=true;d.querySelector(".ddb").setAttribute("aria-expanded","false")}});
 });
 $("reset").onclick=()=>{brand="Tout";filterCat=null;q="";showAll=false;$("q").value="";[...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
 $("q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderVedette()};
-$("ddBtn").onclick=()=>{const m=$("ddMenu");m.hidden=!m.hidden;$("ddBtn").setAttribute("aria-expanded",!m.hidden)};
+document.querySelectorAll(".ddb").forEach(bt=>bt.onclick=()=>{const m=$(bt.getAttribute("aria-controls"));m.hidden=!m.hidden;bt.setAttribute("aria-expanded",!m.hidden)});
 $("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
-function closeMenus(){$("ddMenu").hidden=true;$("nav").classList.remove("open")}
+function closeMenus(){document.querySelectorAll(".dd-menu").forEach(m=>m.hidden=true);document.querySelectorAll(".ddb").forEach(b=>b.setAttribute("aria-expanded","false"));$("nav").classList.remove("open")}
 $("nav").addEventListener("click",e=>{if(e.target.matches("nav>a"))closeMenus()});
 
 // Compte à rebours jusqu'à dimanche minuit
