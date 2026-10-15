@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>My Flash · Ordinateurs, iPhone, Android et accessoires à Dakar</title>
 <meta name="description" content="My Flash : ordinateurs portables, MacBook, iPhone, smartphones Android, Apple Watch et accessoires. Livraison 24–48 h à Dakar, paiement à la livraison, Wave et Orange Money.">
 <meta name="theme-color" content="#0b1f3a">
@@ -522,6 +522,11 @@ html.fd body::after{content:"";visibility:visible;position:fixed;left:50%;top:50
 .f-crumb{font-size:13px;color:var(--muted);margin-bottom:8px}.f-crumb a{color:var(--muted);text-decoration:none}.f-crumb a:hover{color:var(--blue)}
 .f-stock{display:inline-flex;align-items:center;gap:6px;color:#1f9d55;font-weight:700;font-size:14px;margin:0 0 14px}.f-stock i{width:8px;height:8px;border-radius:50%;background:#1f9d55}
 .f-share{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-weight:600;color:var(--navy);cursor:pointer}
+/* Fiche et page : jamais plus larges que l'écran, pas de zoom au double-tap */
+html,body{max-width:100%;overflow-x:hidden}html{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.fiche{overflow-x:hidden;overscroll-behavior:contain}.f-grid>*{min-width:0}.f-thumbs{max-width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none}.f-thumbs::-webkit-scrollbar{display:none}
+.f-info h1{overflow-wrap:anywhere}.f-btns>*{max-width:100%;min-width:0}.f-assur>div{min-width:0}
+input,select,textarea{font-size:16px}
 </style>
 </head>
 <body style="margin:0">
