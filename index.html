@@ -710,6 +710,7 @@ body.pg-contact .cpage{display:block}
 </section>
 <div class="toast" id="toast" hidden></div>
 
+<script src="couleurs.js?v=3"></script>
 <script type="module">
 import { db } from "./firebase.js";
 import { collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -834,7 +835,7 @@ document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");if(g)document.getElementById(g.dataset.go).scrollIntoView({behavior:"smooth"});
   const sh=e.target.closest("[data-shop]");if(sh){e.preventDefault();showAll=true;filterCat=null;brand="Tout";q="";$("q").value="";
     [...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
-  const a=e.target.closest(".add");if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
+  const a=e.target.closest(".add");if(a&&cp(a.dataset.id)?.col?.length)ouvrirFiche(a.dataset.id);else if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
   const inDd=e.target.closest(".dd");document.querySelectorAll(".dd").forEach(d=>{if(d!==inDd){d.querySelector(".dd-menu").hidden=true;d.querySelector(".ddb").setAttribute("aria-expanded","false")}});
 });
 $("reset").onclick=()=>{brand="Tout";filterCat=null;q="";showAll=false;$("q").value="";[...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
@@ -852,13 +853,14 @@ function tick(){const now=new Date(),end=new Date(now);end.setDate(now.getDate()
 tick();setInterval(tick,1000);
 
 // Panier
-const subtotal=()=>Object.keys(cart).reduce((a,id)=>a+(P.find(x=>x.id==id)?.p||0)*cart[id],0);
+const cp=k=>P.find(x=>x.id==String(k).split("|")[0]),cc=k=>String(k).split("|")[1]||"",cn=k=>cc(k)?" ("+cc(k)+")":"";
+const subtotal=()=>Object.keys(cart).reduce((a,id)=>a+(cp(id)?.p||0)*cart[id],0);
 function upd(){$("cartTotal").textContent=subtotal().toLocaleString("fr-FR").replace(/ | /g," ")+" F"}
 let tt;function toast(m){$("toast").textContent=m;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>$("toast").hidden=true,1600)}
 const pic2=p=>p.img?`<img src="${p.img}" alt="">`:pic;
 function drawCart(){const ids=Object.keys(cart).filter(k=>cart[k]>0);
   if(!ids.length){$("lines").innerHTML='<p style="color:var(--muted)">Votre panier est vide. Ajoutez un produit pour commander.</p>';$("dfoot").hidden=true;return}
-  $("lines").innerHTML=ids.map(id=>{const p=P.find(x=>x.id==id);return `<div class="line"><b>${p.b} ${p.n.split("·")[0]}</b><span class="p">${f(p.p*cart[id])}</span>
+  $("lines").innerHTML=ids.map(id=>{const p=cp(id);return `<div class="line"><b>${p.b} ${p.n.split("·")[0]}${esc(cn(id))}</b><span class="p">${f(p.p*cart[id])}</span>
   <div class="qty"><button data-d="-1" data-id="${id}" aria-label="Retirer un">−</button><span>${cart[id]}</span><button data-d="1" data-id="${id}" aria-label="Ajouter un">+</button></div></div>`}).join("");
   $("dsub").textContent=f(subtotal());$("dfoot").hidden=false}
 function totals(){const s=subtotal();$("sub").textContent=f(s);$("total").textContent=f(s);return s}
@@ -867,7 +869,7 @@ $("lines").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;const i
 // Page de commande
 function openCaisse(){
   const ids=Object.keys(cart).filter(k=>cart[k]>0);if(!ids.length)return;
-  $("cItems").innerHTML=ids.map(id=>{const p=P.find(x=>x.id==id);return `<div class="c-item"><div class="im">${pic2(p)}</div><div>${p.b} ${p.n}<small>× ${cart[id]}</small></div><span class="pr">${f(p.p*cart[id])}</span></div>`}).join("");
+  $("cItems").innerHTML=ids.map(id=>{const p=cp(id);return `<div class="c-item"><div class="im">${pic2(p)}</div><div>${p.b} ${p.n}${esc(cn(id))}<small>× ${cart[id]}</small></div><span class="pr">${f(p.p*cart[id])}</span></div>`}).join("");
   totals();$("checkout").hidden=false;$("done").hidden=true;$("caisse").hidden=false;$("caisse").scrollTop=0;document.body.style.overflow="hidden";
 }
 function closeCaisse(){$("caisse").hidden=true;document.body.style.overflow=""}
@@ -879,7 +881,7 @@ $("checkout").onsubmit=async e=>{e.preventDefault();
   const t=totals(),n="MT-"+Math.floor(1000+Math.random()*9000);
   const paym=document.querySelector('input[name="paym"]:checked').value;
   const client=[$("prenom").value.trim(),$("nom").value.trim()].filter(Boolean).join(" ")||"Client";
-  const articles=Object.keys(cart).map(id=>{const p=P.find(x=>x.id==id);return p?{id:String(id),nom:p.b+" "+p.n,prix:p.p,quantite:cart[id]}:null}).filter(Boolean);
+  const articles=Object.keys(cart).map(id=>{const p=cp(id);return p?{id:String(id),nom:p.b+" "+p.n+cn(id),prix:p.p,quantite:cart[id]}:null}).filter(Boolean);
   try{
     await addDoc(collection(db,"commandes"),{numero:n,client,telephone:$("tel").value.trim(),email:$("email").value.trim(),
       pays:$("pays").value,region:$("region").value,adresse:$("adr").value.trim(),notes:$("notes").value.trim(),
@@ -939,6 +941,7 @@ document.addEventListener("keydown",e=>{if($("fiche").hidden||e.target.matches("
 var DESC={};
 fetch("descriptions.json?v=2").then(r=>r.ok?r.json():{}).then(j=>{DESC=j||{};if(ficheId)ouvrirFiche(ficheId,false)}).catch(()=>{});
 const descDe=p=>{const own=MINE.find(m=>m.id===p.id);if(own&&own.d&&own.d.trim())return own.d.trim();return DESC[p.id]||(p.d||"").trim()};
+let ficheCol="";const ficheCle=()=>ficheId+(ficheCol?"|"+ficheCol:"");
 function ouvrirFiche(id,push=true){
   const p=P.find(x=>x.id==id);if(!p)return false;
   ficheId=id;ficheQ=1;const imgs=(p.imgs&&p.imgs.length?p.imgs:(p.img?[p.img]:[]));galImgs=imgs;galI=0;
@@ -954,12 +957,14 @@ function ouvrirFiche(id,push=true){
       <h1>${esc(p.n)}</h1>
       <div class="f-price"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>
       ${tags.length?`<div class="f-tags">${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>`:""}
+      ${p.col&&p.col.length?`<div id="fCol" style="margin:4px 0 18px"></div>`:""}
       <div class="f-qty"><span>Quantité</span><button type="button" data-fq="-1" aria-label="Moins">−</button><output id="fQ">1</output><button type="button" data-fq="1" aria-label="Plus">+</button></div>
       <div class="f-btns"><button class="f-buy" id="fAdd">Ajouter au panier</button><button class="f-buy" id="fNow" style="background:#fff;color:var(--navy);border:1px solid var(--navy)">Commander maintenant</button><a class="f-wa" href="${wa}" target="_blank" rel="noopener">Poser une question sur WhatsApp</a></div>
       <div class="f-assur"><div><b>24–48 h</b>Livraison Dakar</div><div><b>${p.r?"Garantie":"12 mois"}</b>${p.r?"précisée à la commande":"de garantie"}</div><div><b>À la livraison</b>Paiement possible</div></div>
       ${descDe(p)?`<div class="f-desc"><h2>Description</h2>${esc(descDe(p))}</div>`:""}
     </div>
     ${sim.length?`<div class="f-sim" style="grid-column:1/-1"><h2>Produits similaires</h2><div class="grid">${sim.map(card).join("")}</div></div>`:""}`;
+  ficheCol="";if(p.col&&p.col.length&&window.MFCouleurs)MFCouleurs.afficherProduit($("fCol"),JSON.stringify(p.col),(g,o)=>{ficheCol=o.nom});
   $("fiche").hidden=false;$("fiche").scrollTop=0;document.body.style.overflow="hidden";
   document.title=p.n+" · My Flash";
   if(push&&location.hash!=="#produit="+encodeURIComponent(id))history.pushState({fiche:id},"","#produit="+encodeURIComponent(id));
@@ -972,8 +977,8 @@ $("fiche").addEventListener("click",e=>{
   const t=e.target.closest("[data-gi]");if(t)galGo(+t.dataset.gi);
   const nv=e.target.closest("[data-gnav]");if(nv)galGo(galI+ +nv.dataset.gnav);
   const q=e.target.closest("[data-fq]");if(q){ficheQ=Math.max(1,Math.min(20,ficheQ+ +q.dataset.fq));$("fQ").textContent=ficheQ}
-  if(e.target.closest("#fAdd")){cart[ficheId]=(cart[ficheId]||0)+ficheQ;save();upd();toast("Ajouté au panier")}
-  if(e.target.closest("#fNow")){cart[ficheId]=(cart[ficheId]||0)+ficheQ;save();upd();fermerFiche();history.replaceState(null,"",location.pathname);openCaisse()}
+  if(e.target.closest("#fAdd")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();toast("Ajouté au panier")}
+  if(e.target.closest("#fNow")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();fermerFiche();history.replaceState(null,"",location.pathname);openCaisse()}
 });
 document.addEventListener("click",e=>{const o=e.target.closest("[data-open]");if(!o||e.target.closest(".add"))return;e.preventDefault();ouvrirFiche(o.dataset.open)});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches(".pic[data-open]"))ouvrirFiche(e.target.dataset.open)});
@@ -1020,7 +1025,7 @@ function fusion(){
     if(l&&l.d&&l.d.trim()&&!(m.d&&m.d.trim()))x.d=l.d;
     return x});
   P=[...vus.filter(p=>!p.h),...LIVE.filter(p=>!ids.has(p.id)&&!noms.has(normN(p.n))).map(p=>{const ph=photosDe(p);return ph&&ph.length>(p.imgs||[]).length?{...p,imgs:ph,img:ph[0]}:p})];
-  if(mineOk&&liveOk)for(const id of Object.keys(cart))if(!P.find(p=>p.id==id))delete cart[id];
+  if(mineOk&&liveOk)for(const id of Object.keys(cart))if(!cp(id))delete cart[id];
   // Les PC avec carte graphique NVIDIA RTX/GTX apparaissent aussi dans « Gaming »
   P.forEach(p=>{if(/\b(rtx|gtx)\b/i.test(p.n)&&!p.c.includes("gaming"))p.c=[...p.c,"gaming"]});
   save();renderVedette();renderRayons();upd();ficheDepuisLien();
@@ -1042,7 +1047,7 @@ async function chargerSource(){
 chargerSource();setInterval(chargerSource,10*60*1000); // vérifie les nouveautés toutes les 10 min
 
 onSnapshot(collection(db,"produits"),snap=>{
-  MINE=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",imgs:x.image?[x.image]:[],d:x.description||"",r:x.etat==="reconditionne",h:!!x.masque}});
+  MINE=snap.docs.map(d=>{const x=d.data();return {id:d.id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",imgs:x.image?[x.image]:[],d:x.description||"",r:x.etat==="reconditionne",col:Array.isArray(x.couleurs)?x.couleurs:[],h:!!x.masque}});
   mineOk=true;fusion();
 },err=>{console.error(err);mineOk=true;fusion();});
 

@@ -135,6 +135,7 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius
         <label class="check"><input type="checkbox" id="fMasque"> Masquer de la boutique (le produit reste ici mais les clients ne le voient plus)</label>
         <label for="fEtat">État<select id="fEtat"><option value="neuf">Neuf</option><option value="reconditionne">Reconditionné</option></select></label>
         <div><div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:6px">Rayons</div><div class="cats" id="fCats"></div></div>
+        <div id="fCouleurs" style="border:1px solid var(--line);border-radius:12px;padding:14px"></div>
         <div class="photo">
           <img id="fPreview" alt="" hidden>
           <label for="fPhoto" style="flex:1">Photo du produit<input id="fPhoto" type="file" accept="image/*"></label>
@@ -163,6 +164,7 @@ textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius
 <datalist id="marques"><option>Apple</option><option>ASUS</option><option>ASUS ROG</option><option>Dell</option><option>HP</option><option>Lenovo</option><option>MSI</option><option>Samsung</option><option>Microsoft</option><option>Xiaomi</option><option>Tecno</option><option>Infinix</option><option>Google Pixel</option><option>Logitech</option><option>JBL</option><option>Anker</option></datalist>
 <div class="toast" id="toast" hidden></div>
 
+<script src="couleurs.js?v=3"></script>
 <script type="module">
 import { db, auth } from "./firebase.js";
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -193,6 +195,7 @@ document.querySelector(".tabs").onclick=e=>{const b=e.target.closest("[data-tab]
 
 /* ---------- Produits ---------- */
 let produits=[],editId=null,photo="";
+const picker=window.MFCouleurs?MFCouleurs.selecteurGerant($("fCouleurs")):null;
 $("fCats").innerHTML=RAYONS.map(([k,n])=>`<label><input type="checkbox" value="${k}"> ${n}</label>`).join("");
 
 function start(){
@@ -226,6 +229,7 @@ function openForm(p){
   $("fNom").value=p?.nom||"";$("fMarque").value=p?.marque||"";$("fPrix").value=p?.prix||"";$("fAncien").value=p?.ancienPrix||"";
   $("fVedette").checked=!!p?.vedette;$("fEtat").value=p?.etat||"neuf";$("fMasque").checked=!!p?.masque;$("fDesc").value=p?.description||"";$("fPhoto").value="";
   $("fCats").querySelectorAll("input").forEach(i=>i.checked=(p?.categories||[]).includes(i.value));
+  if(picker)picker.definir(p?.couleurs||[]);
   $("fPreview").src=photo;$("fPreview").hidden=!photo;$("formErr").hidden=true;
   $("pForm").hidden=false;$("pForm").scrollIntoView({behavior:"smooth"});$("fNom").focus();
 }
@@ -245,7 +249,8 @@ $("pForm").onsubmit=async e=>{e.preventDefault();
   const cats=[...$("fCats").querySelectorAll("input:checked")].map(i=>i.value);
   if(!cats.length){$("formErr").textContent="Choisis au moins un rayon pour que le produit apparaisse dans la boutique.";$("formErr").hidden=false;return}
   const data={nom:$("fNom").value.trim(),marque:$("fMarque").value.trim(),prix:+$("fPrix").value,ancienPrix:+$("fAncien").value||0,
-    categories:cats,vedette:$("fVedette").checked,etat:$("fEtat").value,masque:$("fMasque").checked,description:$("fDesc").value.trim(),image:photo,maj:serverTimestamp()};
+    categories:cats,vedette:$("fVedette").checked,etat:$("fEtat").value,masque:$("fMasque").checked,description:$("fDesc").value.trim(),image:photo,maj:serverTimestamp(),
+    couleurs:picker?picker.valeur().map(c=>{const o={nom:c.nom,hex:c.hex||"#cccccc"};if(c.hex2)o.hex2=c.hex2;if(c.grad)o.grad=c.grad;return o}):[]};
   if(data.ancienPrix&&data.ancienPrix<=data.prix){$("formErr").textContent="L'ancien prix doit être plus élevé que le prix de vente.";$("formErr").hidden=false;return}
   $("saveBtn").disabled=true;$("saveBtn").textContent="Enregistrement…";
   try{editId?await updateDoc(doc(db,"produits",editId),data):await addDoc(collection(db,"produits"),data);
