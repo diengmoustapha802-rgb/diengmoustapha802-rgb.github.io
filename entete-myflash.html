@@ -1,0 +1,188 @@
+<!-- ============================================================
+     EN-TÊTE MY FLASH — style infinitech.sn
+     Colle tout ce bloc juste après la balise <body> de index.html,
+     et supprime (ou commente) ton ancien <header>.
+     ============================================================ -->
+
+<style>
+  :root{
+    --mf-navy:#0b1f3a;
+    --mf-blue:#1d4ed8;
+    --mf-border:#e5e7eb;
+    --mf-h:64px;
+  }
+  /* Barre fixe toujours visible */
+  .mf-header{
+    position:fixed; top:0; left:0; right:0; z-index:9999;
+    height:var(--mf-h); background:#fff;
+    border-bottom:1px solid var(--mf-border);
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+  }
+  .mf-header__in{
+    max-width:1280px; height:100%; margin:0 auto; padding:0 14px;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  }
+  body{ padding-top:var(--mf-h) !important; }
+
+  /* Bouton MENU (3 barres) */
+  .mf-burger{
+    justify-self:start; display:flex; align-items:center; gap:8px;
+    background:none; border:0; cursor:pointer; padding:8px 4px;
+    font:600 14px/1 inherit; letter-spacing:.04em; color:var(--mf-navy);
+  }
+  .mf-burger span.bars{ display:grid; gap:4px; }
+  .mf-burger span.bars i{ display:block; width:20px; height:2px; background:var(--mf-navy); border-radius:2px; }
+
+  /* Logo centré */
+  .mf-logo{ justify-self:center; display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .mf-logo img{ height:38px; width:auto; }
+  .mf-logo b{ font-weight:800; font-size:18px; color:var(--mf-navy); }
+
+  /* Panier carré avec compteur */
+  .mf-cart{
+    justify-self:end; position:relative; width:42px; height:42px;
+    display:grid; place-items:center; text-decoration:none;
+    border:2px solid var(--mf-navy); border-radius:6px; color:var(--mf-navy);
+    font-weight:700;
+  }
+  .mf-cart svg{ width:20px; height:20px; }
+  .mf-cart .mf-count{
+    position:absolute; top:-8px; right:-8px; min-width:20px; height:20px;
+    padding:0 5px; border-radius:10px; background:var(--mf-blue); color:#fff;
+    font:700 11px/20px system-ui, sans-serif; text-align:center;
+  }
+
+  /* Tiroir de menu (gauche) */
+  .mf-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:10000;
+    opacity:0; visibility:hidden; transition:.25s;
+  }
+  .mf-drawer{
+    position:fixed; top:0; left:0; bottom:0; width:min(84vw,340px); z-index:10001;
+    background:#fff; transform:translateX(-100%); transition:transform .28s ease;
+    display:flex; flex-direction:column; overflow-y:auto;
+  }
+  .mf-open .mf-overlay{ opacity:1; visibility:visible; }
+  .mf-open .mf-drawer{ transform:none; }
+  .mf-open{ overflow:hidden; }
+
+  .mf-drawer__top{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px; border-bottom:1px solid var(--mf-border);
+  }
+  .mf-drawer__top b{ color:var(--mf-navy); font-size:16px; }
+  .mf-close{ background:none; border:0; font-size:28px; line-height:1; cursor:pointer; color:var(--mf-navy); }
+
+  .mf-search{ padding:14px 16px; border-bottom:1px solid var(--mf-border); }
+  .mf-search input{
+    width:100%; box-sizing:border-box; padding:11px 12px; font-size:15px;
+    border:1px solid var(--mf-border); border-radius:6px;
+  }
+  .mf-drawer nav a{
+    display:flex; justify-content:space-between; padding:15px 16px;
+    border-bottom:1px solid var(--mf-border); text-decoration:none;
+    color:#111; font-size:15px;
+  }
+  .mf-drawer nav a::after{ content:"›"; color:#9ca3af; }
+  .mf-drawer nav a:active{ background:#f3f4f6; }
+  .mf-wa{
+    margin:16px; padding:13px; border-radius:6px; text-align:center;
+    background:#25d366; color:#fff; font-weight:700; text-decoration:none;
+  }
+</style>
+
+<header class="mf-header">
+  <div class="mf-header__in">
+    <button class="mf-burger" id="mfBurger" aria-label="Ouvrir le menu">
+      <span class="bars"><i></i><i></i><i></i></span> MENU
+    </button>
+
+    <a class="mf-logo" href="#">
+      <img src="logo.png" alt="My Flash" onerror="this.remove()">
+      <b>My Flash</b>
+    </a>
+
+    <a class="mf-cart" id="mfCart" href="#panier" aria-label="Panier">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="mf-count" id="mfCount">0</span>
+    </a>
+  </div>
+</header>
+
+<div class="mf-overlay" id="mfOverlay"></div>
+<aside class="mf-drawer" aria-label="Menu">
+  <div class="mf-drawer__top">
+    <b>Menu</b>
+    <button class="mf-close" id="mfClose" aria-label="Fermer">&times;</button>
+  </div>
+  <div class="mf-search">
+    <input id="mfSearch" type="search" placeholder="Rechercher un produit…">
+  </div>
+  <nav id="mfNav"></nav>
+  <a class="mf-wa" href="https://wa.me/221788740712" target="_blank">Contactez-nous sur WhatsApp</a>
+</aside>
+
+<script>
+(function(){
+  /* ---- 1. TES CATÉGORIES : adapte les liens à ton site ---- */
+  var MENU = [
+    ["Accueil",        "#"],
+    ["Ordinateurs",    "#categorie=ordinateurs"],
+    ["Bureautique",    "#categorie=bureautique"],
+    ["iPhone",         "#categorie=iphone"],
+    ["Android",        "#categorie=android"],
+    ["Apple Watch",    "#categorie=apple-watch"],
+    ["Accessoires",    "#categorie=accessoires"],
+    ["Mon panier",     "#panier"]
+  ];
+
+  var nav = document.getElementById("mfNav");
+  MENU.forEach(function(m){
+    var a = document.createElement("a");
+    a.textContent = m[0]; a.href = m[1];
+    a.addEventListener("click", closeMenu);
+    nav.appendChild(a);
+  });
+
+  /* ---- 2. Ouvrir / fermer le menu ---- */
+  function openMenu(){ document.documentElement.classList.add("mf-open"); }
+  function closeMenu(){ document.documentElement.classList.remove("mf-open"); }
+  document.getElementById("mfBurger").onclick = openMenu;
+  document.getElementById("mfClose").onclick = closeMenu;
+  document.getElementById("mfOverlay").onclick = closeMenu;
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeMenu(); });
+  window.addEventListener("hashchange", closeMenu);
+
+  /* ---- 3. Recherche : redirige vers ta recherche ---- */
+  document.getElementById("mfSearch").addEventListener("keydown", function(e){
+    if(e.key==="Enter" && this.value.trim()){
+      location.hash = "recherche=" + encodeURIComponent(this.value.trim());
+      closeMenu();
+    }
+  });
+
+  /* ---- 4. Compteur du panier ----
+     Appelle  mfSetCartCount(n)  dans ton code à chaque ajout/suppression.
+     Sinon, le script essaie de lire tout seul un panier stocké dans localStorage. */
+  window.mfSetCartCount = function(n){
+    document.getElementById("mfCount").textContent = n || 0;
+  };
+  function autoCount(){
+    try{
+      for(var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if(!/cart|panier/i.test(k)) continue;
+        var v = JSON.parse(localStorage.getItem(k));
+        if(Array.isArray(v)){
+          var n = v.reduce(function(s,x){ return s + (+(x && (x.qty||x.quantite||x.quantity)) || 1); },0);
+          return mfSetCartCount(n);
+        }
+      }
+    }catch(e){}
+  }
+  autoCount();
+  setInterval(autoCount, 1500);
+  window.addEventListener("storage", autoCount);
+})();
+</script>
+<!-- =================== FIN EN-TÊTE MY FLASH =================== -->
