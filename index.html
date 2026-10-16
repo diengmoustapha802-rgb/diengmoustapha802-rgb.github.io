@@ -540,6 +540,27 @@ input,select,textarea{font-size:16px}
 .card.sk .pic,.card.sk i{background:linear-gradient(90deg,#eef1f6 25%,#f7f9fc 50%,#eef1f6 75%);background-size:200% 100%;animation:skl 1.2s linear infinite}
 .card.sk .pic{min-height:150px;border-radius:12px}.card.sk i{display:block;height:12px;border-radius:6px;margin-top:12px}.card.sk i.s{width:55%}
 @keyframes skl{to{background-position:-200% 0}}
+
+/* ===== Fiche produit façon Infinitech : l'en-tête (MENU, logo, panier) reste visible ===== */
+body.fiche-on header{z-index:39}
+body.fiche-on .fiche{top:var(--hh,0px)}
+.fiche .c-top{display:none}
+body.fiche-on .scrim{z-index:41}
+body.fiche-on .drawer{z-index:42}
+.f-crumb.top{grid-column:1/-1;margin:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-crumb.top a{color:var(--ink)}
+.f-crumb.top .sep{margin:0 8px;color:#c4c9d2}
+.f-crumb.top .cur{color:var(--muted)}
+@keyframes cartBump{0%{transform:scale(1)}35%{transform:scale(1.15)}70%{transform:scale(.95)}100%{transform:scale(1)}}
+.cartbtn.bump{animation:cartBump .45s ease}
+.cb-bag{display:none}
+@media (max-width:820px){
+  .cartbtn .cb-txt{display:none}
+  .cartbtn{background:#fff!important;color:var(--navy)!important;border:2px solid var(--navy)!important;padding:0!important;width:46px;height:46px;border-radius:8px!important;display:flex;align-items:center;justify-content:center;flex:none}
+  .cartbtn .cb-bag{display:flex;position:relative;align-items:center;justify-content:center}
+  .cartbtn .cb-bag svg{width:26px;height:26px}
+  .cartbtn .cb-bag b{position:absolute;top:-12px;right:-14px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--navy);color:#fff;font-size:12px;line-height:20px;text-align:center}
+}
 </style>
 </head>
 <body style="margin:0">
@@ -568,7 +589,7 @@ input,select,textarea{font-size:16px}
   </nav>
   <div class="tools">
     <input id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher">
-    <button class="cartbtn" id="openCart">Panier · <span id="cartTotal">0 F</span></button>
+    <button class="cartbtn" id="openCart" aria-label="Panier"><span class="cb-txt">Panier · <span id="cartTotal">0 F</span></span><span class="cb-bag" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><b id="cartCount">0</b></span></button>
   </div>
 </div></header>
 
@@ -916,7 +937,7 @@ $("nav").addEventListener("click",e=>{if(e.target.matches("nav>a"))closeMenus()}
 const cp=k=>P.find(x=>x.id==String(k).split("|")[0]),cc=k=>String(k).split("|")[1]||"",cn=k=>cc(k)?" ("+cc(k)+")":"";
 const nomP=p=>p.b&&!p.n.toLowerCase().startsWith(p.b.toLowerCase())?p.b+" "+p.n:p.n;
 const subtotal=()=>Object.keys(cart).reduce((a,id)=>a+(cp(id)?.p||0)*cart[id],0);
-function upd(){$("cartTotal").textContent=subtotal().toLocaleString("fr-FR").replace(/ | /g," ")+" F"}
+function upd(){const cc0=$("cartCount");if(cc0)cc0.textContent=Object.keys(cart).reduce((a,k)=>a+(cp(k)?cart[k]:0),0);$("cartTotal").textContent=subtotal().toLocaleString("fr-FR").replace(/ | /g," ")+" F"}
 let tt;function toast(m){$("toast").textContent=m;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>$("toast").hidden=true,1600)}
 const pic2=p=>p.img?`<img src="${esc(thu(p.img))}" alt="">`:pic;
 function drawCart(){const ids=Object.keys(cart).filter(k=>cart[k]>0&&cp(k));
@@ -1014,12 +1035,11 @@ function ouvrirFiche(id,push=true){
   const tags=p.n.split(/\s[|–—,]\s|\s\|\s|,\s/).slice(1).map(t=>t.trim()).filter(t=>t&&t.length<40).slice(0,6);
   const sim=P.filter(x=>x.id!==p.id&&x.c.some(c=>p.c.includes(c))).slice(0,4);
   const wa="https://wa.me/221788740712?text="+encodeURIComponent(`Bonjour My Flash, je suis intéressé par : ${nomP(p)} (${f(p.p)}). Est-il disponible ?`);
-  $("ficheBody").innerHTML=`<div>
+  $("ficheBody").innerHTML=`${(()=>{const c=CATS.find(x=>p.c.includes(x.k));return `<div class="f-crumb top" aria-label="Fil d'Ariane"><a href="#top" data-fermer>Accueil</a>${c?`<span class="sep">/</span><a href="#vedette" data-cat="${c.k}">${esc(c.n)}</a>`:""}<span class="sep">/</span><span class="cur">${esc(nomP(p))}</span></div>`})()}<div>
       <div class="f-main">${p.o?`<span class="off">-${Math.round((1-p.p/p.o)*100)} %</span>`:""}${p.r?`<span class="rec">Reconditionné</span>`:""}${pic}${imgs[0]?`<img id="fImg" src="${esc(med(imgs[0]))}" style="background:#fff url(&quot;${esc(thu(imgs[0]))}&quot;) center/contain no-repeat" alt="${esc(p.n)}" fetchpriority="high" onerror="this.remove()">`:""}${imgs.length>1?`<button type="button" class="g-nav g-prev" data-gnav="-1" aria-label="Photo précédente">‹</button><button type="button" class="g-nav g-next" data-gnav="1" aria-label="Photo suivante">›</button><span class="g-count" id="gCount">1 / ${imgs.length}</span><span class="g-dots" id="gDots">${imgs.map((u,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</span>`:""}</div>
       ${imgs.length>1?`<div class="f-thumbs">${imgs.map((u,i)=>`<button type="button" data-gi="${i}" aria-pressed="${i===0}" aria-label="Photo ${i+1}"><img src="${esc(thu(u))}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>`:""}
     </div>
     <div class="f-info">
-      ${(()=>{const c=CATS.find(x=>p.c.includes(x.k));return `<div class="f-crumb"><a href="#top" data-fermer>Accueil</a>${c?` › <a href="#vedette" data-cat="${c.k}">${esc(c.n)}</a>`:""}</div>`})()}
       <div class="brand">${esc(p.b)}${p.r?" · Reconditionné":" · Neuf"}</div>
       <h1>${esc(p.n)}</h1>
       <div class="f-price"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>
@@ -1034,13 +1054,17 @@ function ouvrirFiche(id,push=true){
     <div id="fSim" style="grid-column:1/-1"></div>`;
   setTimeout(()=>{const z=$("fSim");if(z&&ficheId===id&&sim.length)z.outerHTML=`<div class="f-sim" style="grid-column:1/-1"><h2>Produits similaires</h2><div class="grid">${sim.map(card).join("")}</div></div>`},60);
   ficheCol="";if(p.col&&p.col.length&&window.MFCouleurs)MFCouleurs.afficherProduit($("fCol"),JSON.stringify(p.col),(g,o)=>{ficheCol=o.nom});
-  $("fiche").hidden=false;$("fiche").scrollTop=0;document.documentElement.classList.remove("fd");document.body.style.overflow="hidden";
+  document.body.classList.add("fiche-on");ficheHaut();$("fiche").hidden=false;$("fiche").scrollTop=0;document.documentElement.classList.remove("fd");document.body.style.overflow="hidden";
   document.title=p.n+" · My Flash";
   if(push&&location.hash!=="#produit="+encodeURIComponent(id))history.pushState({fiche:id},"","#produit="+encodeURIComponent(id));
   return true;
 }
-function fermerFiche(){$("fiche").hidden=true;ficheId=null;document.body.style.overflow="";document.title="My Flash"}
+function ficheHaut(){const h=document.querySelector("header");if(h)document.documentElement.style.setProperty("--hh",Math.max(0,h.getBoundingClientRect().bottom)+"px")}
+addEventListener("resize",()=>{if(ficheId)ficheHaut()});
+function fermerFiche(){document.body.classList.remove("fiche-on");$("fiche").hidden=true;ficheId=null;document.body.style.overflow="";document.title="My Flash"}
 $("ficheBack").onclick=()=>{if(history.state&&history.state.fiche)history.back();else{fermerFiche();history.replaceState(null,"",location.pathname)}};
+document.querySelector("header").addEventListener("click",e=>{if(ficheId&&e.target.closest(".logo,nav a,[data-cat],[data-shop]")){fermerFiche();history.replaceState(null,"",location.pathname);const n=$("nav");if(n&&n.classList.contains("open")){n.classList.remove("open");$("burger").setAttribute("aria-expanded",false)}}});
+$("q").addEventListener("input",()=>{if(ficheId){fermerFiche();history.replaceState(null,"",location.pathname)}});
 window.addEventListener("popstate",()=>{const m=location.hash.match(/^#produit=(.+)$/);if(m)ouvrirFiche(decodeURIComponent(m[1]),false);else fermerFiche()});
 $("fiche").addEventListener("click",e=>{
   const t=e.target.closest("[data-gi]");if(t)galGo(+t.dataset.gi);
@@ -1050,7 +1074,7 @@ $("fiche").addEventListener("click",e=>{
   const wl=e.target.closest("#fWa");if(wl){const p=cp(ficheId);wl.href="https://wa.me/221788740712?text="+encodeURIComponent(`Bonjour My Flash, je veux commander :\n${nomP(p)}${ficheCol?" ("+ficheCol+")":""} × ${ficheQ}\nPrix : ${f(p.p*ficheQ)}\n${lienP()}`)}
   if(e.target.closest("#fShare")){const p=cp(ficheId),u=lienP();if(navigator.share)navigator.share({title:nomP(p)+" · My Flash",text:nomP(p)+" à "+f(p.p),url:u}).catch(()=>{});else navigator.clipboard.writeText(u).then(()=>toast("Lien du produit copié"),()=>toast(u))}
   if(e.target.closest("[data-cat],[data-fermer]")){fermerFiche();history.replaceState(null,"",location.pathname)}
-  if(e.target.closest("#fAdd")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();toast("Ajouté au panier")}
+  if(e.target.closest("#fAdd")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();const cb=$("openCart");cb.classList.remove("bump");void cb.offsetWidth;cb.classList.add("bump");toast("Ajouté au panier")}
   if(e.target.closest("#fNow")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();fermerFiche();history.replaceState(null,"",location.pathname);openCaisse()}
 });
 document.addEventListener("click",e=>{const o=e.target.closest("[data-open]");if(!o||e.target.closest(".add"))return;e.preventDefault();ouvrirFiche(o.dataset.open)});
