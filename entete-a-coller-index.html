@@ -1,0 +1,212 @@
+<!-- ===== EN-TETE MY FLASH (style Infinitech) =====
+     A coller dans index.html JUSTE AVANT </body>
+     Puis : supprime ton ancien <header> et la ligne <script src="mf-header.js..."> si tu l avais ajoutee.
+     Reglages (logo, nom, menu, WhatsApp) : en haut du script, partie REGLAGES. -->
+<script>
+(function () {
+  /* ---------- R\u00c9GLAGES ---------- */
+  var LOGO = "logo.png";              // chemin de ton logo
+  var NOM = "My Flash";
+  var SLOGAN = "boutique";            // bandeau sous le nom, comme \u00ab store \u00bb chez Infinitech
+  var WHATSAPP = "221788740712";
+  var ORDIS = [                       // sous-menu \u00ab Nos ordinateurs \u00bb
+    ["Bureautique", "#categorie=bureautique"],
+    ["Graphisme & montage vid\u00e9o", "#categorie=graphisme"],
+    ["Gaming", "#categorie=gaming"],
+    ["2-en-1 tactiles", "#categorie=2-en-1"]
+  ];
+  var MENU = [
+    ["Accueil", "#"],
+    ["Boutique", "#boutique"],
+    ["Nos ordinateurs", null],        // null = liste d\u00e9roulante ORDIS
+    ["T\u00e9l\u00e9phones", "#categorie=telephones"],
+    ["Accessoires", "#categorie=accessoires"],
+    ["Contact", "https://wa.me/" + WHATSAPP]
+  ];
+
+  /* ---------- STYLE ---------- */
+  var CSS = `
+:root{--mf-navy:#0b1f3a;--mf-blue:#1d4ed8;--mf-bd:#eceef1;--mf-h:84px}
+@media(max-width:900px){:root{--mf-h:64px}}
+html body{padding-top:var(--mf-h)!important}
+#mf-header{position:fixed!important;top:0;left:0;right:0;z-index:2147483000;height:var(--mf-h);background:#fff;border-bottom:1px solid var(--mf-bd);font-family:inherit}
+#mf-header *{box-sizing:border-box}
+#mf-header .in{max-width:1240px;height:100%;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:28px}
+#mf-header .burger{display:none;align-items:center;gap:8px;background:none;border:0;cursor:pointer;padding:8px 0;font-weight:700;font-size:14px;letter-spacing:.05em;color:var(--mf-navy)}
+#mf-header .bars{display:grid;gap:4px}#mf-header .bars i{display:block;width:20px;height:2px;background:var(--mf-navy);border-radius:2px}
+#mf-header .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex:none}
+#mf-header .logo img{height:52px;width:auto}
+#mf-header .logo .txt{display:flex;flex-direction:column;line-height:1}
+#mf-header .logo .txt b{font-weight:500;font-size:22px;color:var(--mf-navy)}
+#mf-header .logo .txt span{margin-top:4px;background:var(--mf-navy);color:#fff;font-size:13px;text-align:center;padding:3px 0}
+#mf-header nav.desk{flex:1;display:flex;justify-content:center;gap:4px}
+#mf-header nav.desk>a,#mf-header nav.desk .dd>button{display:flex;align-items:center;gap:4px;padding:10px 12px;font-size:16px;color:#1f2937;text-decoration:none;background:none;border:0;cursor:pointer;font-family:inherit}
+#mf-header nav.desk>a:hover,#mf-header nav.desk .dd>button:hover{color:var(--mf-blue)}
+#mf-header .dd{position:relative}
+#mf-header .dd .menu{position:absolute;top:100%;left:0;min-width:240px;background:#fff;border:1px solid var(--mf-bd);border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:6px 0;opacity:0;visibility:hidden;transform:translateY(6px);transition:.18s}
+#mf-header .dd:hover .menu,#mf-header .dd:focus-within .menu{opacity:1;visibility:visible;transform:none}
+#mf-header .dd .menu a{display:block;padding:10px 16px;color:#1f2937;text-decoration:none;font-size:15px}
+#mf-header .dd .menu a:hover{background:#f5f7fa;color:var(--mf-blue)}
+#mf-header .right{display:flex;align-items:center;gap:18px;flex:none}
+#mf-header .ico{background:none;border:0;cursor:pointer;color:#374151;display:grid;place-items:center;padding:6px}
+#mf-header .ico svg{width:22px;height:22px}
+#mf-header .total{font-size:15px;color:#374151;white-space:nowrap}
+#mf-header .cart{position:relative;width:34px;height:38px;display:grid;place-items:center;border:2px solid var(--mf-navy);border-radius:0 0 6px 6px;color:var(--mf-navy);text-decoration:none;font:700 13px/1 system-ui,sans-serif}
+#mf-header .cart:before{content:"";position:absolute;top:-9px;left:50%;width:14px;height:9px;margin-left:-7px;border:2px solid var(--mf-navy);border-bottom:0;border-radius:8px 8px 0 0}
+#mf-search{position:fixed;top:var(--mf-h);left:0;right:0;z-index:2147482999;background:#fff;border-bottom:1px solid var(--mf-bd);padding:14px 24px;display:none}
+#mf-search.on{display:block}
+#mf-search input{display:block;width:100%;max-width:700px;margin:0 auto;padding:12px 14px;font-size:16px;border:1px solid #d1d5db;border-radius:6px}
+@media(max-width:900px){
+ #mf-header .in{padding:0 14px;display:grid;grid-template-columns:1fr auto 1fr;gap:0}
+ #mf-header .burger{display:flex;justify-self:start}
+ #mf-header nav.desk,#mf-header .total,#mf-header .ico.srch{display:none}
+ #mf-header .logo{justify-self:center}
+ #mf-header .logo img{height:38px}
+ #mf-header .logo .txt b{font-size:17px}#mf-header .logo .txt span{font-size:11px}
+ #mf-header .right{justify-self:end}
+}
+#mf-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2147483001;opacity:0;visibility:hidden;transition:.25s}
+#mf-drawer{position:fixed;top:0;left:0;bottom:0;width:min(84vw,340px);z-index:2147483002;background:#fff;transform:translateX(-100%);transition:transform .28s;display:flex;flex-direction:column;overflow-y:auto;font-family:inherit}
+html.mf-open #mf-overlay{opacity:1;visibility:visible}html.mf-open #mf-drawer{transform:none}html.mf-open body{overflow:hidden}
+#mf-drawer .top{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--mf-bd)}
+#mf-drawer .top b{color:var(--mf-navy);font-size:16px}
+#mf-drawer .x{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:var(--mf-navy)}
+#mf-drawer .s{padding:14px 16px;border-bottom:1px solid var(--mf-bd)}
+#mf-drawer .s input{width:100%;box-sizing:border-box;padding:11px 12px;font-size:15px;border:1px solid #d1d5db;border-radius:6px}
+#mf-drawer a.l{display:flex;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--mf-bd);text-decoration:none;color:#111;font-size:15px}
+#mf-drawer a.l:after{content:"\\203A";color:#9ca3af}
+#mf-drawer a.sub{padding-left:32px;font-size:14px;color:#374151}
+#mf-drawer .wa{margin:16px;padding:13px;border-radius:6px;text-align:center;background:#25d366;color:#fff;font-weight:700;text-decoration:none}
+`;
+
+  /* ---------- HTML ---------- */
+  var ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+  function ext(h){ return /^https?:/.test(h) ? ' target="_blank"' : ''; }
+
+  var deskNav = MENU.map(function (m) {
+    if (m[1] === null) {
+      return '<div class="dd"><button type="button">' + m[0] + ' <small>&#9662;</small></button><div class="menu">' +
+        ORDIS.map(function (o) { return '<a href="' + o[1] + '">' + o[0] + '</a>'; }).join("") + '</div></div>';
+    }
+    return '<a href="' + m[1] + '"' + ext(m[1]) + '>' + m[0] + '</a>';
+  }).join("");
+
+  var HEADER =
+    '<div class="in">' +
+      '<button class="burger" type="button" aria-label="Ouvrir le menu"><span class="bars"><i></i><i></i><i></i></span>MENU</button>' +
+      '<a class="logo" href="#"><img src="' + LOGO + '" alt="" onerror="this.remove()"><span class="txt"><b>' + NOM + '</b><span>' + SLOGAN + '</span></span></a>' +
+      '<nav class="desk">' + deskNav + '</nav>' +
+      '<div class="right">' +
+        '<button class="ico srch" type="button" aria-label="Rechercher">' + ICON_SEARCH + '</button>' +
+        '<span class="total">0 CFA</span>' +
+        '<a class="cart" href="#panier" aria-label="Panier"><span class="count">0</span></a>' +
+      '</div>' +
+    '</div>';
+
+  var mobLinks = MENU.map(function (m) {
+    if (m[1] === null) {
+      return '<a class="l" href="#">' + m[0] + '</a>' +
+        ORDIS.map(function (o) { return '<a class="l sub" href="' + o[1] + '">' + o[0] + '</a>'; }).join("");
+    }
+    return '<a class="l" href="' + m[1] + '"' + ext(m[1]) + '>' + m[0] + '</a>';
+  }).join("");
+
+  var DRAWER =
+    '<div class="top"><b>Menu</b><button class="x" type="button" aria-label="Fermer">&times;</button></div>' +
+    '<div class="s"><input type="search" placeholder="Rechercher un produit\u2026"></div>' +
+    mobLinks + '<a class="l" href="#panier">Mon panier</a>' +
+    '<a class="wa" target="_blank" href="https://wa.me/' + WHATSAPP + '">Contactez-nous sur WhatsApp</a>';
+
+  /* ---------- LOGIQUE ---------- */
+  function open(){ document.documentElement.classList.add("mf-open"); }
+  function close(){ document.documentElement.classList.remove("mf-open"); }
+  function doSearch(q){
+    q = (q || "").trim(); if (!q) return;
+    location.hash = "recherche=" + encodeURIComponent(q); close();
+    var bar = document.getElementById("mf-search"); if (bar) bar.classList.remove("on");
+  }
+  function onEnter(e){ if (e.key === "Enter") doSearch(this.value); }
+
+  function install(){
+    if (!document.body) return;
+    if (!document.getElementById("mf-style")) {
+      var s = document.createElement("style"); s.id = "mf-style"; s.textContent = CSS;
+      document.head.appendChild(s);
+    }
+    if (!document.getElementById("mf-header")) {
+      var h = document.createElement("header"); h.id = "mf-header"; h.innerHTML = HEADER;
+      h.querySelector(".burger").onclick = open;
+      h.querySelector(".srch").onclick = function(){
+        var b = document.getElementById("mf-search"); b.classList.toggle("on");
+        if (b.classList.contains("on")) b.querySelector("input").focus();
+      };
+      document.body.insertBefore(h, document.body.firstChild);
+    }
+    if (!document.getElementById("mf-search")) {
+      var sb = document.createElement("div"); sb.id = "mf-search";
+      sb.innerHTML = '<input type="search" placeholder="Rechercher un ordinateur, un iPhone\u2026">';
+      sb.querySelector("input").addEventListener("keydown", onEnter);
+      document.body.appendChild(sb);
+    }
+    if (!document.getElementById("mf-drawer")) {
+      var o = document.createElement("div"); o.id = "mf-overlay"; o.onclick = close;
+      var d = document.createElement("aside"); d.id = "mf-drawer"; d.innerHTML = DRAWER;
+      d.querySelector(".x").onclick = close;
+      d.querySelectorAll("a.l").forEach(function(a){ a.addEventListener("click", close); });
+      d.querySelector("input").addEventListener("keydown", onEnter);
+      document.body.appendChild(o); document.body.appendChild(d);
+    }
+    refreshCart();
+  }
+
+  /* ---------- PANIER : nombre + total ---------- */
+  var state = { n: 0, t: 0 };
+  function fmt(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " CFA"; }
+  function paint(){
+    var c = document.querySelector("#mf-header .count"), t = document.querySelector("#mf-header .total");
+    if (c) c.textContent = state.n;
+    if (t) t.textContent = fmt(state.t);
+  }
+  /* \u00c0 appeler depuis ton code si tu veux : mfSetCart(nombre, total) */
+  window.mfSetCart = function(n, total){ state.n = n || 0; state.t = total || 0; paint(); };
+  window.mfSetCartCount = function(n){ state.n = n || 0; paint(); };
+
+  function num(v){ return +String(v == null ? "" : v).replace(/[^\d.]/g, "") || 0; }
+  function refreshCart(){
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!/cart|panier/i.test(k)) continue;
+        var v = JSON.parse(localStorage.getItem(k));
+        if (v && !Array.isArray(v) && typeof v === "object") v = v.items || v.produits || Object.values(v);
+        if (!Array.isArray(v)) continue;
+        var n = 0, t = 0;
+        v.forEach(function(x){
+          if (!x) return;
+          var q = num(x.qty || x.quantite || x.quantity || x.qte) || 1;
+          var p = num(x.prix || x.price || x.prixUnitaire || (x.produit && (x.produit.prix || x.produit.price)));
+          n += q; t += q * p;
+        });
+        state.n = n; state.t = t; return paint();
+      }
+    } catch (e) {}
+    paint();
+  }
+
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") { close(); var b=document.getElementById("mf-search"); if(b) b.classList.remove("on"); } });
+  window.addEventListener("hashchange", function(){ close(); install(); });
+  window.addEventListener("storage", refreshCart);
+  setInterval(refreshCart, 1500);
+
+  function start(){
+    /* masque les anciens en-t\u00eates du site pour ne pas en avoir deux */
+    document.querySelectorAll("body > header:not(#mf-header), .site-header, .topbar, .navbar").forEach(function(el){ el.style.display = "none"; });
+    install();
+    new MutationObserver(function(){
+      if (!document.getElementById("mf-header") || !document.getElementById("mf-drawer")) install();
+    }).observe(document.body, { childList: true });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+</script>
+<!-- ===== FIN EN-TETE MY FLASH ===== -->
