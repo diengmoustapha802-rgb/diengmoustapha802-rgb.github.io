@@ -509,12 +509,20 @@ body.pg-contact .cpage{display:block}
 @media (max-width:600px){.cp-row{grid-template-columns:1fr}.cp-hero{padding:48px 0 52px}.cp-sec{padding:52px 0}.cp-hero p{font-size:16px}.cp-hero p br{display:none}}
 </style>
 <script>/* Lien direct vers un produit : on cache l'accueil et on montre un chargement jusqu'à l'ouverture de la fiche */
-if(/^#produit=/.test(location.hash)){document.documentElement.classList.add("fd");setTimeout(function(){document.documentElement.classList.remove("fd")},9000);
+if(/^#produit=/.test(location.hash)){document.documentElement.classList.add("fd");setTimeout(function(){document.documentElement.classList.remove("fd")},15000);
   var pid=decodeURIComponent(location.hash.slice(9));window.__preId=pid;
-  window.__pre=(pid.indexOf("inf-")===0
-    ?fetch("https://infinitech.sn/wp-json/wc/store/v1/products?slug="+encodeURIComponent(pid.slice(4))).then(function(r){return r.ok?r.json():null}).then(function(j){return j&&j[0]?{woo:j[0]}:null})
-    :fetch("https://firestore.googleapis.com/v1/projects/flashboutique-6c/databases/(default)/documents/produits/"+encodeURIComponent(pid)).then(function(r){return r.ok?r.json():null}).then(function(j){return j&&j.fields?{fs:j}:null})
-  ).catch(function(){return null})}</script>
+  /* 1) ta base (tous tes produits, y compris les 78 importés) */
+  var fsP=fetch("https://firestore.googleapis.com/v1/projects/flashboutique-6c/databases/(default)/documents/produits/"+encodeURIComponent(pid)).then(function(r){return r.ok?r.json():null}).then(function(j){return j&&j.fields?{fs:j}:null}).catch(function(){return null});
+  /* 2) en même temps, Infinitech (même quand le nom du lien est raccourci) */
+  var wooP=null;
+  if(pid.indexOf("inf-")===0){var slug=pid.slice(4),API="https://infinitech.sn/wp-json/wc/store/v1/products";
+    var norm=function(y){return "inf-"+String(y&&y.slug||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,80)};
+    wooP=fetch(API+"?slug="+encodeURIComponent(slug)).then(function(r){return r.ok?r.json():[]}).then(function(j){
+      if(j&&j[0]&&norm(j[0])===pid)return j[0];
+      return fetch(API+"?per_page=50&search="+encodeURIComponent(slug.split("-").slice(0,3).join(" "))).then(function(r){return r.ok?r.json():[]}).then(function(l){for(var i=0;i<(l||[]).length;i++)if(norm(l[i])===pid)return l[i];return null})
+    }).then(function(x){return x?{woo:x}:null}).catch(function(){return null})}
+  /* le premier qui répond ouvre la fiche */
+  window.__pre=new Promise(function(res){var n=wooP?2:1,ok=false;function f(v){if(ok)return;if(v){ok=true;res(v)}else if(--n===0)res(null)}fsP.then(f);if(wooP)wooP.then(f)})}</script>
 <style>html.fd body{visibility:hidden;overflow:hidden}
 html.fd body::before{content:"";visibility:visible;position:fixed;inset:0;background:#fff;z-index:2147483646}
 html.fd body::after{content:"";visibility:visible;position:fixed;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;border:4px solid #dfe4ee;border-top-color:#0b1f4b;border-radius:50%;animation:fdspin .8s linear infinite;z-index:2147483647}
@@ -1047,7 +1055,7 @@ let ficheAuto=true;function ficheDepuisLien(){if(!ficheAuto)return;const m=locat
 
 // ---------- Produits : ma base + catalogue Infinitech en direct ----------
 const SOURCE="https://infinitech.sn"; // les nouveaux produits ajoutés sur ce site apparaissent automatiquement
-let MINE=[],LIVE=[],mineOk=false,liveOk=false;
+let MINE=[],LIVE=[],mineOk=false,liveOk=false,liveGood=false,mineGood=false,essais=0;
 const slugId=s=>"inf-"+String(s||"").toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,80);
 const normN=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
 const txt=h=>{if(!h)return "";const d=new DOMParser().parseFromString(String(h).replace(/<br\s*\/?>/gi,"\n").replace(/<\/(p|li|h[1-6]|div|tr)>/gi,"\n"),"text/html");return (d.body.textContent||"").replace(/\n{3,}/g,"\n\n").trim()};
@@ -1093,7 +1101,7 @@ function fusion(){
   const maxOff=Math.max(0,...P.filter(p=>p.o>p.p).map(p=>Math.round((1-p.p/p.o)*100)));
   $("promoTxt").innerHTML=maxOff?`<b>Promotions en cours</b> : jusqu'à -${maxOff} % sur une sélection · Livraison 24–48 h à Dakar`:"<b>Livraison 24–48 h à Dakar</b> · Paiement à la livraison possible";
   save();renderVedette();renderRayons();upd();ficheDepuisLien();
-  if(ficheAuto&&mineOk&&liveOk&&/^#produit=/.test(location.hash)){ficheAuto=false;document.documentElement.classList.remove("fd");history.replaceState(null,"",location.pathname);toast("Ce produit n'est plus disponible")}
+  if(ficheAuto&&mineGood&&liveGood&&/^#produit=/.test(location.hash)){ficheAuto=false;document.documentElement.classList.remove("fd");history.replaceState(null,"",location.pathname);toast("Ce produit n'est plus disponible")}
 }
 {const mr=location.hash.match(/^#rayon=([\w-]+)$/);if(mr&&CATS.some(c=>c.k===mr[1])){filterCat=mr[1];renderVedette();setTimeout(goVedette,400)}}
 function deMoi(id,x){return {id:id,b:x.marque||"",n:x.nom||"",p:+x.prix||0,o:+x.ancienPrix||0,c:x.categories||[],v:!!x.vedette,img:x.image||"",imgs:[x.image,...(Array.isArray(x.autresImages)?x.autresImages:[])].filter(Boolean),d:x.description||"",r:x.etat==="reconditionne",col:Array.isArray(x.couleurs)?x.couleurs:[],h:!!x.masque}}
@@ -1110,8 +1118,10 @@ async function chargerSource(){
       const list=await r.json();all.push(...list);if(list.length<100)break;
     }
     LIVE=all.filter(x=>x.is_in_stock!==false&&x.prices).map(deWoo).filter(p=>p.n&&p.p);
+    if(all.length){liveGood=true;essais=0}
     try{if(LIVE.length)localStorage.setItem("mf-live",JSON.stringify(LIVE))}catch(e){}
   }catch(e){console.warn("Catalogue en direct indisponible",e)}
+  if(!liveGood&&essais<3){essais++;setTimeout(chargerSource,2000*essais)}
   liveOk=true;fusion();
 }
 try{const c=JSON.parse(localStorage.getItem("mf-live")||"[]");if(Array.isArray(c)&&c.length){LIVE=c;fusion()}}catch(e){}
@@ -1122,7 +1132,7 @@ if(window.__pre)window.__pre.then(r=>{if(!r||!ficheAuto)return;const id=window._
 chargerSource();setInterval(chargerSource,10*60*1000); // vérifie les nouveautés toutes les 10 min
 
 FB.then(({db,onSnapshot,collection})=>onSnapshot(collection(db,"produits"),snap=>{
-  MINE=snap.docs.map(d=>deMoi(d.id,d.data()));
+  MINE=snap.docs.map(d=>deMoi(d.id,d.data()));mineGood=true;
   mineOk=true;fusion();
 },err=>{console.error(err);mineOk=true;fusion();})).catch(err=>{console.error(err);mineOk=true;fusion();});
 
