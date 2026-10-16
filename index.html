@@ -508,7 +508,9 @@ body.pg-contact .cpage{display:block}
 .cp-form small{text-align:center;color:#444;font-size:12.5px}
 @media (max-width:600px){.cp-row{grid-template-columns:1fr}.cp-hero{padding:48px 0 52px}.cp-sec{padding:52px 0}.cp-hero p{font-size:16px}.cp-hero p br{display:none}}
 </style>
-<script>/* Lien direct vers un produit : on cache l'accueil et on montre un chargement jusqu'à l'ouverture de la fiche */
+<script>/* Tes produits : téléchargés tout de suite, avant le reste de la page */
+window.__list=fetch("https://firestore.googleapis.com/v1/projects/flashboutique-6c/databases/(default)/documents/produits?pageSize=300").then(function(r){return r.ok?r.json():null}).catch(function(){return null});
+/* Lien direct vers un produit : on cache l'accueil et on montre un chargement jusqu'à l'ouverture de la fiche */
 if(/^#produit=/.test(location.hash)){document.documentElement.classList.add("fd");setTimeout(function(){document.documentElement.classList.remove("fd")},15000);
   var pid=decodeURIComponent(location.hash.slice(9));window.__preId=pid;
   /* 1) ta base (tous tes produits, y compris les 78 importés) */
@@ -535,6 +537,9 @@ html,body{max-width:100%;overflow-x:hidden}html{touch-action:manipulation;-webki
 .fiche{overflow-x:hidden;overscroll-behavior:contain}.f-grid>*{min-width:0}.f-thumbs{max-width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none}.f-thumbs::-webkit-scrollbar{display:none}
 .f-info h1{overflow-wrap:anywhere}.f-btns>*{max-width:100%;min-width:0}.f-assur>div{min-width:0}
 input,select,textarea{font-size:16px}
+.card.sk .pic,.card.sk i{background:linear-gradient(90deg,#eef1f6 25%,#f7f9fc 50%,#eef1f6 75%);background-size:200% 100%;animation:skl 1.2s linear infinite}
+.card.sk .pic{min-height:150px;border-radius:12px}.card.sk i{display:block;height:12px;border-radius:6px;margin-top:12px}.card.sk i.s{width:55%}
+@keyframes skl{to{background-position:-200% 0}}
 </style>
 </head>
 <body style="margin:0">
@@ -884,7 +889,7 @@ function renderVedette(){
   $("reset").hidden=all;
   // Filtre actif : on cache les rayons pour ne montrer que les produits choisis
   $("rayons").hidden=!all;
-  $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun produit ne correspond. Essayez une autre marque ou un autre mot.</p>':'<p class="empty">Les produits arrivent bientôt.</p>');
+  $("gVedette").innerHTML=list.length?list.map(card).join(""):(P.length?'<p class="empty">Aucun produit ne correspond. Essayez une autre marque ou un autre mot.</p>':(window.__prets?'<p class="empty">Les produits arrivent bientôt.</p>':'<article class="card sk"><div class="pic"></div><i></i><i class="s"></i></article>'.repeat(8)));
 }
 function goVedette(){document.getElementById("vedette").scrollIntoView({behavior:"smooth"})}
 $("brands").onclick=e=>{const b=e.target.closest("button");if(!b||b.dataset.cat)return;brand=brand===b.dataset.b?"Tout":b.dataset.b;filterCat=null;showAll=false;
@@ -1082,6 +1087,7 @@ function photosDe(p){const k=PHOTOS[p.id]?p.id:PH_IMG[phBase(p.img)];if(!k)retur
   const g=PHOTOS[k].map(u=>PH_BASE+u),own=phBase(p.img);
   return [...new Set([...(p.img&&(own.startsWith("data:")||g.includes(own))?[p.img]:[]),...g])].slice(0,12);}
 function fusion(){
+  if(mineGood||liveGood||P.length||LIVE.length||MINE.length)window.__prets=mineGood||liveGood;
   LIVE.forEach(p=>(p.sz||[]).forEach(([k,t,m])=>{if(k&&!SZ[k])SZ[k]=[t,m]}));
   const ids=new Set(MINE.map(p=>p.id)),noms=new Set(MINE.map(p=>normN(p.n)));
   // Complète chaque produit de l'espace gérant avec toutes les photos Infinitech (3, 4 photos…)
@@ -1124,6 +1130,8 @@ async function chargerSource(){
   if(!liveGood&&essais<3){essais++;setTimeout(chargerSource,2000*essais)}
   liveOk=true;fusion();
 }
+if(window.__list)window.__list.then(j=>{if(!j||!Array.isArray(j.documents)||mineGood)return;
+  MINE=j.documents.map(d=>deMoi(decodeURIComponent(String(d.name).split("/").pop()),fv({mapValue:{fields:d.fields||{}}})));fusion()});
 try{const c=JSON.parse(localStorage.getItem("mf-live")||"[]");if(Array.isArray(c)&&c.length){LIVE=c;fusion()}}catch(e){}
 if(window.__pre)window.__pre.then(r=>{if(!r||!ficheAuto)return;const id=window.__preId;let p=null;
   if(r.fs){const o=fv({mapValue:{fields:r.fs.fields}});if(o.masque)return;p=deMoi(id,o);if(!MINE.some(m=>m.id===id))MINE=[...MINE,p]}
