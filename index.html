@@ -566,6 +566,22 @@ header.scrolled{box-shadow:0 4px 18px rgba(11,31,75,.10)}
 @media (min-width:821px) and (max-width:1340px){.bar{gap:14px!important}nav{gap:0!important}nav>a,nav>.dd>button{font-size:15px!important;padding:8px 8px!important}.logo{font-size:19px!important}.logo img{width:48px!important;height:48px!important}}
 @media (max-width:820px){.cartbtn .cb-tot{display:none}.cartbtn{padding:0 4px!important}.cartbtn .cb-bag{width:40px;height:38px}}
 </style>
+<!-- Pixel Meta My Flash (1418928070112487) -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1418928070112487');
+fbq('track', 'PageView');
+// Envoi sécurisé d'un événement (ne casse jamais le site si le pixel est bloqué)
+window.px=function(ev,data,opt){try{if(window.fbq)fbq('track',ev,data||{},opt||{})}catch(e){}};
+// Contact : clic sur un lien WhatsApp / appel (hors confirmation de commande)
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="wa.me"],a[href^="tel:"],#cpCall,#cpWa');
+  if(a&&!a.closest('#done'))px('Contact');},true);
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1418928070112487&ev=PageView&noscript=1"/></noscript>
 </head>
 <body style="margin:0">
 
@@ -925,12 +941,12 @@ document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");if(g)document.getElementById(g.dataset.go).scrollIntoView({behavior:"smooth"});
   const sh=e.target.closest("[data-shop]");if(sh){e.preventDefault();showAll=true;filterCat=null;brand="Tout";q="";$("q").value="";
     [...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette();closeMenus();goVedette()}
-  const a=e.target.closest(".add");if(a&&cp(a.dataset.id)?.col?.length)ouvrirFiche(a.dataset.id);else if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier")}
+  const a=e.target.closest(".add");if(a&&cp(a.dataset.id)?.col?.length)ouvrirFiche(a.dataset.id);else if(a){cart[a.dataset.id]=(cart[a.dataset.id]||0)+1;save();upd();toast("Ajouté au panier");const pa=cp(a.dataset.id);px("AddToCart",{content_ids:[String(pa?pa.id:a.dataset.id)],content_type:"product",value:pa?pa.p:0,currency:"XOF"})}
   const inDd=e.target.closest(".dd");document.querySelectorAll(".dd").forEach(d=>{if(d!==inDd){d.querySelector(".dd-menu").hidden=true;d.querySelector(".ddb").setAttribute("aria-expanded","false")}});
 });
 $("reset").onclick=()=>{brand="Tout";filterCat=null;q="";showAll=false;$("q").value="";[...$("brands").querySelectorAll("[data-b]")].forEach(x=>x.setAttribute("aria-pressed",x.dataset.b==="Tout"));renderVedette()};
 $("tsort").onchange=$("tbudget").onchange=()=>renderVedette();$("moreBtn").onclick=()=>{LIM+=24;renderVedette()};
-$("q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderVedette()};
+$("q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderVedette();clearTimeout(window.__sq);if(q.length>1)window.__sq=setTimeout(()=>px("Search",{search_string:q}),1500)};
 document.querySelectorAll(".ddb").forEach(bt=>bt.onclick=()=>{const m=$(bt.getAttribute("aria-controls"));m.hidden=!m.hidden;bt.setAttribute("aria-expanded",!m.hidden)});
 $("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
 function closeMenus(){document.querySelectorAll(".dd-menu").forEach(m=>m.hidden=true);document.querySelectorAll(".ddb").forEach(b=>b.setAttribute("aria-expanded","false"));$("nav").classList.remove("open")}
@@ -955,6 +971,7 @@ $("lines").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;const i
 // Page de commande
 function openCaisse(){
   const ids=Object.keys(cart).filter(k=>cart[k]>0&&cp(k));if(!ids.length)return;
+  px("InitiateCheckout",{content_ids:ids.map(k=>String(cp(k).id)),content_type:"product",num_items:ids.reduce((a,k)=>a+cart[k],0),value:subtotal(),currency:"XOF"});
   $("cItems").innerHTML=ids.map(id=>{const p=cp(id);return `<div class="c-item"><div class="im">${pic2(p)}</div><div>${esc(nomP(p))}${esc(cn(id))}<small>× ${cart[id]}</small></div><span class="pr">${f(p.p*cart[id])}</span></div>`}).join("");
   totals();$("checkout").hidden=false;$("done").hidden=true;$("caisse").hidden=false;$("caisse").scrollTop=0;document.body.style.overflow="hidden";
 }
@@ -974,6 +991,7 @@ $("checkout").onsubmit=async e=>{e.preventDefault();
     await addDoc(collection(db,"commandes"),{numero:n,client,telephone:$("tel").value.trim(),email:$("email").value.trim(),
       pays:$("pays").value,region:$("region").value,adresse:$("adr").value.trim(),notes:$("notes").value.trim(),
       paiement:paym,articles,total:t,statut:"nouvelle",date:serverTimestamp()});
+    px("Purchase",{content_ids:articles.map(a=>a.id.split("|")[0]),content_type:"product",num_items:articles.reduce((x,a)=>x+a.quantite,0),value:t,currency:"XOF"},{eventID:n});
     const msg=`Bonjour My Flash, je viens de passer la commande ${n} :\n`+articles.map(a=>`- ${a.quantite} x ${a.nom} (${f(a.prix*a.quantite)})`).join("\n")
       +`\nTotal : ${f(t)}\nAdresse : ${$("adr").value.trim()}, ${$("region").value}\nPaiement : ${paym}\nNom : ${client} - Tél : ${$("tel").value.trim()}`+($("notes").value.trim()?`\nNote : ${$("notes").value.trim()}`:"");
     const wa="https://wa.me/221788740712?text="+encodeURIComponent(msg);
@@ -1035,6 +1053,7 @@ const descDe=p=>{const own=MINE.find(m=>m.id===p.id);if(own&&own.d&&own.d.trim()
 let ficheCol="";const ficheCle=()=>ficheId+(ficheCol?"|"+ficheCol:"");
 function ouvrirFiche(id,push=true){
   const p=P.find(x=>x.id==id);if(!p)return false;
+  if(window.__vc!==String(p.id)){window.__vc=String(p.id);px("ViewContent",{content_ids:[String(p.id)],content_name:nomP(p),content_type:"product",value:p.p,currency:"XOF"})}
   ficheId=id;ficheQ=1;const imgs=(p.imgs&&p.imgs.length?p.imgs:(p.img?[p.img]:[]));galImgs=imgs;galI=0;
   const tags=p.n.split(/\s[|–—,]\s|\s\|\s|,\s/).slice(1).map(t=>t.trim()).filter(t=>t&&t.length<40).slice(0,6);
   const sim=P.filter(x=>x.id!==p.id&&x.c.some(c=>p.c.includes(c))).slice(0,4);
@@ -1079,8 +1098,8 @@ $("fiche").addEventListener("click",e=>{
   const wl=e.target.closest("#fWa");if(wl){const p=cp(ficheId);wl.href="https://wa.me/221788740712?text="+encodeURIComponent(`Bonjour My Flash, je veux commander :\n${nomP(p)}${ficheCol?" ("+ficheCol+")":""} × ${ficheQ}\nPrix : ${f(p.p*ficheQ)}\n${lienP()}`)}
   if(e.target.closest("#fShare")){const p=cp(ficheId),u=lienP();if(navigator.share)navigator.share({title:nomP(p)+" · My Flash",text:nomP(p)+" à "+f(p.p),url:u}).catch(()=>{});else navigator.clipboard.writeText(u).then(()=>toast("Lien du produit copié"),()=>toast(u))}
   if(e.target.closest("[data-cat],[data-fermer]")){fermerFiche();history.replaceState(null,"",location.pathname)}
-  if(e.target.closest("#fAdd")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();const cb=$("openCart");cb.classList.remove("bump");void cb.offsetWidth;cb.classList.add("bump");toast("Ajouté au panier")}
-  if(e.target.closest("#fNow")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();fermerFiche();history.replaceState(null,"",location.pathname);openCaisse()}
+  if(e.target.closest("#fAdd")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();{const pa=cp(k);px("AddToCart",{content_ids:[String(ficheId)],content_type:"product",value:(pa?pa.p:0)*ficheQ,currency:"XOF"})}const cb=$("openCart");cb.classList.remove("bump");void cb.offsetWidth;cb.classList.add("bump");toast("Ajouté au panier")}
+  if(e.target.closest("#fNow")){const k=ficheCle();cart[k]=(cart[k]||0)+ficheQ;save();upd();{const pa=cp(k);px("AddToCart",{content_ids:[String(ficheId)],content_type:"product",value:(pa?pa.p:0)*ficheQ,currency:"XOF"})}fermerFiche();history.replaceState(null,"",location.pathname);openCaisse()}
 });
 document.addEventListener("click",e=>{const o=e.target.closest("[data-open]");if(!o||e.target.closest(".add"))return;e.preventDefault();ouvrirFiche(o.dataset.open)});
 document.addEventListener("pointerdown",e=>{const o=e.target.closest("[data-open]");const p=o&&cp(o.dataset.open);if(p&&p.imgs&&p.imgs[0]){const i=new Image();i.src=med(p.imgs[0])}},{passive:true});
